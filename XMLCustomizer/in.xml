@@ -1,1 +1,8 @@
-<!--comment-->
+<?xml version="1.0" encoding="UTF-8"?>
+<ns0:MT_test xmlns:ns0="urn:elrosado.com:switchTransaccional:listaNegra">
+	<row>
+		<nombre>Juan</nombre>
+		<apellido>Padilla</apellido>
+		<edad>32</edad>
+	</row>
+</ns0:MT_test>
