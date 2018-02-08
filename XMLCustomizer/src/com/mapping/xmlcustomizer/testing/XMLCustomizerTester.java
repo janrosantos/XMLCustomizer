@@ -14,15 +14,14 @@ public class XMLCustomizerTester {
 			InputStream in = new FileInputStream(new File("in.xml"));
 			OutputStream out = new FileOutputStream(new File("out.xml"));
 
-//			byte[] buffer = new byte[1024];
-//			int len;
-//			while ((len = in.read(buffer)) != -1) {
-//				out.write(buffer, 0, len);
-//			}
+			String operation = "addNode";
+			String arg0 = "";
+			String arg1 = "";
+			String arg2 = "";
+			String arg3 = "";
 
 			XMLCustomizer myMapping = new XMLCustomizer();
-			myMapping.execute(in, out);
-
+			myMapping.execute(operation, arg0, arg1, arg2, arg3, in, out);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

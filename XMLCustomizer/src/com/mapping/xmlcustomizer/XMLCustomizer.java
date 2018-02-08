@@ -17,8 +17,14 @@ public class XMLCustomizer extends AbstractTransformation {
 			TransformationOutput transformationOutput)
 			throws StreamTransformationException {
 
+		String operation = "";
+		String arg0 = "";
+		String arg1 = "";
+		String arg2 = "";
+		String arg3 = "";
+
 		try {
-			this.execute(
+			this.execute(operation, arg0, arg1, arg2, arg3,
 					transformationInput.getInputPayload().getInputStream(),
 					transformationOutput.getOutputPayload().getOutputStream());
 		} catch (Exception e) {
@@ -26,75 +32,38 @@ public class XMLCustomizer extends AbstractTransformation {
 		}
 	}
 
-	public void execute(InputStream in, OutputStream out)
+	public void execute(String operation, String arg0, String arg1,
+			String arg2, String arg3, InputStream in, OutputStream out)
 			throws StreamTransformationException {
 
-		String RESULT = new String();
+		if (operation.equals("playground")) {
 
-		String inicio = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-				+ "<ns0:MT_test xmlns:ns0=\"urn:elrosado.com:switchTransaccional:listaNegra\">";
-		String fin = "</ns0:MT_test>";
-		String nombre = "";
-		String apellido = "";
-		String edad = "";
+			System.out.println("Playground");
+			XMLCustomizerPlayground playgroundXML = new XMLCustomizerPlayground();
+			playgroundXML.executePlayground(in, out);
 
-		try {
+		} else if (operation.equals("addNode")) {
 
-			InputStream inputstream = in;
+			System.out.println("Add node to XML");
+			XMLCustomizerAddNode addNodeXML = new XMLCustomizerAddNode();
+			addNodeXML.executeAddNode(arg0, arg1, arg2, arg3, in, out);
 
-			OutputStream outputstream = out;
-			
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
+		} else if (operation.equals("deleteNode")) {
 
-			DocumentBuilder builder = factory.newDocumentBuilder();
+			System.out.println("Delete node from XML");
+			XMLCustomizerDeleteNode deleteNodeXML = new XMLCustomizerDeleteNode();
+			deleteNodeXML.executeDeleteNode(arg0, arg1, arg2, arg3, in, out);
 
-			Document doc = builder.parse(inputstream);
+		} else if (operation.equals("replaceValue")) {
 
-			NodeList children = doc.getElementsByTagName("row");
+			System.out.println("Replacing value of XML segment");
+			XMLCustomizerReplaceValue replaceValueXML = new XMLCustomizerReplaceValue();
+			replaceValueXML
+					.executeReplaceValue(arg0, arg1, arg2, arg3, in, out);
 
-			for (int i = 0; i < children.getLength(); i++) {
-
-				Node node = children.item(i);
-
-				if (node.getNodeType() == Node.ELEMENT_NODE) {
-
-					Element eElement = (Element) node;
-
-					nombre = eElement.getElementsByTagName("nombre").item(0)
-							.getTextContent();
-
-					apellido = eElement.getElementsByTagName("apellido")
-							.item(0).getTextContent();
-
-					edad = eElement.getElementsByTagName("edad").item(0)
-							.getTextContent();
-
-					RESULT = RESULT + "<row>" + "<nombre>" + nombre + " "
-							+ apellido + "</nombre>" +
-
-							"<apellido>" + nombre + " " + apellido
-							+ "</apellido>" + "<edad>" + edad + "</edad>"
-							+ "</row>";
-
-				}
-
-			}
-
-			RESULT = inicio + RESULT + fin;
-
-			outputstream.write(RESULT.getBytes());
-
-		} catch (Exception exception) {
-
-//			getTrace().addDebugMessage(exception.getMessage() + RESULT);
-
-//			throw new StreamTransformationException(exception.toString()
-//					+ RESULT);
-			RESULT = "";
+		} else {
+			System.out.println("Nothing to do");
 
 		}
-
 	}
-
 }
