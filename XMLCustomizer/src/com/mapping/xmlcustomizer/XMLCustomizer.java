@@ -91,7 +91,7 @@ public class XMLCustomizer extends AbstractTransformation {
 
 //			throw new StreamTransformationException(exception.toString()
 //					+ RESULT);
-			RESULT = "Error";
+			RESULT = "";
 
 		}
 
