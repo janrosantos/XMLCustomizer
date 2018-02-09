@@ -13,8 +13,7 @@ import org.w3c.dom.NodeList;
 public class XMLCustomizer extends AbstractTransformation {
 
 	@Override
-	public void transform(TransformationInput transformationInput,
-			TransformationOutput transformationOutput)
+	public void transform(TransformationInput transformationInput, TransformationOutput transformationOutput)
 			throws StreamTransformationException {
 
 		String operation = "";
@@ -24,17 +23,15 @@ public class XMLCustomizer extends AbstractTransformation {
 		String arg3 = "";
 
 		try {
-			this.execute(operation, arg0, arg1, arg2, arg3,
-					transformationInput.getInputPayload().getInputStream(),
+			this.execute(operation, arg0, arg1, arg2, arg3, transformationInput.getInputPayload().getInputStream(),
 					transformationOutput.getOutputPayload().getOutputStream());
 		} catch (Exception e) {
 			System.out.println("error");
 		}
 	}
 
-	public void execute(String operation, String arg0, String arg1,
-			String arg2, String arg3, InputStream in, OutputStream out)
-			throws StreamTransformationException {
+	public void execute(String operation, String arg0, String arg1, String arg2, String arg3, InputStream in,
+			OutputStream out) throws StreamTransformationException {
 
 		if (operation.equals("playground")) {
 
@@ -58,8 +55,7 @@ public class XMLCustomizer extends AbstractTransformation {
 
 			System.out.println("Replacing value of XML segment");
 			XMLCustomizerReplaceValue replaceValueXML = new XMLCustomizerReplaceValue();
-			replaceValueXML
-					.executeReplaceValue(arg0, arg1, arg2, arg3, in, out);
+			replaceValueXML.executeReplaceValue(arg0, arg1, arg2, arg3, in, out);
 
 		} else {
 			System.out.println("Nothing to do");

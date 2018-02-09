@@ -7,9 +7,13 @@ import com.sap.aii.mapping.api.StreamTransformationException;
 
 public class XMLCustomizerDeleteNode {
 
-	public void executeDeleteNode(String arg0, String arg1, String arg2,
-			String arg3, InputStream in, OutputStream out)
+	public void executeDeleteNode(String arg0, String arg1, String arg2, String arg3, InputStream in, OutputStream out)
 			throws StreamTransformationException {
+
+		// arg0 is the node to be deleted
+		// arg1 is not used
+		// arg2 is not used
+		// arg3 is not used
 
 	}
 

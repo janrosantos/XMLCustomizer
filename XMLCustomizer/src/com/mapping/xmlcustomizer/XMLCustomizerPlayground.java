@@ -15,8 +15,7 @@ import com.sap.aii.mapping.api.StreamTransformationException;
 
 public class XMLCustomizerPlayground {
 
-	public void executePlayground(InputStream in, OutputStream out)
-			throws StreamTransformationException {
+	public void executePlayground(InputStream in, OutputStream out) throws StreamTransformationException {
 
 		String RESULT = new String();
 
@@ -33,8 +32,7 @@ public class XMLCustomizerPlayground {
 
 			OutputStream outputstream = out;
 
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
 			DocumentBuilder builder = factory.newDocumentBuilder();
 
@@ -50,21 +48,15 @@ public class XMLCustomizerPlayground {
 
 					Element eElement = (Element) node;
 
-					nombre = eElement.getElementsByTagName("nombre").item(0)
-							.getTextContent();
+					nombre = eElement.getElementsByTagName("nombre").item(0).getTextContent();
 
-					apellido = eElement.getElementsByTagName("apellido")
-							.item(0).getTextContent();
+					apellido = eElement.getElementsByTagName("apellido").item(0).getTextContent();
 
-					edad = eElement.getElementsByTagName("edad").item(0)
-							.getTextContent();
+					edad = eElement.getElementsByTagName("edad").item(0).getTextContent();
 
-					RESULT = RESULT + "<row>" + "<nombre>" + nombre + " "
-							+ apellido + "</nombre>" +
+					RESULT = RESULT + "<row>" + "<nombre>" + nombre + " " + apellido + "</nombre>" +
 
-							"<apellido>" + nombre + " " + apellido
-							+ "</apellido>" + "<edad>" + edad + "</edad>"
-							+ "</row>";
+					"<apellido>" + nombre + " " + apellido + "</apellido>" + "<edad>" + edad + "</edad>" + "</row>";
 
 				}
 
