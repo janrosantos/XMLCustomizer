@@ -15,6 +15,8 @@ public class XMLCustomizerAddNode {
 		// arg2 is not used
 		// arg3 is not used
 
+		arg0 = "/MT_test/row/apellido";
+
 	}
 
 }

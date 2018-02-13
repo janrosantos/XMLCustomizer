@@ -1,8 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ns0:MT_test xmlns:ns0="urn:elrosado.com:switchTransaccional:listaNegra">
-	<row>
-		<nombre>Juan</nombre>
-		<apellido>Padilla</apellido>
-		<edad>32</edad>
-	</row>
-</ns0:MT_test>
+<Message>
+	<Header>
+	</Header>
+	<Item>
+		<Qualf>A</Qualf>
+		<Field1></Field1>
+		<Field2></Field2>
+	</Item>
+	<Item>
+		<Qualf>B</Qualf>
+		<Field1></Field1>
+		<Field2>BField21</Field2>
+		<Field2>BField22</Field2>
+	</Item>
+	<Item>
+		<Qualf>C</Qualf>
+		<Field1></Field1>
+		<Field2></Field2>
+	</Item>
+	<Item>
+		<Qualf>D</Qualf>
+		<Field1></Field1>
+		<Field2></Field2>
+	</Item>
+</Message>

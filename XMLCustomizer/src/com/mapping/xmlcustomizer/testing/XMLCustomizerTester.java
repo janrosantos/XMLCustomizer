@@ -14,7 +14,7 @@ public class XMLCustomizerTester {
 			InputStream in = new FileInputStream(new File("in.xml"));
 			OutputStream out = new FileOutputStream(new File("out.xml"));
 
-			String operation = "addNode";
+			String operation = "deleteNode";
 			String arg0 = "";
 			String arg1 = "";
 			String arg2 = "";
