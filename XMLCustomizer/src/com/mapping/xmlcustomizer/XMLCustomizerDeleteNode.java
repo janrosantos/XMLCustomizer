@@ -1,5 +1,7 @@
 package com.mapping.xmlcustomizer;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
@@ -16,7 +18,8 @@ import com.sun.org.apache.xpath.internal.NodeSet;
 
 public class XMLCustomizerDeleteNode {
 
-	public void executeDeleteNode(String arg0, String arg1, String arg2, String arg3, InputStream in, OutputStream out)
+
+	public ByteArrayOutputStream executeDeleteNode(String arg0, String arg1, String arg2, String arg3, InputStream in)
 			throws StreamTransformationException {
 
 		// This method will execute deletion of nodes from the XML document
@@ -24,7 +27,7 @@ public class XMLCustomizerDeleteNode {
 		// Node selection is based on the first argument
 
 		// arg0 is the node/s to be deleted
-		// arg0 is an xpath expression
+		// arg0 is an XPath expression
 		// arg1 is not used
 		// arg2 is not used
 		// arg3 is not used
@@ -35,7 +38,7 @@ public class XMLCustomizerDeleteNode {
 
 		// Assign variables for the XML stream
 		InputStream inputstream = in;
-		OutputStream outputstream = out;
+		ByteArrayOutputStream  outputstream = new ByteArrayOutputStream();
 
 		try {
 
@@ -43,7 +46,7 @@ public class XMLCustomizerDeleteNode {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document doc = builder.parse(inputstream);
-
+			
 			// Create XPath expression from arg0
 			XPathFactory xPathfactory = XPathFactory.newInstance();
 			XPath xpath = xPathfactory.newXPath();
@@ -52,7 +55,7 @@ public class XMLCustomizerDeleteNode {
 			// Parse XML document using XPath expression
 			// List all matches in delNode
 			NodeList delNode = (NodeList) delXPath.evaluate(doc, XPathConstants.NODESET);
-
+			
 			// Execute deletion of nodes for all that matched the XPath
 			// delNode is an array/list of nodes that matched the XPath
 			for (int i = 0; i < delNode.getLength(); i++) {
@@ -62,7 +65,7 @@ public class XMLCustomizerDeleteNode {
 			// Create new Transformer with the XSLT
 			TransformerFactory tfactory = TransformerFactory.newInstance();
 			Transformer transformer = tfactory.newTransformer();
-
+			
 			// Create a temporary variable for transformed XML storage
 			StringWriter stringWriter = new StringWriter();
 
@@ -80,11 +83,13 @@ public class XMLCustomizerDeleteNode {
 			// To be removed on actual deployment
 			System.out.println("Deletion completed.");
 
+
 		} catch (Exception exception) {
 			// Console output only for debugging
 			// To be removed on actual deployment
 			System.out.println("Result: ERROR " + exception);
 		}
+		return outputstream;
 
 	}
 

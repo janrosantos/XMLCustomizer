@@ -1,7 +1,8 @@
 package com.mapping.xmlcustomizer;
 
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.nio.charset.Charset;
+
 import com.sap.aii.mapping.api.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -28,52 +29,67 @@ public class XMLCustomizer extends AbstractTransformation {
 
 		// Execute method to get rule parameters from PI cache
 		XMLCustomizerGetRules getRules = new XMLCustomizerGetRules();
-		String[] rules = getRules.executeGetRules();
+		String[][] rules = getRules.executeGetRules();
 
-		// Assign output ofr getRules method to individual variables
-		String operation = rules[0];
-		String arg0 = rules[1];
-		String arg1 = rules[2];
-		String arg2 = rules[3];
-		String arg3 = rules[4];
+		InputStream inputstreamtemp = in;
+		ByteArrayOutputStream outputstreamtemp = new ByteArrayOutputStream();
+		String streamptemp = in.toString();
 
-		// Choose which operation/method to execute
-		if (operation.equals("playground")) {
+		// Loop though all the rules found
+		for (int i = 0; i < rules.length; i++) {
 
-			// Playground only
-			// Can be removed on actual deployment
-			System.out.println("Playground");
-			XMLCustomizerPlayground playgroundXML = new XMLCustomizerPlayground();
-			playgroundXML.executePlayground(in, out);
+			// Assign output for getRules method to individual variables
+			String operation = rules[i][0];
+			String arg0 = rules[i][1];
+			String arg1 = rules[i][2];
+			String arg2 = rules[i][3];
+			String arg3 = rules[i][4];
 
-		} else if (operation.equals("addNode")) {
+			// Choose which operation/method to execute
+			if (operation.equals("playground")) {
 
-			// Add XML nodes/elements
-			System.out.println("Add node to XML");
-			XMLCustomizerAddNode addNodeXML = new XMLCustomizerAddNode();
-			addNodeXML.executeAddNode(arg0, arg1, arg2, arg3, in, out);
+				// Playground only
+				// Can be removed on actual deployment
+				System.out.println("Playground");
+				XMLCustomizerPlayground playgroundXML = new XMLCustomizerPlayground();
+				playgroundXML.executePlayground(inputstreamtemp, outputstreamtemp);
 
-		} else if (operation.equals("deleteNode")) {
+			} else if (operation.equals("addNode")) {
 
-			// Delete XML nodes/elements
-			System.out.println("Delete node from XML");
-			XMLCustomizerDeleteNode deleteNodeXML = new XMLCustomizerDeleteNode();
-			deleteNodeXML.executeDeleteNode(arg0, arg1, arg2, arg3, in, out);
+				// Add XML nodes/elements
+				System.out.println("Add node to XML");
+				XMLCustomizerAddNode addNodeXML = new XMLCustomizerAddNode();
+				addNodeXML.executeAddNode(arg0, arg1, arg2, arg3, inputstreamtemp, outputstreamtemp);
 
-		} else if (operation.equals("replaceValue")) {
+			} else if (operation.equals("deleteNode")) {
 
-			// Replace XML nodes/elements values
-			System.out.println("Replacing value of XML segment");
-			XMLCustomizerReplaceValue replaceValueXML = new XMLCustomizerReplaceValue();
-			replaceValueXML.executeReplaceValue(arg0, arg1, arg2, arg3, in, out);
+				// Delete XML nodes/elements
+				System.out.println("Delete node from XML");
+				XMLCustomizerDeleteNode deleteNodeXML = new XMLCustomizerDeleteNode();
+				outputstreamtemp = deleteNodeXML.executeDeleteNode(arg0, arg1, arg2, arg3, inputstreamtemp);
 
-		} else {
+			} else if (operation.equals("replaceValue")) {
 
-			// No operation found, invalid operation parameter
-			// Console output only for debugging
-			// To be removed on actual deployment
-			System.out.println("Nothing to do");
+				// Replace XML nodes/elements values
+				System.out.println("Replacing value of XML segment");
+				XMLCustomizerReplaceValue replaceValueXML = new XMLCustomizerReplaceValue();
+				replaceValueXML.executeReplaceValue(arg0, arg1, arg2, arg3, inputstreamtemp, outputstreamtemp);
+
+			} else {
+
+				// No operation found, invalid operation parameter
+				// Console output only for debugging
+				// To be removed on actual deployment
+				System.out.println("Nothing to do");
+
+			}
+
+			streamptemp = outputstreamtemp.toString();
+			System.out.println("StreamTemp: " + i + " " + streamptemp);
+			inputstreamtemp = new ByteArrayInputStream(Charset.forName("UTF-16").encode(streamptemp).array());
 
 		}
+
+		out = outputstreamtemp;
 	}
 }

@@ -31,18 +31,19 @@ public class XMLCustomizerAddNode {
 		// Node selection and value to be assigned is based on the first, second
 		// and third argument
 
-		// arg0 is the node/element to be created
+		// arg0 is the parent node where the new element is to be inserted
 		// arg0 is an XPath expression
-		// arg1 is the value to be assigned
-		// arg1 is a constant
-		// arg1 is optional
-		// arg2 is a node/element where a value should be copied should arg1 is
-		// blank
-		// arg2 is an XPath expression
+		// arg1 is the name of the new element/node
+		// arg1 is a string
+		// arg2 is the value to be assigned to the new node
+		// arg2 is a constant
 		// arg2 is optional
+		// arg3 is a node/element where a value should be copied
+		// should arg2 is blank
+		// arg3 is an XPath expression
+		// arg3 is optional
 		// Either arg1 or arg2 should at least exist else the created node will
 		// be blank
-		// arg3 is not used
 
 		// Console output only for debugging
 		// To be removed on actual deployment
@@ -72,21 +73,21 @@ public class XMLCustomizerAddNode {
 			String newValue = "";
 
 			// Check where the value to assign will come from
-			if (!arg1.isEmpty()) {
+			if (!arg2.isEmpty()) {
 
 				// Using a constant value
-				newValue = arg1;
+				newValue = arg2;
 
 				// Console output only for debugging
 				// To be removed on actual deployment
 				System.out.println("New constant value: " + newValue);
 
-			} else if (!arg2.isEmpty()) {
+			} else if (!arg3.isEmpty()) {
 
 				// Copy value from an existing node
 
 				// Create XPath expression from arg2
-				XPathExpression copyXPath = xpath.compile(arg2);
+				XPathExpression copyXPath = xpath.compile(arg3);
 
 				// Parse XML document using XPath expression
 				// Assign matching node to copyNode
@@ -114,15 +115,36 @@ public class XMLCustomizerAddNode {
 			// Do addNode proper
 			//
 
-			// Create XPath expression from arg0
-			XPathExpression addXPath = xpath.compile(arg0);
+			// Create XPath expression from arg0 which is the parent node
+			XPathExpression parentXPath = xpath.compile(arg0);
 
 			// Parse XML document using XPath expression
-			// Assign matching node to copyNode
-			// Node addNode = (Node) addXPath.
+			// Assign matching node to parentNode
+			NodeList parentNode = (NodeList) parentXPath.evaluate(doc, XPathConstants.NODESET);
 
-			// addNode.appendChild(addNode);
-			// addNode.setTextContent(newValue);
+			// Create XML document for the new node to be inserted
+			Document addNodeDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+			addNodeDoc.appendChild(addNodeDoc.createElement(arg1));
+
+			// Create XPath expression from arg1 which is the child/new node
+			XPathExpression addXPath = xpath.compile("/" + arg1);
+
+			// Parse XML document using XPath expression
+			// Assign matching node to addNode
+			Node addNode = (Node) addXPath.evaluate(addNodeDoc, XPathConstants.NODE);
+
+			// Assign value to new node
+			addNode.setTextContent(newValue);
+
+			// Execute insertion of new node for all parent nodes
+			// parentNode is an array/list of parent nodes
+			// addNode is the node object of the child node to be inserted
+			for (int i = 0; i < parentNode.getLength(); i++) {
+
+				// Insert child node to parent node
+				parentNode.item(i).appendChild(doc.importNode(addNode, true));
+
+			}
 
 			// Create new Transformer with the XSLT
 			TransformerFactory tfactory = TransformerFactory.newInstance();
@@ -143,12 +165,14 @@ public class XMLCustomizerAddNode {
 
 			// Console output only for debugging
 			// To be removed on actual deployment
-			System.out.println("Deletion completed.");
+			System.out.println("Addition completed.");
 
 		} catch (Exception exception) {
+
 			// Console output only for debugging
 			// To be removed on actual deployment
 			System.out.println("Result: ERROR " + exception);
+
 		}
 
 	}
