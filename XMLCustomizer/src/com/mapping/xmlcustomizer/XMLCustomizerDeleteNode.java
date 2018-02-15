@@ -57,13 +57,13 @@ public class XMLCustomizerDeleteNode {
 
 			// Parse XML document using XPath expression
 			// List all matches in delNode
-			NodeList delNode = (NodeList) delXPath.evaluate(doc, XPathConstants.NODESET);
+			NodeList delNodes = (NodeList) delXPath.evaluate(doc, XPathConstants.NODESET);
 
 			// Execute deletion of nodes for all that matched the XPath
-			// delNode is an array/list of nodes that matched the XPath
-			for (int i = 0; i < delNode.getLength(); i++) {
+			// delNodes is an array/list of nodes that matched the XPath
+			for (int i = 0; i < delNodes.getLength(); i++) {
 
-				delNode.item(i).getParentNode().removeChild(delNode.item(i));
+				delNodes.item(i).getParentNode().removeChild(delNodes.item(i));
 
 			}
 

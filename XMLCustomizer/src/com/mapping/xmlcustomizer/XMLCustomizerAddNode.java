@@ -120,7 +120,7 @@ public class XMLCustomizerAddNode {
 
 			// Parse XML document using XPath expression
 			// Assign matching node to parentNode
-			NodeList parentNode = (NodeList) parentXPath.evaluate(doc, XPathConstants.NODESET);
+			NodeList parentNodes = (NodeList) parentXPath.evaluate(doc, XPathConstants.NODESET);
 			
 			// Create XML document for the new node to be inserted
 			Document addNodeDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
@@ -137,12 +137,12 @@ public class XMLCustomizerAddNode {
 			addNode.setTextContent(newValue);
 
 			// Execute insertion of new node for all parent nodes
-			// parentNode is an array/list of parent nodes
+			// parentNodes is an array/list of parent nodes
 			// addNode is the node object of the child node to be inserted
-			for (int i = 0; i < parentNode.getLength(); i++) {
+			for (int i = 0; i < parentNodes.getLength(); i++) {
 
 				// Insert child node to parent node
-				parentNode.item(i).appendChild(doc.importNode(addNode, true));
+				parentNodes.item(i).appendChild(doc.importNode(addNode, true));
 
 			}
 

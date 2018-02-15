@@ -5,5 +5,5 @@
 		
 		
 		
-	<Section><Level1><Level2><Level3/></Level2></Level1></Section></Body>
+	<Section><Level1><Level2><Level3><Item>Constant Value 1</Item><Item>Constant Value 2</Item><Item>Constant Value 3</Item><Item>Constant Value Replace</Item><Item>Constant Value 5</Item><Item>Constant Value 6</Item><Item>Constant Value 7</Item></Level3></Level2></Level1></Section></Body>
 </Message>

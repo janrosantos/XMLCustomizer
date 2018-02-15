@@ -1,15 +1,9 @@
 package com.mapping.xmlcustomizer;
 
-import java.io.*;
-import java.nio.charset.Charset;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import com.sap.aii.mapping.api.*;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 public class XMLCustomizer extends AbstractTransformation {
 
@@ -84,10 +78,8 @@ public class XMLCustomizer extends AbstractTransformation {
 
 					// Replace XML nodes/elements values
 					System.out.println("Replacing value of XML segment");
-					// XMLCustomizerReplaceValue replaceValueXML = new
-					// XMLCustomizerReplaceValue();
-					// replaceValueXML.executeReplaceValue(arg0, arg1, arg2,
-					// arg3, inputstreamtemp, outputstreamtemp);
+					XMLCustomizerReplaceValue replaceValueXML = new XMLCustomizerReplaceValue();
+					outputstreamtemp = replaceValueXML.executeReplaceValue(arg0, arg1, arg2, arg3, inputstreamtemp);
 
 				} else {
 
@@ -106,8 +98,12 @@ public class XMLCustomizer extends AbstractTransformation {
 
 			out.write(outputstreamtemp.toString().getBytes());
 
-		} catch (Exception e) {
-			// TODO: handle exception
+		} catch (Exception exception) {
+
+			// Console output only for debugging
+			// To be removed on actual deployment
+			System.out.println("Error encountered: " + exception);
+
 		}
 	}
 }

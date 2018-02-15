@@ -26,6 +26,8 @@ public class XMLCustomizerGetRules {
 				{ "addNode", "/Message/Body/Section/Level1/Level2/Level3", "Item", "Constant Value 4", arg3 },
 				{ "addNode", "/Message/Body/Section/Level1/Level2/Level3", "Item", "Constant Value 5", arg3 },
 				{ "addNode", "/Message/Body/Section/Level1/Level2/Level3", "Item", "Constant Value 6", arg3 },
-				{ "addNode", "/Message/Body/Section/Level1/Level2/Level3", "Item", "Constant Value 7", arg3 }, };
+				{ "addNode", "/Message/Body/Section/Level1/Level2/Level3", "Item", "Constant Value 7", arg3 },
+				{ "replaceValue", "/Message/Body/Section/Level1/Level2/Level3/Item[4]", "", "Constant Value Replace", arg3 }};
+		
 	}
 }
