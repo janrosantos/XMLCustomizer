@@ -1,8 +1,5 @@
 package com.mapping.xmlcustomizer;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import com.sap.aii.mapping.api.StreamTransformationException;
 
 public class XMLCustomizerGetRules {
@@ -13,11 +10,22 @@ public class XMLCustomizerGetRules {
 		// from value mapping cache in PI
 
 		String operation = "deleteNode";
-		String arg0 = "/Message/Body/Section[@id='2']/Item[Qualf='C']";
-		String arg1 = "Field3";
-		String arg2 = "TEST NEW VALUE";
-		String arg3 = "/Message/Body/Section[@id='2']/Item[Qualf='C']/Field1";
+		String arg0 = "/Message/Body/Section";
+		String arg1 = "";
+		String arg2 = "";
+		String arg3 = "";
 
-		return new String[][] { { operation, arg0, arg1, arg2, arg3 }, { operation, arg0, arg1, arg2, arg3 } };
+		return new String[][] { { operation, arg0, arg1, arg2, arg3 },
+				{ "addNode", "/Message/Body", "Section", arg2, arg3 },
+				{ "addNode", "/Message/Body/Section", "Level1", arg2, arg3 },
+				{ "addNode", "/Message/Body/Section/Level1", "Level2", arg2, arg3 },
+				{ "addNode", "/Message/Body/Section/Level1/Level2", "Level3", arg2, arg3 },
+				{ "addNode", "/Message/Body/Section/Level1/Level2/Level3", "Item", "Constant Value 1", arg3 },
+				{ "addNode", "/Message/Body/Section/Level1/Level2/Level3", "Item", "Constant Value 2", arg3 },
+				{ "addNode", "/Message/Body/Section/Level1/Level2/Level3", "Item", "Constant Value 3", arg3 },
+				{ "addNode", "/Message/Body/Section/Level1/Level2/Level3", "Item", "Constant Value 4", arg3 },
+				{ "addNode", "/Message/Body/Section/Level1/Level2/Level3", "Item", "Constant Value 5", arg3 },
+				{ "addNode", "/Message/Body/Section/Level1/Level2/Level3", "Item", "Constant Value 6", arg3 },
+				{ "addNode", "/Message/Body/Section/Level1/Level2/Level3", "Item", "Constant Value 7", arg3 }, };
 	}
 }

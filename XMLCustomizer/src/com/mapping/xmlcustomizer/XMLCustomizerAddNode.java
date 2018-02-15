@@ -1,9 +1,7 @@
 package com.mapping.xmlcustomizer;
 
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.StringReader;
 import java.io.StringWriter;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -14,16 +12,15 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
+import org.xml.sax.InputSource;
 import com.sap.aii.mapping.api.StreamTransformationException;
 
 public class XMLCustomizerAddNode {
 
-	public void executeAddNode(String arg0, String arg1, String arg2, String arg3, InputStream in, OutputStream out)
+	public StringBuilder executeAddNode(String arg0, String arg1, String arg2, String arg3, StringBuilder in)
 			throws StreamTransformationException {
 
 		// This method will execute addition of nodes on the XML document
@@ -49,16 +46,19 @@ public class XMLCustomizerAddNode {
 		// To be removed on actual deployment
 		System.out.println("Entering node addition subroutine.");
 
-		// Assign variables for the XML stream
-		InputStream inputstream = in;
-		OutputStream outputstream = out;
+		// Assign variables for the XML string
+		StringBuilder inputString = in;
+
+		// Create a variable for output XML string
+		// Initialize to ensure it is empty as start
+		StringBuilder outputString = new StringBuilder();
 
 		try {
 
-			// Create XML document from input stream
+			// Create XML document from input string
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document doc = builder.parse(inputstream);
+			Document doc = builder.parse(new InputSource(new StringReader(inputString.toString())));
 
 			// Create XPath expression
 			XPathFactory xPathfactory = XPathFactory.newInstance();
@@ -114,21 +114,21 @@ public class XMLCustomizerAddNode {
 			//
 			// Do addNode proper
 			//
-
+			
 			// Create XPath expression from arg0 which is the parent node
 			XPathExpression parentXPath = xpath.compile(arg0);
 
 			// Parse XML document using XPath expression
 			// Assign matching node to parentNode
 			NodeList parentNode = (NodeList) parentXPath.evaluate(doc, XPathConstants.NODESET);
-
+			
 			// Create XML document for the new node to be inserted
 			Document addNodeDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 			addNodeDoc.appendChild(addNodeDoc.createElement(arg1));
-
+			
 			// Create XPath expression from arg1 which is the child/new node
 			XPathExpression addXPath = xpath.compile("/" + arg1);
-
+			
 			// Parse XML document using XPath expression
 			// Assign matching node to addNode
 			Node addNode = (Node) addXPath.evaluate(addNodeDoc, XPathConstants.NODE);
@@ -150,7 +150,7 @@ public class XMLCustomizerAddNode {
 			TransformerFactory tfactory = TransformerFactory.newInstance();
 			Transformer transformer = tfactory.newTransformer();
 
-			// Create a temporary variable for transformed XML storage
+			// Create a temporary variable for transformed XML string storage
 			StringWriter stringWriter = new StringWriter();
 
 			// Assign transformed XML document to a temporary variable
@@ -160,8 +160,8 @@ public class XMLCustomizerAddNode {
 			// To be removed on actual deployment
 			System.out.println(stringWriter.toString());
 
-			// Export modified XML document to output stream
-			outputstream.write(stringWriter.toString().getBytes());
+			// Write transformed XML string to output variable
+			outputString.append(stringWriter.toString());
 
 			// Console output only for debugging
 			// To be removed on actual deployment
@@ -171,9 +171,12 @@ public class XMLCustomizerAddNode {
 
 			// Console output only for debugging
 			// To be removed on actual deployment
-			System.out.println("Result: ERROR " + exception);
+			System.out.println("Error encountered: " + exception);
 
 		}
+
+		// Return output variable
+		return outputString;
 
 	}
 
