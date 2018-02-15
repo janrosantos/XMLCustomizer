@@ -1,6 +1,5 @@
 package com.mapping.xmlcustomizer;
 
-
 import java.io.InputStream;
 import java.io.OutputStream;
 import com.sap.aii.mapping.api.*;
@@ -50,17 +49,7 @@ public class XMLCustomizer extends AbstractTransformation {
 				String arg3 = rules[i][4];
 
 				// Choose which operation/method to execute
-				if (operation.equals("playground")) {
-
-					// Playground only
-					// Can be removed on actual deployment
-					System.out.println("Playground");
-					// XMLCustomizerPlayground playgroundXML = new
-					// XMLCustomizerPlayground();
-					// playgroundXML.executePlayground(inputstreamtemp,
-					// outputstreamtemp);
-
-				} else if (operation.equals("addNode")) {
+				if (operation.equals("addNode")) {
 
 					// Add XML nodes/elements
 					System.out.println("Add node to XML");
