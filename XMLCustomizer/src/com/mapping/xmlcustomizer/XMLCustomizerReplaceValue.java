@@ -19,8 +19,8 @@ import org.xml.sax.InputSource;
 import com.sap.aii.mapping.api.StreamTransformationException;
 
 public class XMLCustomizerReplaceValue {
-	public StringBuilder executeReplaceValue(String arg0, String arg1, String arg2, String arg3, StringBuilder in)
-			throws StreamTransformationException {
+	public StringBuilder executeReplaceValue(String valueSource, String arg0, String arg1, String arg2, String arg3,
+			StringBuilder in) throws StreamTransformationException {
 
 		// This method will execute value replacement of nodes on the XML
 		// document passed via the input stream
@@ -71,42 +71,61 @@ public class XMLCustomizerReplaceValue {
 			String newValue = "";
 
 			// Check where the value to assign will come from
-			if (!arg2.isEmpty()) {
+			if (valueSource.equals("replaceValueConstant")) {
 
-				// Using a constant value
-				newValue = arg2;
+				if (arg2.isEmpty()) {
 
-				// Console output only for debugging
-				// To be removed on actual deployment
-				System.out.println("New constant value: " + newValue);
+					// arg2 is empty
+					// Assigning blank value
+					newValue = "";
 
-			} else if (!arg3.isEmpty()) {
+					// Console output only for debugging
+					// To be removed on actual deployment
+					System.out.println("Assigning blank value.");
 
-				// Copy value from an existing node
+				} else {
 
-				// Create XPath expression from arg2
-				XPathExpression copyXPath = xpath.compile(arg3);
+					// Using a constant value
+					newValue = arg2;
 
-				// Parse XML document using XPath expression
-				// Assign matching node to copyNode
-				Node copyNode = (Node) copyXPath.evaluate(doc, XPathConstants.NODE);
+					// Console output only for debugging
+					// To be removed on actual deployment
+					System.out.println("New constant value: " + newValue);
 
-				// Get text content of copyNode
-				newValue = copyNode.getTextContent();
+				}
 
-				// Console output only for debugging
-				// To be removed on actual deployment
-				System.out.println("New value from existing node: " + newValue);
+			} else if (valueSource.equals("replaceValueXPath")) {
 
-			} else {
+				if (arg2.isEmpty()) {
 
-				// Both arguments are empty
-				// Assigning blank value
-				newValue = "";
+					// arg2 is empty
+					// Assigning blank value
+					newValue = "";
 
-				// Console output only for debugging
-				// To be removed on actual deployment
-				System.out.println("Assigning blank value.");
+					// Console output only for debugging
+					// To be removed on actual deployment
+					System.out.println("Assigning blank value.");
+
+				} else {
+
+					// Copy value from an existing node
+
+					// Create XPath expression from arg2
+					XPathExpression copyXPath = xpath.compile(arg3);
+
+					// Parse XML document using XPath expression
+					// Assign matching node to copyNode
+					Node copyNode = (Node) copyXPath.evaluate(doc, XPathConstants.NODE);
+
+					// Get text content of copyNode
+					newValue = copyNode.getTextContent();
+
+					// Console output only for debugging
+					// To be removed on actual deployment
+					System.out.println("New value from existing node: " + newValue);
+
+				}
+
 			}
 
 			//

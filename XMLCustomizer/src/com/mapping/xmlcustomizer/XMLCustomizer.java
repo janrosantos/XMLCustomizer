@@ -2,7 +2,10 @@ package com.mapping.xmlcustomizer;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import com.mapping.xmlcustomizer.getrules.XCgetRules;
 import com.sap.aii.mapping.api.*;
+import com.sap.aii.mappingtool.tf7.rt.Container;
 
 public class XMLCustomizer extends AbstractTransformation {
 
@@ -22,6 +25,16 @@ public class XMLCustomizer extends AbstractTransformation {
 
 		try {
 
+			Container container = null;
+
+			// Execute method to get rule parameters from PI cache
+			// XMLCustomizerGetRules getRules = new XMLCustomizerGetRules();
+			// String[][] rules = getRules.executeGetRules();
+
+			// Execute method to get rule parameters from PI cache
+			XCgetRules getRules = new XCgetRules();
+			String[][] XCrules = getRules.executeXCgetRules(in, container);
+
 			StringBuilder inputstreamtemp = new StringBuilder();
 
 			byte[] buffer = new byte[2048];
@@ -34,27 +47,23 @@ public class XMLCustomizer extends AbstractTransformation {
 			StringBuilder outputstreamtemp = new StringBuilder();
 			String streamptemp = in.toString();
 
-			// Execute method to get rule parameters from PI cache
-			XMLCustomizerGetRules getRules = new XMLCustomizerGetRules();
-			String[][] rules = getRules.executeGetRules();
-
 			// Loop though all the rules found
-			for (int i = 0; i < rules.length; i++) {
+			for (int i = 0; i < XCrules.length; i++) {
 
 				// Assign output for getRules method to individual variables
-				String operation = rules[i][0];
-				String arg0 = rules[i][1];
-				String arg1 = rules[i][2];
-				String arg2 = rules[i][3];
-				String arg3 = rules[i][4];
+				String operation = XCrules[i][0];
+				String arg0 = XCrules[i][1];
+				String arg1 = XCrules[i][2];
+				String arg2 = XCrules[i][3];
+				String arg3 = XCrules[i][4];
 
 				// Choose which operation/method to execute
-				if (operation.equals("addNode")) {
+				if ((operation.equals("addNodeConstant")) || (operation.equals("addNodeXPath"))) {
 
 					// Add XML nodes/elements
 					System.out.println("Add node to XML");
 					XMLCustomizerAddNode addNodeXML = new XMLCustomizerAddNode();
-					outputstreamtemp = addNodeXML.executeAddNode(arg0, arg1, arg2, arg3, inputstreamtemp);
+					outputstreamtemp = addNodeXML.executeAddNode(operation, arg0, arg1, arg2, arg3, inputstreamtemp);
 
 				} else if (operation.equals("deleteNode")) {
 
@@ -63,12 +72,13 @@ public class XMLCustomizer extends AbstractTransformation {
 					XMLCustomizerDeleteNode deleteNodeXML = new XMLCustomizerDeleteNode();
 					outputstreamtemp = deleteNodeXML.executeDeleteNode(arg0, arg1, arg2, arg3, inputstreamtemp);
 
-				} else if (operation.equals("replaceValue")) {
+				} else if ((operation.equals("replaceValueConstant")) || (operation.equals("replaceValueXPath"))) {
 
 					// Replace XML nodes/elements values
 					System.out.println("Replacing value of XML segment");
 					XMLCustomizerReplaceValue replaceValueXML = new XMLCustomizerReplaceValue();
-					outputstreamtemp = replaceValueXML.executeReplaceValue(arg0, arg1, arg2, arg3, inputstreamtemp);
+					outputstreamtemp = replaceValueXML.executeReplaceValue(operation, arg0, arg1, arg2, arg3,
+							inputstreamtemp);
 
 				} else {
 

@@ -20,8 +20,8 @@ import com.sap.aii.mapping.api.StreamTransformationException;
 
 public class XMLCustomizerAddNode {
 
-	public StringBuilder executeAddNode(String arg0, String arg1, String arg2, String arg3, StringBuilder in)
-			throws StreamTransformationException {
+	public StringBuilder executeAddNode(String addSource, String arg0, String arg1, String arg2, String arg3,
+			StringBuilder in) throws StreamTransformationException {
 
 		// This method will execute addition of nodes on the XML document
 		// passed via the input stream
@@ -73,62 +73,80 @@ public class XMLCustomizerAddNode {
 			String newValue = "";
 
 			// Check where the value to assign will come from
-			if (!arg2.isEmpty()) {
+			if (addSource.equals("addNodeConstant")) {
 
-				// Using a constant value
-				newValue = arg2;
+				if (arg2.isEmpty()) {
 
-				// Console output only for debugging
-				// To be removed on actual deployment
-				System.out.println("New constant value: " + newValue);
+					// arg2 is empty
+					// Assigning blank value
+					newValue = "";
 
-			} else if (!arg3.isEmpty()) {
+					// Console output only for debugging
+					// To be removed on actual deployment
+					System.out.println("Assigning blank value.");
+
+				} else {
+
+					// Using a constant value
+					newValue = arg2;
+
+					// Console output only for debugging
+					// To be removed on actual deployment
+					System.out.println("New constant value: " + newValue);
+
+				}
+
+			} else if (addSource.equals("addNodeXPath")) {
 
 				// Copy value from an existing node
 
-				// Create XPath expression from arg2
-				XPathExpression copyXPath = xpath.compile(arg3);
+				if (arg2.isEmpty()) {
 
-				// Parse XML document using XPath expression
-				// Assign matching node to copyNode
-				Node copyNode = (Node) copyXPath.evaluate(doc, XPathConstants.NODE);
+					// arg2 is empty
+					// Assigning blank value
+					newValue = "";
 
-				// Get text content of copyNode
-				newValue = copyNode.getTextContent();
+					// Console output only for debugging
+					// To be removed on actual deployment
+					System.out.println("Assigning blank value.");
 
-				// Console output only for debugging
-				// To be removed on actual deployment
-				System.out.println("New value from existing node: " + newValue);
+				} else {
 
-			} else {
+					// Create XPath expression from arg2
+					XPathExpression copyXPath = xpath.compile(arg3);
 
-				// Both arguments are empty
-				// Assigning blank value
-				newValue = "";
+					// Parse XML document using XPath expression
+					// Assign matching node to copyNode
+					Node copyNode = (Node) copyXPath.evaluate(doc, XPathConstants.NODE);
 
-				// Console output only for debugging
-				// To be removed on actual deployment
-				System.out.println("Assigning blank value.");
+					// Get text content of copyNode
+					newValue = copyNode.getTextContent();
+
+					// Console output only for debugging
+					// To be removed on actual deployment
+					System.out.println("New value from existing node: " + newValue);
+
+				}
 			}
 
 			//
 			// Do addNode proper
 			//
-			
+
 			// Create XPath expression from arg0 which is the parent node
 			XPathExpression parentXPath = xpath.compile(arg0);
 
 			// Parse XML document using XPath expression
 			// Assign matching node to parentNode
 			NodeList parentNodes = (NodeList) parentXPath.evaluate(doc, XPathConstants.NODESET);
-			
+
 			// Create XML document for the new node to be inserted
 			Document addNodeDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 			addNodeDoc.appendChild(addNodeDoc.createElement(arg1));
-			
+
 			// Create XPath expression from arg1 which is the child/new node
 			XPathExpression addXPath = xpath.compile("/" + arg1);
-			
+
 			// Parse XML document using XPath expression
 			// Assign matching node to addNode
 			Node addNode = (Node) addXPath.evaluate(addNodeDoc, XPathConstants.NODE);

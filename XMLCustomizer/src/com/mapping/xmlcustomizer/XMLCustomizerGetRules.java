@@ -5,6 +5,8 @@ import com.sap.aii.mapping.value.api.IFIdentifier;
 import com.sap.aii.mapping.value.api.ValueMappingException;
 import com.sap.aii.mapping.value.api.XIVMFactory;
 import com.sap.aii.mapping.value.api.XIVMService;
+import com.sap.aii.mapping.value.api.*;
+import com.sap.aii.mapping.value.*;
 
 public class XMLCustomizerGetRules {
 
@@ -20,22 +22,22 @@ public class XMLCustomizerGetRules {
 		String receiverScheme = "VMR_Target";
 		String context = "";
 
-		try {
-
-			IFIdentifier vmsetsrc = XIVMFactory.newIdentifier("http://janro.com/vmrset", senderAgency, senderScheme);
-			IFIdentifier vmsetdst = XIVMFactory
-					.newIdentifier("http://janro.com/vmrset", receiverAgency, receiverScheme);
-			String vmset = XIVMService.executeMapping(vmsetsrc, vmsetdst, "0.0.VMRSET");
-			context = "http://janro.com/vmr/" + vmset;
-
-		} catch (ValueMappingException e) {
-
-			System.out.println("VM lookup failed.");
-
-		}
+//		try {
+//
+//			IFIdentifier vmsetsrc = XIVMFactory.newIdentifier("http://janro.com/vmrset", senderAgency, senderScheme);
+//			IFIdentifier vmsetdst = XIVMFactory
+//					.newIdentifier("http://janro.com/vmrset", receiverAgency, receiverScheme);
+//			String vmset = XIVMService.executeMapping(vmsetsrc, vmsetdst, "0.0.VMRSET");
+//			context = "http://janro.com/vmr/" + vmset;
+//
+//		} catch (ValueMappingException e) {
+//
+//			System.out.println("VM lookup failed.");
+//
+//		}
 
 		String operation = "deleteNode";
-		String arg0 = "/Message/Body/Section";
+		String arg0 = "//Body/Section";
 		String arg1 = "";
 		String arg2 = "";
 		String arg3 = "";
@@ -48,7 +50,7 @@ public class XMLCustomizerGetRules {
 				{ "addNode", "/Message/Body/Section/Level1/Level2", "Level3", arg2, arg3 },
 				{ "addNode", "/Message/Body/Section/Level1/Level2/Level3", "Item", "Constant Value 1", arg3 },
 				{ "addNode", "/Message/Body/Section/Level1/Level2/Level3", "Item", "Constant Value 2", arg3 },
-				{ "addNode", "/Message/Body/Section/Level1/Level2/Level3", "Item", "Constant Value 3", arg3 },
+				{ "addNode", "//Level2/Level3", "Item", "Constant Value 3", arg3 },
 				{ "addNode", "/Message/Body/Section/Level1/Level2/Level3", "Item", "Constant Value 4", arg3 },
 				{ "addNode", "/Message/Body/Section/Level1/Level2/Level3", "Item", "Constant Value 5", arg3 },
 				{ "addNode", "/Message/Body/Section/Level1/Level2/Level3", "Item", "Constant Value 6", arg3 },
