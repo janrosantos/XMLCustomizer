@@ -1,23 +1,17 @@
 package com.mapping.xmlcustomizer.getrules;
 
-import java.util.Map;
-
-import com.sap.aii.mapping.api.AbstractTrace;
-import com.sap.aii.mapping.api.StreamTransformationConstants;
 import com.sap.aii.mapping.api.StreamTransformationException;
 import com.sap.aii.mapping.value.api.IFIdentifier;
 import com.sap.aii.mapping.value.api.ValueMappingException;
 import com.sap.aii.mapping.value.api.XIVMFactory;
 import com.sap.aii.mapping.value.api.XIVMService;
-import com.sap.aii.mappingtool.tf7.rt.Container;
-import com.sap.aii.mappingtool.tf7.rt.GlobalContainer;
 import com.sap.aii.mappingtool.tf7.rt.ResultList;
 
 public class XCgetVM {
 
-	public String executeGetVM(String table, int returnval, Container container) throws StreamTransformationException {
+	public String executeGetVM(String table, int returnval) throws StreamTransformationException {
 
-		AbstractTrace trace = container.getTrace();
+//		AbstractTrace trace = container.getTrace();
 
 		String delimiter = "~@#~";
 		String senderAgency = "VMR_Key";
@@ -46,24 +40,24 @@ public class XCgetVM {
 		String gcvmkeygc = "";
 		String gcvmkeygg = "";
 
-		GlobalContainer globalContainer;
-		globalContainer = container.getGlobalContainer();
-		gcvmkeypc = "" + globalContainer.getParameter("vmkeypc");
-		gcvmkeypg = "" + globalContainer.getParameter("vmkeypg");
-		gcvmkeygc = "" + globalContainer.getParameter("vmkeygc");
-		gcvmkeygg = "" + globalContainer.getParameter("vmkeygg");
+//		GlobalContainer globalContainer;
+//		globalContainer = container.getGlobalContainer();
+//		gcvmkeypc = "" + globalContainer.getParameter("vmkeypc");
+//		gcvmkeypg = "" + globalContainer.getParameter("vmkeypg");
+//		gcvmkeygc = "" + globalContainer.getParameter("vmkeygc");
+//		gcvmkeygg = "" + globalContainer.getParameter("vmkeygg");
 
-		try {
-			if (gcvmkeypc.equals("null") || gcvmkeypc.length() == 0) {
-
-				java.util.Map param = (Map) container.getInputParameters();
-				gcvmkeypc = (String) param.get(StreamTransformationConstants.CONVERSATION_ID);
-			}
-		} catch (Exception e) {
-
-			java.util.Map param = (Map) container.getInputParameters();
-			gcvmkeypc = (String) param.get(StreamTransformationConstants.CONVERSATION_ID);
-		}
+//		try {
+//			if (gcvmkeypc.equals("null") || gcvmkeypc.length() == 0) {
+//
+//				java.util.Map param = (Map) container.getInputParameters();
+//				gcvmkeypc = (String) param.get(StreamTransformationConstants.CONVERSATION_ID);
+//			}
+//		} catch (Exception e) {
+//
+//			java.util.Map param = (Map) container.getInputParameters();
+//			gcvmkeypc = (String) param.get(StreamTransformationConstants.CONVERSATION_ID);
+//		}
 
 		IFIdentifier src = XIVMFactory.newIdentifier(context, senderAgency, senderScheme);
 		IFIdentifier dst = XIVMFactory.newIdentifier(context, receiverAgency, receiverScheme);
@@ -82,22 +76,22 @@ public class XCgetVM {
 
 				if ((returnval > pc.length) || (returnval < 1)) {
 
-					trace.addInfo("VM Key PC: " + vmkeypc);
+//					trace.addInfo("VM Key PC: " + vmkeypc);
 					res = "";
 
 				} else {
 
-					trace.addInfo("VM Key PC: " + vmkeypc);
+//					trace.addInfo("VM Key PC: " + vmkeypc);
 					res = pc[returnval - 1];
 
 				}
 
-				trace.addInfo("Get Value 0: " + res);
+//				trace.addInfo("Get Value 0: " + res);
 				result.addValue(res);
 
 			} catch (ValueMappingException epc) {
 
-				trace.addInfo("VM Key PC for Table " + table + " not found. Trying VM Key PG.");
+//				trace.addInfo("VM Key PC for Table " + table + " not found. Trying VM Key PG.");
 
 				try {
 
@@ -108,22 +102,22 @@ public class XCgetVM {
 
 					if ((returnval > pg.length) || (returnval < 1)) {
 
-						trace.addInfo("VM Key PG: " + vmkeypg);
+//						trace.addInfo("VM Key PG: " + vmkeypg);
 						res = "";
 
 					} else {
 
-						trace.addInfo("VM Key PG: " + vmkeypg);
+//						trace.addInfo("VM Key PG: " + vmkeypg);
 						res = pg[returnval - 1];
 
 					}
 
-					trace.addInfo("Get Value 0: " + res);
+//					trace.addInfo("Get Value 0: " + res);
 					result.addValue(res);
 
 				} catch (ValueMappingException epg) {
 
-					trace.addInfo("VM Key PG for Table " + table + " not found. Trying VM Key GC.");
+//					trace.addInfo("VM Key PG for Table " + table + " not found. Trying VM Key GC.");
 
 					try {
 
@@ -134,22 +128,22 @@ public class XCgetVM {
 
 						if ((returnval > gc.length) || (returnval < 1)) {
 
-							trace.addInfo("VM Key GC: " + vmkeygc);
+//							trace.addInfo("VM Key GC: " + vmkeygc);
 							res = "";
 
 						} else {
 
-							trace.addInfo("VM Key GC: " + vmkeygc);
+//							trace.addInfo("VM Key GC: " + vmkeygc);
 							res = gc[returnval - 1];
 
 						}
 
-						trace.addInfo("Get Value 0: " + res);
+//						trace.addInfo("Get Value 0: " + res);
 						result.addValue(res);
 
 					} catch (ValueMappingException egc) {
 
-						trace.addInfo("VM Key GC for Table " + table + " not found. Trying VM Key GG.");
+//						trace.addInfo("VM Key GC for Table " + table + " not found. Trying VM Key GG.");
 
 						try {
 
@@ -161,21 +155,21 @@ public class XCgetVM {
 
 							if ((returnval > gg.length) || (returnval < 1)) {
 
-								trace.addInfo("VM Key GG: " + vmkeygg);
+//								trace.addInfo("VM Key GG: " + vmkeygg);
 								res = "";
 
 							} else {
 
-								trace.addInfo("VM Key GG: " + vmkeygg);
+//								trace.addInfo("VM Key GG: " + vmkeygg);
 								res = gg[returnval - 1];
 							}
 
-							trace.addInfo("Get Value 0: " + res);
+//							trace.addInfo("Get Value 0: " + res);
 							result.addValue(res);
 
 						} catch (ValueMappingException egg) {
 
-							trace.addInfo("VM Key GG for Table " + table + "  not found. Conversion failed. " + egg);
+//							trace.addInfo("VM Key GG for Table " + table + "  not found. Conversion failed. " + egg);
 							result.addValue("");
 
 						}
@@ -188,7 +182,7 @@ public class XCgetVM {
 
 		} else {
 
-			trace.addInfo("Map not initialized. Aborting conversion.");
+//			trace.addInfo("Map not initialized. Aborting conversion.");
 			result.addValue("");
 
 		}

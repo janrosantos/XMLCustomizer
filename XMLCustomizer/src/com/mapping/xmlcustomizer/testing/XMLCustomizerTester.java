@@ -18,7 +18,7 @@ public class XMLCustomizerTester {
 		try {
 
 			// Read/assign input and output XML files
-			InputStream in = new FileInputStream(new File("in.xml"));
+			InputStream in = new FileInputStream(new File("inIDOC.xml"));
 			OutputStream out = new FileOutputStream(new File("out.xml"));
 
 			// Execute java map

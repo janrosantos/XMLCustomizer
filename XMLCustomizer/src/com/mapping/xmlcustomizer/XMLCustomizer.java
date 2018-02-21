@@ -4,8 +4,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import com.mapping.xmlcustomizer.getrules.XCgetRules;
-import com.sap.aii.mapping.api.*;
-import com.sap.aii.mappingtool.tf7.rt.Container;
+import com.sap.aii.mapping.api.AbstractTransformation;
+import com.sap.aii.mapping.api.StreamTransformationException;
+import com.sap.aii.mapping.api.TransformationInput;
+import com.sap.aii.mapping.api.TransformationOutput;
 
 public class XMLCustomizer extends AbstractTransformation {
 
@@ -25,15 +27,7 @@ public class XMLCustomizer extends AbstractTransformation {
 
 		try {
 
-			Container container = null;
-
-			// Execute method to get rule parameters from PI cache
-			// XMLCustomizerGetRules getRules = new XMLCustomizerGetRules();
-			// String[][] rules = getRules.executeGetRules();
-
-			// Execute method to get rule parameters from PI cache
-			XCgetRules getRules = new XCgetRules();
-			String[][] XCrules = getRules.executeXCgetRules(in, container);
+			getTrace().addInfo("Starting XML Customizer");
 
 			StringBuilder inputstreamtemp = new StringBuilder();
 
@@ -42,11 +36,22 @@ public class XMLCustomizer extends AbstractTransformation {
 			while ((length = in.read(buffer)) != -1) {
 				inputstreamtemp.append(new String(buffer, 0, length));
 			}
+
 			in.close();
 
 			StringBuilder outputstreamtemp = new StringBuilder();
 			String streamptemp = in.toString();
 
+			// Execute method to get rule parameters from PI cache
+			// XMLCustomizerGetRules getRules = new XMLCustomizerGetRules();
+			// String[][] XCrules = getRules.executeGetRules();
+
+			// Execute method to get rule parameters from PI cache
+			XCgetRules getRules = new XCgetRules();
+			String[][] XCrules = getRules.executeXCgetRules(inputstreamtemp, getTrace());
+			getTrace().addInfo("Rules acquired from PI cache: " + XCrules.length);
+
+			System.out.println("ZZZ" + XCrules.length);
 			// Loop though all the rules found
 			for (int i = 0; i < XCrules.length; i++) {
 
@@ -101,7 +106,7 @@ public class XMLCustomizer extends AbstractTransformation {
 
 			// Console output only for debugging
 			// To be removed on actual deployment
-			System.out.println("Error encountered: " + exception);
+			System.out.println("Class XMLCustomizer - error encountered: " + exception);
 
 		}
 	}
