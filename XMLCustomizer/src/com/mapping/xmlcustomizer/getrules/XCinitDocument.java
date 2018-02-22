@@ -1,6 +1,5 @@
 package com.mapping.xmlcustomizer.getrules;
 
-import com.mapping.xmlcustomizer.XMLCustomizer;
 import com.sap.aii.mapping.api.AbstractTrace;
 import com.sap.aii.mapping.api.StreamTransformationException;
 import com.sap.aii.mapping.value.api.IFIdentifier;
@@ -8,11 +7,19 @@ import com.sap.aii.mapping.value.api.ValueMappingException;
 import com.sap.aii.mapping.value.api.XIVMFactory;
 import com.sap.aii.mapping.value.api.XIVMService;
 
-public class XCinitIDOC extends XMLCustomizer {
+public class XCinitDocument {
 
-	public String[] executeXCinitIDOC(String table, String direction, String standard, String message, String version,
-			String partnertype, String partner, String company, AbstractTrace trace)
+	public String[] executeXCinitDocuement(String[] initDocKey, AbstractTrace trace)
 			throws StreamTransformationException {
+
+		String table = initDocKey[0];
+		String direction = initDocKey[1];
+		String standard = initDocKey[2];
+		String message = initDocKey[3];
+		String version = initDocKey[4];
+		String partnertype = initDocKey[5];
+		String partner = initDocKey[6];
+		String company = initDocKey[7];
 
 		String delimiter = "~@#~";
 		String senderAgency = "VMR_Key";
@@ -20,9 +27,9 @@ public class XCinitIDOC extends XMLCustomizer {
 		String receiverAgency = "VMR_Return";
 		String receiverScheme = "VMR_Target";
 		String context = "";
-		
-		trace.addInfo("Initialize IDOC VM Keys");
-		
+
+		trace.addInfo("Class XCinitDocument: Initialize document VM keys");
+
 		try {
 
 			IFIdentifier vmsetsrc = XIVMFactory.newIdentifier("http://janro.com/vmrset", senderAgency, senderScheme);
@@ -30,11 +37,11 @@ public class XCinitIDOC extends XMLCustomizer {
 					.newIdentifier("http://janro.com/vmrset", receiverAgency, receiverScheme);
 			String vmset = XIVMService.executeMapping(vmsetsrc, vmsetdst, "0.0.VMRSET");
 			context = "http://janro.com/vmr/" + vmset;
-			trace.addInfo("VMR Set: " + context);
+			trace.addInfo("Class XCinitDocument: VMR Set: " + context);
 
 		} catch (ValueMappingException e) {
 
-			trace.addInfo("No ValueMapping found for " + "0.0.VMRSET");
+			trace.addInfo("Class XCinitDocument: No ValueMapping found for " + "0.0.VMRSET");
 			return new String[] { "", "", "", "" };
 
 		}
@@ -67,15 +74,15 @@ public class XCinitIDOC extends XMLCustomizer {
 			String vmkeygg = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
 					+ "GG" + delimiter + delimiter;
 
-//			globalContainer.setParameter("vmkeypc", vmkeypc);
-//			globalContainer.setParameter("vmkeypg", vmkeypg);
-//			globalContainer.setParameter("vmkeygc", vmkeygc);
-//			globalContainer.setParameter("vmkeygg", vmkeygg);
+			// globalContainer.setParameter("vmkeypc", vmkeypc);
+			// globalContainer.setParameter("vmkeypg", vmkeypg);
+			// globalContainer.setParameter("vmkeygc", vmkeygc);
+			// globalContainer.setParameter("vmkeygg", vmkeygg);
 
-//			trace.addInfo("Initialize VM Key PC: " + vmkeypc);
-//			trace.addInfo("Initialize VM Key PG: " + vmkeypg);
-//			trace.addInfo("Initialize VM Key GC: " + vmkeygc);
-//			trace.addInfo("Initialize VM Key GG: " + vmkeygg);
+			trace.addInfo("Class XCinitDocument: Initialize VM Key PC - " + vmkeypc);
+			trace.addInfo("Class XCinitDocument: Initialize VM Key PG - " + vmkeypg);
+			trace.addInfo("Class XCinitDocument: Initialize VM Key GC - " + vmkeygc);
+			trace.addInfo("Class XCinitDocument: Initialize VM Key GG - " + vmkeygg);
 
 			return new String[] { vmkeypc, vmkeypg, vmkeygc, vmkeygg };
 
@@ -83,7 +90,7 @@ public class XCinitIDOC extends XMLCustomizer {
 
 			try {
 
-//				trace.addInfo("No VM Key PC found for " + vmkey + ". Trying VM Key PG.");
+				trace.addInfo("No VM Key PC found for " + vmkey + ". Trying VM Key PG.");
 
 				vmkey = table + delimiter + direction + delimiter + standard + delimiter + message + delimiter
 						+ version + delimiter + delimiter + delimiter + delimiter + partnertype + delimiter + partner
@@ -104,25 +111,25 @@ public class XCinitIDOC extends XMLCustomizer {
 				String vmkeygg = direction + delimiter + standard + delimiter + message + delimiter + version
 						+ delimiter + "GG" + delimiter + delimiter;
 
-//				globalContainer.setParameter("vmkeypc", vmkeypc);
-//				globalContainer.setParameter("vmkeypg", vmkeypg);
-//				globalContainer.setParameter("vmkeygc", vmkeygc);
-//				globalContainer.setParameter("vmkeygg", vmkeygg);
+				// globalContainer.setParameter("vmkeypc", vmkeypc);
+				// globalContainer.setParameter("vmkeypg", vmkeypg);
+				// globalContainer.setParameter("vmkeygc", vmkeygc);
+				// globalContainer.setParameter("vmkeygg", vmkeygg);
 
-//				trace.addInfo("Initialize VM Key PC: Not possible.");
-//				trace.addInfo("Initialize VM Key PG: " + vmkeypg);
-//				trace.addInfo("Initialize VM Key GC: " + vmkeygc);
-//				trace.addInfo("Initialize VM Key GG: " + vmkeygg);
+				trace.addInfo("Class XCinitDocument: Initialize VM Key PC not possible.");
+				trace.addInfo("Class XCinitDocument: Initialize VM Key PG - " + vmkeypg);
+				trace.addInfo("Class XCinitDocument: Initialize VM Key GC - " + vmkeygc);
+				trace.addInfo("Class XCinitDocument: Initialize VM Key GG - " + vmkeygg);
 
 				return new String[] { vmkeypc, vmkeypg, vmkeygc, vmkeygg };
 
 			} catch (ValueMappingException epg) {
 
-//				globalContainer.setParameter("vmkeypc", "");
-//				globalContainer.setParameter("vmkeypg", "");
-//				globalContainer.setParameter("vmkeygc", "");
-//				globalContainer.setParameter("vmkeygg", "");
-//				trace.addInfo("Failed to initialize map with VM Key: " + vmkey);
+				// globalContainer.setParameter("vmkeypc", "");
+				// globalContainer.setParameter("vmkeypg", "");
+				// globalContainer.setParameter("vmkeygc", "");
+				// globalContainer.setParameter("vmkeygg", "");
+				trace.addInfo("Class XCinitDocument: Failed to initialize map with VM Key - " + vmkey);
 
 				return new String[] { "", "", "", "" };
 

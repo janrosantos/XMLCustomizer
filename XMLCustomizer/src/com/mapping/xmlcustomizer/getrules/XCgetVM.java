@@ -1,17 +1,18 @@
 package com.mapping.xmlcustomizer.getrules;
 
+import com.mapping.xmlcustomizer.XMLCustomizer;
+import com.sap.aii.mapping.api.AbstractTrace;
 import com.sap.aii.mapping.api.StreamTransformationException;
 import com.sap.aii.mapping.value.api.IFIdentifier;
 import com.sap.aii.mapping.value.api.ValueMappingException;
 import com.sap.aii.mapping.value.api.XIVMFactory;
 import com.sap.aii.mapping.value.api.XIVMService;
-import com.sap.aii.mappingtool.tf7.rt.ResultList;
 
-public class XCgetVM {
+public class XCgetVM extends XMLCustomizer {
 
-	public String executeGetVM(String table, int returnval) throws StreamTransformationException {
+	public String executeGetVM(String table, String[] initVMKey, int returnval, AbstractTrace trace) throws StreamTransformationException {
 
-//		AbstractTrace trace = container.getTrace();
+		trace.addInfo("Class XCgetVM: Excuting rule acquisition from PI cache");
 
 		String delimiter = "~@#~";
 		String senderAgency = "VMR_Key";
@@ -19,7 +20,6 @@ public class XCgetVM {
 		String receiverAgency = "VMR_Return";
 		String receiverScheme = "VMR_Target";
 		String context = "";
-		ResultList result = null;
 
 		try {
 
@@ -29,35 +29,37 @@ public class XCgetVM {
 			String vmset = XIVMService.executeMapping(vmsetsrc, vmsetdst, "0.0.VMRSET");
 			context = "http://janro.com/vmr/" + vmset;
 
-		} catch (ValueMappingException e) {
+		} catch (ValueMappingException exception) {
 
-			result.addValue("");
+			trace.addInfo("Class XCgetVM error: " + exception);
 
 		}
 
-		String gcvmkeypc = "";
-		String gcvmkeypg = "";
-		String gcvmkeygc = "";
-		String gcvmkeygg = "";
+		String gcvmkeypc = initVMKey[0];
+		String gcvmkeypg = initVMKey[1];
+		String gcvmkeygc = initVMKey[2];
+		String gcvmkeygg = initVMKey[3];
 
-//		GlobalContainer globalContainer;
-//		globalContainer = container.getGlobalContainer();
-//		gcvmkeypc = "" + globalContainer.getParameter("vmkeypc");
-//		gcvmkeypg = "" + globalContainer.getParameter("vmkeypg");
-//		gcvmkeygc = "" + globalContainer.getParameter("vmkeygc");
-//		gcvmkeygg = "" + globalContainer.getParameter("vmkeygg");
+		// GlobalContainer globalContainer;
+		// globalContainer = container.getGlobalContainer();
+		// gcvmkeypc = "" + globalContainer.getParameter("vmkeypc");
+		// gcvmkeypg = "" + globalContainer.getParameter("vmkeypg");
+		// gcvmkeygc = "" + globalContainer.getParameter("vmkeygc");
+		// gcvmkeygg = "" + globalContainer.getParameter("vmkeygg");
 
-//		try {
-//			if (gcvmkeypc.equals("null") || gcvmkeypc.length() == 0) {
-//
-//				java.util.Map param = (Map) container.getInputParameters();
-//				gcvmkeypc = (String) param.get(StreamTransformationConstants.CONVERSATION_ID);
-//			}
-//		} catch (Exception e) {
-//
-//			java.util.Map param = (Map) container.getInputParameters();
-//			gcvmkeypc = (String) param.get(StreamTransformationConstants.CONVERSATION_ID);
-//		}
+		// try {
+		// if (gcvmkeypc.equals("null") || gcvmkeypc.length() == 0) {
+		//
+		// java.util.Map param = (Map) container.getInputParameters();
+		// gcvmkeypc = (String)
+		// param.get(StreamTransformationConstants.CONVERSATION_ID);
+		// }
+		// } catch (Exception e) {
+		//
+		// java.util.Map param = (Map) container.getInputParameters();
+		// gcvmkeypc = (String)
+		// param.get(StreamTransformationConstants.CONVERSATION_ID);
+		// }
 
 		IFIdentifier src = XIVMFactory.newIdentifier(context, senderAgency, senderScheme);
 		IFIdentifier dst = XIVMFactory.newIdentifier(context, receiverAgency, receiverScheme);
@@ -76,22 +78,22 @@ public class XCgetVM {
 
 				if ((returnval > pc.length) || (returnval < 1)) {
 
-//					trace.addInfo("VM Key PC: " + vmkeypc);
+					trace.addInfo("VM Key PC: " + vmkeypc);
 					res = "";
 
 				} else {
 
-//					trace.addInfo("VM Key PC: " + vmkeypc);
+					trace.addInfo("VM Key PC: " + vmkeypc);
 					res = pc[returnval - 1];
 
 				}
 
-//				trace.addInfo("Get Value 0: " + res);
-				result.addValue(res);
+				trace.addInfo("Get Value 0: " + res);
+				return res;
 
 			} catch (ValueMappingException epc) {
 
-//				trace.addInfo("VM Key PC for Table " + table + " not found. Trying VM Key PG.");
+				trace.addInfo("VM Key PC for Table " + table + " not found. Trying VM Key PG.");
 
 				try {
 
@@ -102,48 +104,48 @@ public class XCgetVM {
 
 					if ((returnval > pg.length) || (returnval < 1)) {
 
-//						trace.addInfo("VM Key PG: " + vmkeypg);
+						trace.addInfo("VM Key PG: " + vmkeypg);
 						res = "";
 
 					} else {
 
-//						trace.addInfo("VM Key PG: " + vmkeypg);
+						trace.addInfo("VM Key PG: " + vmkeypg);
 						res = pg[returnval - 1];
 
 					}
 
-//					trace.addInfo("Get Value 0: " + res);
-					result.addValue(res);
+					trace.addInfo("Get Value 0: " + res);
+					return res;
 
 				} catch (ValueMappingException epg) {
 
-//					trace.addInfo("VM Key PG for Table " + table + " not found. Trying VM Key GC.");
+					trace.addInfo("VM Key PG for Table " + table + " not found. Trying VM Key GC.");
 
 					try {
 
-						String vmkeygc = table + delimiter + gcvmkeygc + delimiter + delimiter + delimiter
-								+ delimiter + delimiter + delimiter;
+						String vmkeygc = table + delimiter + gcvmkeygc + delimiter + delimiter + delimiter + delimiter
+								+ delimiter + delimiter;
 						vmreturn = XIVMService.executeMapping(src, dst, vmkeygc);
 						String gc[] = vmreturn.split("\\" + delimiter);
 
 						if ((returnval > gc.length) || (returnval < 1)) {
 
-//							trace.addInfo("VM Key GC: " + vmkeygc);
+							trace.addInfo("VM Key GC: " + vmkeygc);
 							res = "";
 
 						} else {
 
-//							trace.addInfo("VM Key GC: " + vmkeygc);
+							trace.addInfo("VM Key GC: " + vmkeygc);
 							res = gc[returnval - 1];
 
 						}
 
-//						trace.addInfo("Get Value 0: " + res);
-						result.addValue(res);
+						trace.addInfo("Get Value 0: " + res);
+						return res;
 
 					} catch (ValueMappingException egc) {
 
-//						trace.addInfo("VM Key GC for Table " + table + " not found. Trying VM Key GG.");
+						trace.addInfo("VM Key GC for Table " + table + " not found. Trying VM Key GG.");
 
 						try {
 
@@ -155,22 +157,22 @@ public class XCgetVM {
 
 							if ((returnval > gg.length) || (returnval < 1)) {
 
-//								trace.addInfo("VM Key GG: " + vmkeygg);
+								trace.addInfo("VM Key GG: " + vmkeygg);
 								res = "";
 
 							} else {
 
-//								trace.addInfo("VM Key GG: " + vmkeygg);
+								trace.addInfo("VM Key GG: " + vmkeygg);
 								res = gg[returnval - 1];
 							}
 
-//							trace.addInfo("Get Value 0: " + res);
-							result.addValue(res);
+							trace.addInfo("Get Value 0: " + res);
+							return res;
 
 						} catch (ValueMappingException egg) {
 
-//							trace.addInfo("VM Key GG for Table " + table + "  not found. Conversion failed. " + egg);
-							result.addValue("");
+							trace.addInfo("VM Key GG for Table " + table + "  not found. Conversion failed. " + egg);
+							return res;
 
 						}
 
@@ -182,12 +184,10 @@ public class XCgetVM {
 
 		} else {
 
-//			trace.addInfo("Map not initialized. Aborting conversion.");
-			result.addValue("");
+			trace.addInfo("Map not initialized. Aborting conversion.");
+			return "";
 
 		}
-
-		return result.toString();
 
 	}
 

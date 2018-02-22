@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import com.mapping.xmlcustomizer.getrules.XCgetRules;
+import com.sap.aii.mapping.api.AbstractTrace;
 import com.sap.aii.mapping.api.AbstractTransformation;
 import com.sap.aii.mapping.api.StreamTransformationException;
 import com.sap.aii.mapping.api.TransformationInput;
@@ -25,9 +26,10 @@ public class XMLCustomizer extends AbstractTransformation {
 
 	public void customizeXML(InputStream in, OutputStream out) throws StreamTransformationException {
 
-		try {
+		AbstractTrace trace = getTrace();
+		trace.addInfo("Class XMLCustomizer: Starting XML Customizer");
 
-			getTrace().addInfo("Starting XML Customizer");
+		try {
 
 			StringBuilder inputstreamtemp = new StringBuilder();
 
@@ -40,62 +42,87 @@ public class XMLCustomizer extends AbstractTransformation {
 			in.close();
 
 			StringBuilder outputstreamtemp = new StringBuilder();
-			String streamptemp = in.toString();
+			outputstreamtemp = inputstreamtemp;
+			trace.addInfo(inputstreamtemp.toString());
 
 			// Execute method to get rule parameters from PI cache
 			// XMLCustomizerGetRules getRules = new XMLCustomizerGetRules();
 			// String[][] XCrules = getRules.executeGetRules();
 
 			// Execute method to get rule parameters from PI cache
+			String[][] XCrules = new String[][] { {} };
 			XCgetRules getRules = new XCgetRules();
-			String[][] XCrules = getRules.executeXCgetRules(inputstreamtemp, getTrace());
-			getTrace().addInfo("Rules acquired from PI cache: " + XCrules.length);
+			XCrules = getRules.executeXCgetRules(inputstreamtemp, trace);
 
-			System.out.println("ZZZ" + XCrules.length);
 			// Loop though all the rules found
-			for (int i = 0; i < XCrules.length; i++) {
+			if (XCrules.length > 0) {
 
-				// Assign output for getRules method to individual variables
-				String operation = XCrules[i][0];
-				String arg0 = XCrules[i][1];
-				String arg1 = XCrules[i][2];
-				String arg2 = XCrules[i][3];
-				String arg3 = XCrules[i][4];
+				for (int i = 0; i < XCrules.length; i++) {
 
-				// Choose which operation/method to execute
-				if ((operation.equals("addNodeConstant")) || (operation.equals("addNodeXPath"))) {
+					if (XCrules[0].length > 0) {
 
-					// Add XML nodes/elements
-					System.out.println("Add node to XML");
-					XMLCustomizerAddNode addNodeXML = new XMLCustomizerAddNode();
-					outputstreamtemp = addNodeXML.executeAddNode(operation, arg0, arg1, arg2, arg3, inputstreamtemp);
+						// Assign output for getRules method to individual
+						// variables
+						String operation = XCrules[i][1];
+						String arg0 = XCrules[i][2];
+						String arg1 = XCrules[i][3];
+						String arg2 = XCrules[i][4];
+						String arg3 = XCrules[i][5];
 
-				} else if (operation.equals("deleteNode")) {
+						trace.addInfo("Class XMLCustomizer: " + operation + " " + arg0 + " " + arg1 + " " + arg2 + " "
+								+ arg3);
 
-					// Delete XML nodes/elements
-					System.out.println("Delete node from XML");
-					XMLCustomizerDeleteNode deleteNodeXML = new XMLCustomizerDeleteNode();
-					outputstreamtemp = deleteNodeXML.executeDeleteNode(arg0, arg1, arg2, arg3, inputstreamtemp);
+						// Choose which operation/method to execute
+						if ((operation.equals("addNodeConstant")) || (operation.equals("addNodeXPath"))) {
 
-				} else if ((operation.equals("replaceValueConstant")) || (operation.equals("replaceValueXPath"))) {
+							// Add XML nodes/elements
+							System.out.println("Add node to XML");
+							XMLCustomizerAddNode addNodeXML = new XMLCustomizerAddNode();
+							outputstreamtemp = addNodeXML.executeAddNode(operation, arg0, arg1, arg2, arg3,
+									inputstreamtemp);
 
-					// Replace XML nodes/elements values
-					System.out.println("Replacing value of XML segment");
-					XMLCustomizerReplaceValue replaceValueXML = new XMLCustomizerReplaceValue();
-					outputstreamtemp = replaceValueXML.executeReplaceValue(operation, arg0, arg1, arg2, arg3,
-							inputstreamtemp);
+						} else if (operation.equals("deleteNode")) {
 
-				} else {
+							// Delete XML nodes/elements
+							System.out.println("Delete node from XML");
+							XMLCustomizerDeleteNode deleteNodeXML = new XMLCustomizerDeleteNode();
+							outputstreamtemp = deleteNodeXML.executeDeleteNode(arg0, arg1, arg2, arg3, inputstreamtemp, trace);
 
-					// No operation found, invalid operation parameter
-					// Console output only for debugging
-					// To be removed on actual deployment
-					System.out.println("Nothing to do");
+						} else if ((operation.equals("replaceValueConstant"))
+								|| (operation.equals("replaceValueXPath"))) {
+
+							// Replace XML nodes/elements values
+							System.out.println("Replacing value of XML segment");
+							XMLCustomizerReplaceValue replaceValueXML = new XMLCustomizerReplaceValue();
+							outputstreamtemp = replaceValueXML.executeReplaceValue(operation, arg0, arg1, arg2, arg3,
+									inputstreamtemp);
+
+						} else {
+
+							// No operation found, invalid operation parameter
+							trace.addInfo("Class XMLCustomizer: No valid operation found.");
+
+						}
+
+//						streamptemp = outputstreamtemp.toString();
+						inputstreamtemp = outputstreamtemp;
+						
+					} else {
+
+						trace.addInfo("Class XMLCustomizer: Rule # 1 has no valid entries");
+//						streamptemp = outputstreamtemp.toString();
+						inputstreamtemp = outputstreamtemp;
+						
+
+					}
 
 				}
 
-				streamptemp = outputstreamtemp.toString();
-				System.out.println("StreamTemp: " + i + " " + streamptemp);
+			} else {
+
+				// No valid rules found, invalid operation parameter
+				trace.addInfo("Class XMLCustomizer: No rules found.");
+//				streamptemp = outputstreamtemp.toString();
 				inputstreamtemp = outputstreamtemp;
 
 			}
@@ -106,7 +133,8 @@ public class XMLCustomizer extends AbstractTransformation {
 
 			// Console output only for debugging
 			// To be removed on actual deployment
-			System.out.println("Class XMLCustomizer - error encountered: " + exception);
+			System.out.println("Class XMLCustomizer error: " + exception);
+			trace.addInfo("Class XMLCustomizer error: " + exception);
 
 		}
 	}

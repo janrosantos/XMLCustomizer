@@ -10,29 +10,21 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import com.sap.aii.mapping.api.AbstractTrace;
 import com.sap.aii.mapping.api.StreamTransformationException;
 
 public class XCgetDocType {
 
-	public String[] executeXCgetDocType(StringBuilder in) throws StreamTransformationException {
+	public String executeXCgetDocType(StringBuilder in, AbstractTrace trace) throws StreamTransformationException {
 
-		String doctype = "";
-		String table = "";
-		String direction = "";
-		String standard = "";
-		String message = "";
-		String version = "";
-		String partnertype = "";
-		String partner = "";
-		String company = "";
+		String docType = "";
 
 		// Assign variables for the XML string
 		StringBuilder inputString = in;
-		
+
 		try {
 
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -46,7 +38,7 @@ public class XCgetDocType {
 			// Check if IDOC
 			XPathExpression idocXPath = xpath.compile("//EDI_DC40");
 			NodeList idocNodes = (NodeList) idocXPath.evaluate(doc, XPathConstants.NODESET);
-			
+
 			// Check if EDIFACT
 			XPathExpression edifactXPath = xpath.compile("//S_UNA");
 			NodeList edifactNodes = (NodeList) edifactXPath.evaluate(doc, XPathConstants.NODESET);
@@ -58,68 +50,25 @@ public class XCgetDocType {
 			// Check if XML
 			XPathExpression xmlXPath = xpath.compile("//MsgHeader");
 			NodeList xmlNodes = (NodeList) xmlXPath.evaluate(doc, XPathConstants.NODESET);
-			
+
 			if (idocNodes.getLength() > 0) {
-				
-				doctype = "IDOC";
-				XPathExpression directionXPath = xpath.compile("//DIRECT");
-				XPathExpression standardXPath = xpath.compile("//STD");
-				XPathExpression messageXPath = xpath.compile("//STDMES");
-				XPathExpression versionXPath = xpath.compile("//STDVRS");
-				XPathExpression partnertypeXPath = xpath.compile("//RCVPRT");
-				XPathExpression partnerXPath = xpath.compile("//RCVPRN");
-				XPathExpression companyXPathKU = xpath.compile("//E1EDKA1[PARVW='AG']/LIFNR");
-				XPathExpression companyXPathLI = xpath.compile("//E1EDKA1[PARVW='AG']/PARTN");
-				
-				Node directionNode = (Node) directionXPath.evaluate(doc, XPathConstants.NODE);
-				if (directionNode.getTextContent().equals("1")) {
-					direction = "1";
-					table = "1.1.LOOKUP";
-				} else {
-					direction = "2";
-					table = "1.2.LOOKUP";
-				}
-
-				Node standardNode = (Node) standardXPath.evaluate(doc, XPathConstants.NODE);
-				standard = standardNode.getTextContent();
-
-				Node messageNode = (Node) messageXPath.evaluate(doc, XPathConstants.NODE);
-				message = messageNode.getTextContent();
-
-				Node versionNode = (Node) versionXPath.evaluate(doc, XPathConstants.NODE);
-				version = versionNode.getTextContent();
-
-				Node partnertypeNode = (Node) partnertypeXPath.evaluate(doc, XPathConstants.NODE);
-				partnertype = partnertypeNode.getTextContent();
-
-				Node partnerNode = (Node) partnerXPath.evaluate(doc, XPathConstants.NODE);
-				partner = partnerNode.getTextContent();
-
-				Node companyKUNode = (Node) companyXPathKU.evaluate(doc, XPathConstants.NODE);
-				Node companyLINode = (Node) companyXPathLI.evaluate(doc, XPathConstants.NODE);
-
-				if (partnertype.equals("KU")) {
-					company = companyKUNode.getTextContent();
-				} else if ((partnertype.equals("LI")) && !companyLINode.getTextContent().isEmpty()) {
-					company = companyLINode.getTextContent();
-				}
-				
+				docType = "IDOC";
 			} else if (edifactNodes.getLength() > 0) {
-				doctype = "EDFICAT";
+				docType = "EDFICAT";
 			} else if (x12Nodes.getLength() > 0) {
-				doctype = "X12";
+				docType = "X12";
 			} else if (xmlNodes.getLength() > 0) {
-				doctype = "XML";
+				docType = "XML";
 			} else {
-				doctype = "NotSupported";
+				docType = "NotSupported";
 			}
 
 		} catch (Exception exception) {
-			// TODO: handle exception
-			System.out.println("Class XCgetDocType - error encountered: " + exception);
+			
+			trace.addInfo("Class XCgetDocType error: " + exception);
 		}
 
-		return new String[] { doctype, table, direction, standard, message, version, partnertype, partner, company };
+		return docType;
 
 	}
 }

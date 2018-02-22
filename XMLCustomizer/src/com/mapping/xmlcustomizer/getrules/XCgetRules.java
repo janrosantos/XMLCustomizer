@@ -17,54 +17,54 @@ public class XCgetRules extends XMLCustomizer {
 
 	public String[][] executeXCgetRules(StringBuilder in, AbstractTrace trace) throws StreamTransformationException {
 
-		trace.addInfo("Acquiring rules for XML Customizer");
+		trace.addInfo("Class XCgetRules: Acquiring rules for XML Customizer");
 
 		String docType = "";
-		String[] initVMkey = new String[] { "", "", "", "" };
-		String[] blankVMkey = new String[] { "", "", "", "" };
-		String[][] XCrules = new String[][] {};
+		String[] initDocKey = new String[] {};
+		String[] initVMKey = new String[] { "", "", "", "" };
+		String[] blankVMKey = new String[] { "", "", "", "" };
+		String[][] XCrules = new String[][] { {} };
 
 		try {
 
 			XCgetDocType getDocType = new XCgetDocType();
-			String[] initVariables = getDocType.executeXCgetDocType(in);
-			docType = initVariables[0];
-
-			trace.addInfo(initVariables[0] + initVariables[1] + initVariables[2] + initVariables[3] + initVariables[4]);
-
-			System.out.println(initVariables[0] + initVariables[1] + initVariables[2] + initVariables[3]
-					+ initVariables[4]);
+			docType = getDocType.executeXCgetDocType(in, trace);
 
 			if (docType.equals("IDOC")) {
-				XCinitIDOC initIDOC = new XCinitIDOC();
-				initVMkey = initIDOC
-						.executeXCinitIDOC(initVariables[0], initVariables[1], initVariables[2], initVariables[3],
-								initVariables[4], initVariables[5], initVariables[6], initVariables[7], trace);
+				XCprepIDOC prepIDOC = new XCprepIDOC();
+				initDocKey = prepIDOC.executeXCprepIDOC(in, trace);
 			}
 
-			if (!Arrays.equals(blankVMkey, initVMkey)) {
+			XCinitDocument initDocument = new XCinitDocument();
+			initVMKey = initDocument.executeXCinitDocuement(initDocKey, trace);
+
+			if (!Arrays.equals(blankVMKey, initVMKey)) {
 
 				XCgetVM getVM = new XCgetVM();
-				XCrules = new String[][] { { getVM.executeGetVM(initVariables[1], 1),
-						getVM.executeGetVM(initVariables[1], 2), getVM.executeGetVM(initVariables[1], 3),
-						getVM.executeGetVM(initVariables[1], 4), getVM.executeGetVM(initVariables[1], 5) } };
+				XCrules = new String[][] { { getVM.executeGetVM("4.1.CUSTOM.XML", initVMKey, 1, trace),
+						getVM.executeGetVM("4.1.CUSTOM.XML", initVMKey, 2, trace),
+						getVM.executeGetVM("4.1.CUSTOM.XML", initVMKey, 3, trace),
+						getVM.executeGetVM("4.1.CUSTOM.XML", initVMKey, 4, trace),
+						getVM.executeGetVM("4.1.CUSTOM.XML", initVMKey, 5, trace),
+						getVM.executeGetVM("4.1.CUSTOM.XML", initVMKey, 6, trace) } };
 
 			} else {
 
 				// No rules acquired
-				// getTrace().addInfo("No rules acquired from PI cache");
+				trace.addInfo("Class XCgetRules: No rules acquired from PI cache");
 				XCrules = new String[][] {};
-
+				
 			}
 
 		} catch (Exception exception) {
 
-			// TODO: handle exception
-			trace.addInfo("Class XCgetRules - error encountered: " + exception);
-			System.out.println("Class XCgetRules - error encountered: " + exception);
-
+			trace.addInfo("Class XCgetRules error: " + exception);
+			trace.addInfo("Class XCgetRules error: Returning blank rules");
+			return XCrules;
+			
 		}
 
+		trace.addInfo("Class XCgetRules: " + XCrules.length + " rule(s) acquired");
 		return XCrules;
 
 	}

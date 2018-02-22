@@ -18,11 +18,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import com.sap.aii.mapping.api.AbstractTrace;
 import com.sap.aii.mapping.api.StreamTransformationException;
 
 public class XMLCustomizerDeleteNode {
 
-	public StringBuilder executeDeleteNode(String arg0, String arg1, String arg2, String arg3, StringBuilder in)
+	public StringBuilder executeDeleteNode(String arg0, String arg1, String arg2, String arg3, StringBuilder in, AbstractTrace trace)
 			throws StreamTransformationException {
 
 		// This method will execute deletion of nodes from the XML document
@@ -38,6 +39,7 @@ public class XMLCustomizerDeleteNode {
 		// Console output only for debugging
 		// To be removed on actual deployment
 		System.out.println("Entering node delete subroutine.");
+		trace.addInfo("Class XMLCustomizerDeleteNode: Starting delete node routine");
 
 		// Assign variables for the XML string
 		StringBuilder inputString = in;
@@ -64,11 +66,15 @@ public class XMLCustomizerDeleteNode {
 
 			// Execute deletion of nodes for all that matched the XPath
 			// delNodes is an array/list of nodes that matched the XPath
+			
+						
 			for (int i = 0; i < delNodes.getLength(); i++) {
 
 				delNodes.item(i).getParentNode().removeChild(delNodes.item(i));
 
 			}
+			
+			trace.addInfo("Class XMLCustomizerDeleteNode: " + delNodes.getLength() + " node(s) deleted");
 
 			// Create new Transformer with the XSLT
 			TransformerFactory tfactory = TransformerFactory.newInstance();
@@ -90,12 +96,14 @@ public class XMLCustomizerDeleteNode {
 			// Console output only for debugging
 			// To be removed on actual deployment
 			System.out.println("Deletion completed.");
+			trace.addInfo("Class XMLCustomizerDeleteNode: Deletion completed");
 
 		} catch (Exception exception) {
 
 			// Console output only for debugging
 			// To be removed on actual deployment
 			System.out.println("Error encountered: " + exception);
+			trace.addInfo("Class XMLCustomizerDeleteNode error: " + exception);
 
 		}
 
