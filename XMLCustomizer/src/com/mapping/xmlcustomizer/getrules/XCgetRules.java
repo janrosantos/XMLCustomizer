@@ -1,6 +1,8 @@
 package com.mapping.xmlcustomizer.getrules;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import com.mapping.xmlcustomizer.XMLCustomizer;
 import com.sap.aii.mapping.api.AbstractTrace;
@@ -23,7 +25,9 @@ public class XCgetRules extends XMLCustomizer {
 		String[] initDocKey = new String[] {};
 		String[] initVMKey = new String[] { "", "", "", "" };
 		String[] blankVMKey = new String[] { "", "", "", "" };
-		String[][] XCrules = new String[][] { {} };
+		String[] XCrulesTemp = new String[] {};
+		String[][] XCrules = new String[][] {};
+		List<String[]> XCrulesArray = new ArrayList<String[]>();
 
 		try {
 
@@ -41,19 +45,38 @@ public class XCgetRules extends XMLCustomizer {
 			if (!Arrays.equals(blankVMKey, initVMKey)) {
 
 				XCgetVM getVM = new XCgetVM();
-				XCrules = new String[][] { { getVM.executeGetVM("4.1.CUSTOM.XML", initVMKey, 1, trace),
-						getVM.executeGetVM("4.1.CUSTOM.XML", initVMKey, 2, trace),
-						getVM.executeGetVM("4.1.CUSTOM.XML", initVMKey, 3, trace),
-						getVM.executeGetVM("4.1.CUSTOM.XML", initVMKey, 4, trace),
-						getVM.executeGetVM("4.1.CUSTOM.XML", initVMKey, 5, trace),
-						getVM.executeGetVM("4.1.CUSTOM.XML", initVMKey, 6, trace) } };
+				// XCrules = new String[][] { {
+				// getVM.executeGetVM("4.1.CUSTOM.XML", initVMKey, 1, trace),
+				// getVM.executeGetVM("4.1.CUSTOM.XML", initVMKey, 2, trace),
+				// getVM.executeGetVM("4.1.CUSTOM.XML", initVMKey, 3, trace),
+				// getVM.executeGetVM("4.1.CUSTOM.XML", initVMKey, 4, trace),
+				// getVM.executeGetVM("4.1.CUSTOM.XML", initVMKey, 5, trace),
+				// getVM.executeGetVM("4.1.CUSTOM.XML", initVMKey, 6, trace) }
+				// };
+
+				int ruleNumber = 10100;
+				int lenXCrulesTemp = 1;
+
+				while ((lenXCrulesTemp > 0) && (ruleNumber < 11000)) {
+
+					XCrulesTemp = getVM.executeGetVM("4.1.CUSTOM.XML", initVMKey, ruleNumber, trace);
+					if (XCrulesTemp.length > 0) {
+						XCrulesArray.add(XCrulesTemp);
+					}
+					lenXCrulesTemp = XCrulesTemp.length;
+					ruleNumber = ruleNumber + 100;
+
+					if (ruleNumber == 11000) {
+						break;
+					}
+				}
 
 			} else {
 
 				// No rules acquired
-				trace.addInfo("Class XCgetRules: No rules acquired from PI cache");
+				trace.addInfo("Class XCgetRules: Document not initialized");
 				XCrules = new String[][] {};
-				
+
 			}
 
 		} catch (Exception exception) {
@@ -61,9 +84,10 @@ public class XCgetRules extends XMLCustomizer {
 			trace.addInfo("Class XCgetRules error: " + exception);
 			trace.addInfo("Class XCgetRules error: Returning blank rules");
 			return XCrules;
-			
+
 		}
 
+		XCrules = XCrulesArray.toArray(XCrules);
 		trace.addInfo("Class XCgetRules: " + XCrules.length + " rule(s) acquired");
 		return XCrules;
 

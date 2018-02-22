@@ -1,9 +1,13 @@
 package com.mapping.xmlcustomizer;
 
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 
+import com.mapping.xmlcustomizer.functions.XCpadArray;
 import com.mapping.xmlcustomizer.getrules.XCgetRules;
+import com.mapping.xmlcustomizer.nodeoperations.XCdeleteNode;
 import com.sap.aii.mapping.api.AbstractTrace;
 import com.sap.aii.mapping.api.AbstractTransformation;
 import com.sap.aii.mapping.api.StreamTransformationException;
@@ -32,18 +36,16 @@ public class XMLCustomizer extends AbstractTransformation {
 		try {
 
 			StringBuilder inputstreamtemp = new StringBuilder();
-
-			byte[] buffer = new byte[2048];
-			int length;
-			while ((length = in.read(buffer)) != -1) {
-				inputstreamtemp.append(new String(buffer, 0, length));
+			InputStreamReader reader = new InputStreamReader(in, "UTF-8");
+			char[] buffer = new char[4098];
+			int charsRead;
+			while ((charsRead = reader.read(buffer)) != -1) {
+				inputstreamtemp.append(buffer, 0, charsRead);
 			}
-
 			in.close();
 
 			StringBuilder outputstreamtemp = new StringBuilder();
 			outputstreamtemp = inputstreamtemp;
-			trace.addInfo(inputstreamtemp.toString());
 
 			// Execute method to get rule parameters from PI cache
 			// XMLCustomizerGetRules getRules = new XMLCustomizerGetRules();
@@ -53,6 +55,9 @@ public class XMLCustomizer extends AbstractTransformation {
 			String[][] XCrules = new String[][] { {} };
 			XCgetRules getRules = new XCgetRules();
 			XCrules = getRules.executeXCgetRules(inputstreamtemp, trace);
+			
+			XCpadArray padArray = new XCpadArray();
+			XCrules = padArray.executeXCpadArray(XCrules, "", 5);
 
 			// Loop though all the rules found
 			if (XCrules.length > 0) {
@@ -63,11 +68,11 @@ public class XMLCustomizer extends AbstractTransformation {
 
 						// Assign output for getRules method to individual
 						// variables
-						String operation = XCrules[i][1];
-						String arg0 = XCrules[i][2];
-						String arg1 = XCrules[i][3];
-						String arg2 = XCrules[i][4];
-						String arg3 = XCrules[i][5];
+						String operation = XCrules[i][0];
+						String arg0 = XCrules[i][1];
+						String arg1 = XCrules[i][2];
+						String arg2 = XCrules[i][3];
+						String arg3 = XCrules[i][4];
 
 						trace.addInfo("Class XMLCustomizer: " + operation + " " + arg0 + " " + arg1 + " " + arg2 + " "
 								+ arg3);
@@ -85,8 +90,9 @@ public class XMLCustomizer extends AbstractTransformation {
 
 							// Delete XML nodes/elements
 							System.out.println("Delete node from XML");
-							XMLCustomizerDeleteNode deleteNodeXML = new XMLCustomizerDeleteNode();
-							outputstreamtemp = deleteNodeXML.executeDeleteNode(arg0, arg1, arg2, arg3, inputstreamtemp, trace);
+							XCdeleteNode deleteNodeXML = new XCdeleteNode();
+							outputstreamtemp = deleteNodeXML.executeXCdeleteNode(arg0, arg1, arg2, arg3,
+									inputstreamtemp, trace);
 
 						} else if ((operation.equals("replaceValueConstant"))
 								|| (operation.equals("replaceValueXPath"))) {
@@ -104,15 +110,14 @@ public class XMLCustomizer extends AbstractTransformation {
 
 						}
 
-//						streamptemp = outputstreamtemp.toString();
+						// streamptemp = outputstreamtemp.toString();
 						inputstreamtemp = outputstreamtemp;
-						
+
 					} else {
 
 						trace.addInfo("Class XMLCustomizer: Rule # 1 has no valid entries");
-//						streamptemp = outputstreamtemp.toString();
+						// streamptemp = outputstreamtemp.toString();
 						inputstreamtemp = outputstreamtemp;
-						
 
 					}
 
@@ -122,12 +127,12 @@ public class XMLCustomizer extends AbstractTransformation {
 
 				// No valid rules found, invalid operation parameter
 				trace.addInfo("Class XMLCustomizer: No rules found.");
-//				streamptemp = outputstreamtemp.toString();
+				// streamptemp = outputstreamtemp.toString();
 				inputstreamtemp = outputstreamtemp;
 
 			}
 
-			out.write(outputstreamtemp.toString().getBytes());
+			out.write(outputstreamtemp.toString().getBytes(Charset.forName("UTF-8")));
 
 		} catch (Exception exception) {
 
