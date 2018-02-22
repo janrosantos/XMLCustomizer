@@ -45,21 +45,13 @@ public class XCgetRules extends XMLCustomizer {
 			if (!Arrays.equals(blankVMKey, initVMKey)) {
 
 				XCgetVM getVM = new XCgetVM();
-				// XCrules = new String[][] { {
-				// getVM.executeGetVM("4.1.CUSTOM.XML", initVMKey, 1, trace),
-				// getVM.executeGetVM("4.1.CUSTOM.XML", initVMKey, 2, trace),
-				// getVM.executeGetVM("4.1.CUSTOM.XML", initVMKey, 3, trace),
-				// getVM.executeGetVM("4.1.CUSTOM.XML", initVMKey, 4, trace),
-				// getVM.executeGetVM("4.1.CUSTOM.XML", initVMKey, 5, trace),
-				// getVM.executeGetVM("4.1.CUSTOM.XML", initVMKey, 6, trace) }
-				// };
 
 				int ruleNumber = 10100;
 				int lenXCrulesTemp = 1;
 
 				while ((lenXCrulesTemp > 0) && (ruleNumber < 11000)) {
 
-					XCrulesTemp = getVM.executeGetVM("4.1.CUSTOM.XML", initVMKey, ruleNumber, trace);
+					XCrulesTemp = getVM.executeGetVM("4.1.CUSTOM.XML", initVMKey, initDocKey[8], ruleNumber, trace);
 					if (XCrulesTemp.length > 0) {
 						XCrulesArray.add(XCrulesTemp);
 					}

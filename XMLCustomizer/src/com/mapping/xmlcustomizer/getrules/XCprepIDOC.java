@@ -29,6 +29,7 @@ public class XCprepIDOC extends XMLCustomizer {
 		String partnertype = "";
 		String partner = "";
 		String company = "";
+		String processor = "";
 
 		trace.addInfo("Class XCprepIDOC: Preparing IDOC VM Keys");
 
@@ -86,13 +87,19 @@ public class XCprepIDOC extends XMLCustomizer {
 			} else if ((partnertype.equals("LI")) && !companyLINode.getTextContent().isEmpty()) {
 				company = companyLINode.getTextContent();
 			}
+			
+			if (direction.equals("1")) {
+				processor = "Pre";
+			} else  {
+				processor = "Post";
+			}
 
 		} catch (Exception exception) {
 			
 			trace.addInfo("Class XCprepIDOC error: " + exception);
 		}
 
-		return new String[] { table, direction, standard, message, version, partnertype, partner, company };
+		return new String[] { table, direction, standard, message, version, partnertype, partner, company, processor };
 
 	}
 }

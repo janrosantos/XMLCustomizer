@@ -10,7 +10,7 @@ import com.sap.aii.mapping.value.api.XIVMService;
 
 public class XCgetVM extends XMLCustomizer {
 
-	public String[] executeGetVM(String table, String[] initVMKey, int ruleNumber, AbstractTrace trace)
+	public String[] executeGetVM(String table, String[] initVMKey, String processor, int ruleNumber, AbstractTrace trace)
 			throws StreamTransformationException {
 
 		trace.addInfo("Class XCgetVM: Excuting rule acquisition from PI cache");
@@ -50,8 +50,8 @@ public class XCgetVM extends XMLCustomizer {
 
 			try {
 
-				String vmkeypc = table + delimiter + gcvmkeypc + delimiter + ruleNumber + delimiter + delimiter
-						+ delimiter + delimiter + delimiter;
+				String vmkeypc = table + delimiter + gcvmkeypc + delimiter + processor + delimiter + ruleNumber
+						+ delimiter + delimiter + delimiter + delimiter;
 				vmreturn = XIVMService.executeMapping(src, dst, vmkeypc);
 				String pc[] = vmreturn.split("\\" + delimiter);
 
@@ -64,8 +64,8 @@ public class XCgetVM extends XMLCustomizer {
 
 				try {
 
-					String vmkeypg = table + delimiter + gcvmkeypg + delimiter + ruleNumber + delimiter + delimiter
-							+ delimiter + delimiter + delimiter;
+					String vmkeypg = table + delimiter + gcvmkeypg + delimiter + processor + delimiter + ruleNumber
+					+ delimiter + delimiter + delimiter + delimiter;
 					vmreturn = XIVMService.executeMapping(src, dst, vmkeypg);
 					String pg[] = vmreturn.split("\\" + delimiter);
 
@@ -78,8 +78,8 @@ public class XCgetVM extends XMLCustomizer {
 
 					try {
 
-						String vmkeygc = table + delimiter + gcvmkeygc + delimiter + ruleNumber + delimiter + delimiter
-								+ delimiter + delimiter + delimiter;
+						String vmkeygc = table + delimiter + gcvmkeygc + delimiter + processor + delimiter + ruleNumber
+						+ delimiter + delimiter + delimiter + delimiter;
 						vmreturn = XIVMService.executeMapping(src, dst, vmkeygc);
 						String gc[] = vmreturn.split("\\" + delimiter);
 
@@ -92,8 +92,8 @@ public class XCgetVM extends XMLCustomizer {
 
 						try {
 
-							String vmkeygg = table + delimiter + gcvmkeygg + delimiter + ruleNumber + delimiter
-									+ delimiter + delimiter + delimiter + delimiter;
+							String vmkeygg = table + delimiter + gcvmkeygg + delimiter + processor + delimiter + ruleNumber
+							+ delimiter + delimiter + delimiter + delimiter;
 
 							vmreturn = XIVMService.executeMapping(src, dst, vmkeygg);
 							String gg[] = vmreturn.split("\\" + delimiter);

@@ -74,11 +74,6 @@ public class XCinitDocument {
 			String vmkeygg = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
 					+ "GG" + delimiter + delimiter;
 
-			// globalContainer.setParameter("vmkeypc", vmkeypc);
-			// globalContainer.setParameter("vmkeypg", vmkeypg);
-			// globalContainer.setParameter("vmkeygc", vmkeygc);
-			// globalContainer.setParameter("vmkeygg", vmkeygg);
-
 			trace.addInfo("Class XCinitDocument: Initialize VM Key PC - " + vmkeypc);
 			trace.addInfo("Class XCinitDocument: Initialize VM Key PG - " + vmkeypg);
 			trace.addInfo("Class XCinitDocument: Initialize VM Key GC - " + vmkeygc);
@@ -111,11 +106,6 @@ public class XCinitDocument {
 				String vmkeygg = direction + delimiter + standard + delimiter + message + delimiter + version
 						+ delimiter + "GG" + delimiter + delimiter;
 
-				// globalContainer.setParameter("vmkeypc", vmkeypc);
-				// globalContainer.setParameter("vmkeypg", vmkeypg);
-				// globalContainer.setParameter("vmkeygc", vmkeygc);
-				// globalContainer.setParameter("vmkeygg", vmkeygg);
-
 				trace.addInfo("Class XCinitDocument: Initialize VM Key PC not possible.");
 				trace.addInfo("Class XCinitDocument: Initialize VM Key PG - " + vmkeypg);
 				trace.addInfo("Class XCinitDocument: Initialize VM Key GC - " + vmkeygc);
@@ -125,10 +115,6 @@ public class XCinitDocument {
 
 			} catch (ValueMappingException epg) {
 
-				// globalContainer.setParameter("vmkeypc", "");
-				// globalContainer.setParameter("vmkeypg", "");
-				// globalContainer.setParameter("vmkeygc", "");
-				// globalContainer.setParameter("vmkeygg", "");
 				trace.addInfo("Class XCinitDocument: Failed to initialize map with VM Key - " + vmkey);
 
 				return new String[] { "", "", "", "" };
