@@ -12,18 +12,13 @@ public class XCpadArray {
 						temp[i][j] = arr[i][j];
 					}
 				} catch (Exception e) {
-					// TODO: handle exception
+
 					temp[i][j] = padWith;
 
 				}
 
 			}
 		}
-		// for (int i = 0; i < arr.length; i++) {
-		// for (int j = 0; j < arr[i].length; j++) {
-		// temp[i + numOfPads][j + numOfPads] = arr[i][j];
-		// }
-		// }
 		return temp;
 	}
 
