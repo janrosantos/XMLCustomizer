@@ -1,5 +1,5 @@
 package com.mapping.xmlcustomizer.getrules;
 
-public class XCinitEDIFACT {
+public class XCprepX12 {
 
 }
