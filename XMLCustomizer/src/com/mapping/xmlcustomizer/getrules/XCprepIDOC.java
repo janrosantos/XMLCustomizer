@@ -21,7 +21,7 @@ public class XCprepIDOC extends XMLCustomizer {
 
 	public String[] executeXCprepIDOC(StringBuilder in, AbstractTrace trace) throws StreamTransformationException {
 
-		String table = "";
+		String initTable = "";
 		String direction = "";
 		String standard = "";
 		String message = "";
@@ -29,9 +29,10 @@ public class XCprepIDOC extends XMLCustomizer {
 		String partnertype = "";
 		String partner = "";
 		String company = "";
-		String processor = "";
+		String rcvlad = "";
+		String xcTable = "";
 
-		trace.addInfo("Class XCprepIDOC: Preparing IDOC VM Keys");
+		trace.addInfo("Class XCprepIDOC: Preparing IDOC document keys");
 
 		// Assign variables for the XML string
 		StringBuilder inputString = in;
@@ -50,10 +51,10 @@ public class XCprepIDOC extends XMLCustomizer {
 			Node directionNode = (Node) directionXPath.evaluate(doc, XPathConstants.NODE);
 			if (directionNode.getTextContent().equals("1")) {
 				direction = "1";
-				table = "1.1.LOOKUP";
+				initTable = "1.1.LOOKUP";
 			} else {
 				direction = "2";
-				table = "1.2.LOOKUP";
+				initTable = "1.2.LOOKUP";
 			}
 
 			XPathExpression standardXPath = xpath.compile("//STD");
@@ -87,19 +88,31 @@ public class XCprepIDOC extends XMLCustomizer {
 			} else if ((partnertype.equals("LI")) && !companyLINode.getTextContent().isEmpty()) {
 				company = companyLINode.getTextContent();
 			}
-			
-			if (direction.equals("1")) {
-				processor = "Pre";
-			} else  {
-				processor = "Post";
+
+			try {
+				XPathExpression rcvladXPath = xpath.compile("//RCVLAD");
+				Node rcvladNode = (Node) rcvladXPath.evaluate(doc, XPathConstants.NODE);
+				rcvlad = rcvladNode.getTextContent();
+			} catch (Exception e) {
+				rcvlad = "";
+			}
+
+			if ((direction.equals("1")) && (rcvlad.isEmpty())) {
+				xcTable = "4.1.CUSTOM.XML.PRE";
+			} else if (((direction.equals("1")) && (!rcvlad.isEmpty()))) {
+				xcTable = "4.1.CUSTOM.XML.POST";
+			} else if (((direction.equals("2")) && (rcvlad.isEmpty()))) {
+				xcTable = "4.2.CUSTOM.XML.PRE";
+			} else if (((direction.equals("2")) && (!rcvlad.isEmpty()))) {
+				xcTable = "4.2.CUSTOM.XML.POST";
 			}
 
 		} catch (Exception exception) {
-			
+
 			trace.addInfo("Class XCprepIDOC error: " + exception);
 		}
 
-		return new String[] { table, direction, standard, message, version, partnertype, partner, company, processor };
+		return new String[] { initTable, direction, standard, message, version, partnertype, partner, company, xcTable };
 
 	}
 }

@@ -63,29 +63,35 @@ public class XCinitDocument {
 
 			vmreturn = XIVMService.executeMapping(src, dst, vmkey);
 
-			String pc[] = vmreturn.split("\\" + delimiter);
+			String L1[] = vmreturn.split("\\" + delimiter);
 
-			String vmkeypc = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
-					+ pc[0] + delimiter + pc[1] + delimiter + pc[2];
-			String vmkeypg = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
-					+ "PG" + delimiter + pc[1] + delimiter;
-			String vmkeygc = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
-					+ "GC" + delimiter + delimiter + pc[2];
-			String vmkeygg = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
-					+ "GG" + delimiter + delimiter;
+			String vmkeyA4 = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
+					+ "A4" + delimiter + delimiter;
+			String vmkeyL1 = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
+					+ L1[0] + delimiter + L1[1] + delimiter + L1[2];
+			String vmkeyL2 = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
+					+ "L2" + delimiter + L1[1] + delimiter;
+			String vmkeyL3 = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
+					+ "L3" + delimiter + delimiter + L1[2];
+			String vmkeyL4 = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
+					+ "L4" + delimiter + delimiter;
+			String vmkeyZ4 = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
+					+ "Z4" + delimiter + delimiter;
 
-			trace.addInfo("Class XCinitDocument: Initialize VM Key PC - " + vmkeypc);
-			trace.addInfo("Class XCinitDocument: Initialize VM Key PG - " + vmkeypg);
-			trace.addInfo("Class XCinitDocument: Initialize VM Key GC - " + vmkeygc);
-			trace.addInfo("Class XCinitDocument: Initialize VM Key GG - " + vmkeygg);
+			trace.addInfo("Class XCinitDocument: Initialize VM Key A4 - " + vmkeyA4);
+			trace.addInfo("Class XCinitDocument: Initialize VM Key L1 - " + vmkeyL1);
+			trace.addInfo("Class XCinitDocument: Initialize VM Key L2 - " + vmkeyL2);
+			trace.addInfo("Class XCinitDocument: Initialize VM Key L3 - " + vmkeyL3);
+			trace.addInfo("Class XCinitDocument: Initialize VM Key L4 - " + vmkeyL4);
+			trace.addInfo("Class XCinitDocument: Initialize VM Key Z4 - " + vmkeyZ4);
 
-			return new String[] { vmkeypc, vmkeypg, vmkeygc, vmkeygg };
+			return new String[] { vmkeyA4, vmkeyL1, vmkeyL2, vmkeyL3, vmkeyL4, vmkeyZ4 };
 
 		} catch (ValueMappingException epc) {
 
 			try {
 
-				trace.addInfo("No VM Key PC found for " + vmkey + ". Trying VM Key PG.");
+				trace.addInfo("No VM Key L1 found for " + vmkey + ". Trying VM Key L2.");
 
 				vmkey = table + delimiter + direction + delimiter + standard + delimiter + message + delimiter
 						+ version + delimiter + delimiter + delimiter + delimiter + partnertype + delimiter + partner
@@ -93,31 +99,34 @@ public class XCinitDocument {
 
 				vmreturn = XIVMService.executeMapping(src, dst, vmkey);
 
-				String pg[] = vmreturn.split("\\" + delimiter);
+				String L2[] = vmreturn.split("\\" + delimiter);
 
-				String vmkeypc = ""; // direction + delimiter + standard +
-				// delimiter + message + delimiter +
-				// version + delimiter + pg[0] +
-				// delimiter + pg[1] + delimiter;
-				String vmkeypg = direction + delimiter + standard + delimiter + message + delimiter + version
-						+ delimiter + "PG" + delimiter + pg[1] + delimiter;
-				String vmkeygc = direction + delimiter + standard + delimiter + message + delimiter + version
-						+ delimiter + "GC" + delimiter + delimiter + company;
-				String vmkeygg = direction + delimiter + standard + delimiter + message + delimiter + version
-						+ delimiter + "GG" + delimiter + delimiter;
+				String vmkeyA4 = direction + delimiter + standard + delimiter + message + delimiter + version
+						+ delimiter + "A4" + delimiter + delimiter;
+				String vmkeyL1 = "";
+				String vmkeyL2 = direction + delimiter + standard + delimiter + message + delimiter + version
+						+ delimiter + "L2" + delimiter + L2[1] + delimiter;
+				String vmkeyL3 = direction + delimiter + standard + delimiter + message + delimiter + version
+						+ delimiter + "L3" + delimiter + delimiter + company;
+				String vmkeyL4 = direction + delimiter + standard + delimiter + message + delimiter + version
+						+ delimiter + "L4" + delimiter + delimiter;
+				String vmkeyZ4 = direction + delimiter + standard + delimiter + message + delimiter + version
+						+ delimiter + "Z4" + delimiter + delimiter;
 
-				trace.addInfo("Class XCinitDocument: Initialize VM Key PC not possible.");
-				trace.addInfo("Class XCinitDocument: Initialize VM Key PG - " + vmkeypg);
-				trace.addInfo("Class XCinitDocument: Initialize VM Key GC - " + vmkeygc);
-				trace.addInfo("Class XCinitDocument: Initialize VM Key GG - " + vmkeygg);
+				trace.addInfo("Class XCinitDocument: Initialize VM Key A4 - " + vmkeyA4);
+				trace.addInfo("Class XCinitDocument: Initialize VM Key L1 not possible.");
+				trace.addInfo("Class XCinitDocument: Initialize VM Key L2 - " + vmkeyL2);
+				trace.addInfo("Class XCinitDocument: Initialize VM Key L3 - " + vmkeyL3);
+				trace.addInfo("Class XCinitDocument: Initialize VM Key L4 - " + vmkeyL4);
+				trace.addInfo("Class XCinitDocument: Initialize VM Key Z4 - " + vmkeyZ4);
 
-				return new String[] { vmkeypc, vmkeypg, vmkeygc, vmkeygg };
+				return new String[] { vmkeyA4, vmkeyL1, vmkeyL2, vmkeyL3, vmkeyL4, vmkeyZ4 };
 
 			} catch (ValueMappingException epg) {
 
 				trace.addInfo("Class XCinitDocument: Failed to initialize map with VM Key - " + vmkey);
 
-				return new String[] { "", "", "", "" };
+				return new String[] { "", "", "", "", "", "" };
 
 			}
 

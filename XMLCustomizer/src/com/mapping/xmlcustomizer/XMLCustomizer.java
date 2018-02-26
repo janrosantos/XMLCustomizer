@@ -71,9 +71,6 @@ public class XMLCustomizer extends AbstractTransformation {
 						String arg2 = XCrules[i][3];
 						String arg3 = XCrules[i][4];
 
-						trace.addInfo("Class XMLCustomizer: " + operation + " " + arg0 + " " + arg1 + " " + arg2 + " "
-								+ arg3);
-
 						// Choose which operation/method to execute
 						if ((operation.equals("addNodeConstant")) || (operation.equals("addNodeXPath"))) {
 
