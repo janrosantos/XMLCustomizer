@@ -29,6 +29,7 @@ public class XCprepIDOC extends XMLCustomizer {
 		String partnertype = "";
 		String partner = "";
 		String company = "";
+
 		String rcvlad = "";
 		String xcTable = "";
 

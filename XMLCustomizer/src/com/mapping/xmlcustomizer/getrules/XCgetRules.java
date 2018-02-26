@@ -103,6 +103,7 @@ public class XCgetRules extends XMLCustomizer {
 				while ((lenXCrulesTemp > 0) && (ruleNumber < 11000)) {
 
 					XCrulesTemp = getVMentry.executeGetVMentry(xcTable, initVMKeys[5], ruleNumber, trace);
+
 					if (XCrulesTemp.length > 0) {
 						XCrulesArray.add(XCrulesTemp);
 					}
