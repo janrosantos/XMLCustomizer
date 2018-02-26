@@ -9,17 +9,20 @@ import com.sap.aii.mapping.value.api.XIVMService;
 
 public class XCinitDocument {
 
-	public String[] executeXCinitDocuement(String[] initDocKey, AbstractTrace trace)
+	public String[] executeXCinitDocument(String[] initDocKey, AbstractTrace trace)
 			throws StreamTransformationException {
 
-		String table = initDocKey[0];
+		String initTable = initDocKey[0];
 		String direction = initDocKey[1];
 		String standard = initDocKey[2];
 		String message = initDocKey[3];
 		String version = initDocKey[4];
-		String partnertype = initDocKey[5];
-		String partner = initDocKey[6];
-		String company = initDocKey[7];
+		String vmk1 = initDocKey[5];
+		String vmk2 = initDocKey[6];
+		String vmk3 = initDocKey[7];
+		String vmk4 = initDocKey[8];
+		String vmk5 = initDocKey[9];
+		String vmk6 = initDocKey[10];
 
 		String delimiter = "~@#~";
 		String senderAgency = "VMR_Key";
@@ -57,9 +60,16 @@ public class XCinitDocument {
 
 		try {
 
-			vmkey = table + delimiter + direction + delimiter + standard + delimiter + message + delimiter + version
-					+ delimiter + delimiter + delimiter + delimiter + partnertype + delimiter + partner + delimiter
-					+ company + delimiter + delimiter + delimiter;
+			// vmkey = initTable + delimiter + direction + delimiter + standard
+			// + delimiter + message + delimiter
+			// + version + delimiter + delimiter + delimiter + delimiter +
+			// partnertype + delimiter + partner
+			// + delimiter + company + delimiter + delimiter + delimiter;
+
+			// Try unified init lookup
+			vmkey = initTable + delimiter + delimiter + delimiter + delimiter + delimiter + delimiter + delimiter
+					+ delimiter + vmk1 + delimiter + vmk2 + delimiter + vmk3 + delimiter + vmk4 + delimiter + vmk5
+					+ delimiter + vmk6;
 
 			vmreturn = XIVMService.executeMapping(src, dst, vmkey);
 
@@ -93,9 +103,15 @@ public class XCinitDocument {
 
 				trace.addInfo("No VM Key L1 found for " + vmkey + ". Trying VM Key L2.");
 
-				vmkey = table + delimiter + direction + delimiter + standard + delimiter + message + delimiter
-						+ version + delimiter + delimiter + delimiter + delimiter + partnertype + delimiter + partner
-						+ delimiter + delimiter + delimiter + delimiter;
+				// vmkey = initTable + delimiter + direction + delimiter +
+				// standard + delimiter + message + delimiter
+				// + version + delimiter + delimiter + delimiter + delimiter +
+				// partnertype + delimiter + partner
+				// + delimiter + delimiter + delimiter + delimiter;
+
+				// Try unified init lookup
+				vmkey = initTable + delimiter + delimiter + delimiter + delimiter + delimiter + delimiter + delimiter
+						+ delimiter + vmk1 + delimiter + vmk2 + delimiter + delimiter + delimiter + delimiter;
 
 				vmreturn = XIVMService.executeMapping(src, dst, vmkey);
 
@@ -107,7 +123,7 @@ public class XCinitDocument {
 				String vmkeyL2 = direction + delimiter + standard + delimiter + message + delimiter + version
 						+ delimiter + "L2" + delimiter + L2[1] + delimiter;
 				String vmkeyL3 = direction + delimiter + standard + delimiter + message + delimiter + version
-						+ delimiter + "L3" + delimiter + delimiter + company;
+						+ delimiter + "L3" + delimiter + delimiter + vmk3;
 				String vmkeyL4 = direction + delimiter + standard + delimiter + message + delimiter + version
 						+ delimiter + "L4" + delimiter + delimiter;
 				String vmkeyZ4 = direction + delimiter + standard + delimiter + message + delimiter + version

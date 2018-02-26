@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 
-import com.mapping.xmlcustomizer.functions.XCpadArray;
+import com.mapping.xmlcustomizer.functions.XCpadArray2D;
 import com.mapping.xmlcustomizer.getrules.XCgetRules;
 import com.mapping.xmlcustomizer.nodeoperations.XCaddNode;
 import com.mapping.xmlcustomizer.nodeoperations.XCdeleteNode;
@@ -54,7 +54,7 @@ public class XMLCustomizer extends AbstractTransformation {
 			XCgetRules getRules = new XCgetRules();
 			XCrules = getRules.executeXCgetRules(inputstreamtemp, trace);
 
-			XCrules = XCpadArray.executeXCpadArray(XCrules, "", 5);
+			XCrules = XCpadArray2D.executeXCpadArray2D(XCrules, "", 5);
 
 			// Loop though all the rules found
 			if (XCrules.length > 0) {

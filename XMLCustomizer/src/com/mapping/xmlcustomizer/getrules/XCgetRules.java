@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.mapping.xmlcustomizer.XMLCustomizer;
+import com.mapping.xmlcustomizer.functions.XCpadArray1D;
 import com.sap.aii.mapping.api.AbstractTrace;
 import com.sap.aii.mapping.api.StreamTransformationException;
 
@@ -42,11 +43,13 @@ public class XCgetRules extends XMLCustomizer {
 				docKey = prepIDOC.executeXCprepIDOC(in, trace);
 			}
 
-			xcTable = docKey[8];
+//			docKey = XCpadArray1D.executeXCpadArray1D(docKey, "", 12);
+
+			xcTable = docKey[11];
 
 			// Get Rules Step 3: Initialize document
 			XCinitDocument initDocument = new XCinitDocument();
-			initVMKeys = initDocument.executeXCinitDocuement(docKey, trace);
+			initVMKeys = initDocument.executeXCinitDocument(docKey, trace);
 
 			// Get Rules Step 4: Get rules from cache
 			if (!Arrays.equals(blankVMKey, initVMKeys)) {
