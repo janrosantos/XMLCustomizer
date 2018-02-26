@@ -10,6 +10,10 @@ import com.sap.aii.mapping.value.api.XIVMService;
 
 public class XCgetVM extends XMLCustomizer {
 
+//	
+//	This is not needed anymore
+//	
+	
 	public String[] executeGetVM(String table, String[] initVMKey, String processor, int ruleNumber, AbstractTrace trace)
 			throws StreamTransformationException {
 
