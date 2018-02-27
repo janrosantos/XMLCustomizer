@@ -12,6 +12,7 @@ import com.mapping.xmlcustomizer.nodeoperations.XCdeleteNode;
 import com.mapping.xmlcustomizer.nodeoperations.XCreplaceValue;
 import com.sap.aii.mapping.api.AbstractTrace;
 import com.sap.aii.mapping.api.AbstractTransformation;
+import com.sap.aii.mapping.api.InputParameters;
 import com.sap.aii.mapping.api.StreamTransformationException;
 import com.sap.aii.mapping.api.TransformationInput;
 import com.sap.aii.mapping.api.TransformationOutput;
@@ -23,14 +24,14 @@ public class XMLCustomizer extends AbstractTransformation {
 			throws StreamTransformationException {
 
 		try {
-			this.customizeXML(transformationInput.getInputPayload().getInputStream(), transformationOutput
+			this.customizeXML(transformationInput.getInputPayload().getInputStream(),transformationInput.getInputParameters(), transformationOutput
 					.getOutputPayload().getOutputStream());
 		} catch (Exception e) {
 			System.out.println("Error: " + e);
 		}
 	}
 
-	public void customizeXML(InputStream in, OutputStream out) throws StreamTransformationException {
+	public void customizeXML(InputStream in, InputParameters inParam, OutputStream out) throws StreamTransformationException {
 
 		AbstractTrace trace = getTrace();
 		trace.addInfo("Class XMLCustomizer: Starting XML Customizer");
@@ -48,11 +49,15 @@ public class XMLCustomizer extends AbstractTransformation {
 
 			StringBuilder outputstreamtemp = new StringBuilder();
 			outputstreamtemp = inputstreamtemp;
+			
+			//Get OM parameter
+			String omParam = inParam.getString("XC");
+			getTrace().addInfo("Input Parameter: " + omParam);
 
 			// Execute method to get rule parameters from PI cache
 			String[][] XCrules = new String[][] { {} };
 			XCgetRules getRules = new XCgetRules();
-			XCrules = getRules.executeXCgetRules(inputstreamtemp, trace);
+			XCrules = getRules.executeXCgetRules(inputstreamtemp, omParam, trace);
 
 			XCrules = XCpadArray2D.executeXCpadArray2D(XCrules, "", 5);
 

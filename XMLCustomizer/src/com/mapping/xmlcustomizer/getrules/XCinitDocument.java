@@ -101,7 +101,7 @@ public class XCinitDocument {
 
 			try {
 
-				trace.addInfo("No VM Key L1 found for " + vmkey + ". Trying VM Key L2.");
+				trace.addInfo("Class XCinitDocument: No VM Key L1 found for " + vmkey + ". Trying VM Key L2.");
 
 				// vmkey = initTable + delimiter + direction + delimiter +
 				// standard + delimiter + message + delimiter
@@ -130,7 +130,7 @@ public class XCinitDocument {
 						+ delimiter + "Z4" + delimiter + delimiter;
 
 				trace.addInfo("Class XCinitDocument: Initialize VM Key A4 - " + vmkeyA4);
-				trace.addInfo("Class XCinitDocument: Initialize VM Key L1 not possible.");
+				trace.addInfo("Class XCinitDocument: Initialize VM Key L1 not possible");
 				trace.addInfo("Class XCinitDocument: Initialize VM Key L2 - " + vmkeyL2);
 				trace.addInfo("Class XCinitDocument: Initialize VM Key L3 - " + vmkeyL3);
 				trace.addInfo("Class XCinitDocument: Initialize VM Key L4 - " + vmkeyL4);
@@ -140,9 +140,26 @@ public class XCinitDocument {
 
 			} catch (ValueMappingException epg) {
 
-				trace.addInfo("Class XCinitDocument: Failed to initialize map with VM Key - " + vmkey);
+				trace.addInfo("Class XCinitDocument: No VM Key L1 found for " + vmkey + ". Defaulting to VM Key L4.");
 
-				return new String[] { "", "", "", "", "", "" };
+				String vmkeyA4 = direction + delimiter + standard + delimiter + message + delimiter + version
+						+ delimiter + "A4" + delimiter + delimiter;
+				String vmkeyL1 = "";
+				String vmkeyL2 = "";
+				String vmkeyL3 = "";
+				String vmkeyL4 = direction + delimiter + standard + delimiter + message + delimiter + version
+						+ delimiter + "L4" + delimiter + delimiter;
+				String vmkeyZ4 = direction + delimiter + standard + delimiter + message + delimiter + version
+						+ delimiter + "Z4" + delimiter + delimiter;
+
+				trace.addInfo("Class XCinitDocument: Initialize VM Key A4 - " + vmkeyA4);
+				trace.addInfo("Class XCinitDocument: Initialize VM Key L1 not possible");
+				trace.addInfo("Class XCinitDocument: Initialize VM Key L2 not possible");
+				trace.addInfo("Class XCinitDocument: Initialize VM Key L3 - SKIP");
+				trace.addInfo("Class XCinitDocument: Initialize VM Key L4 - " + vmkeyL4);
+				trace.addInfo("Class XCinitDocument: Initialize VM Key Z4 - " + vmkeyZ4);
+
+				return new String[] { vmkeyA4, vmkeyL1, vmkeyL2, vmkeyL3, vmkeyL4, vmkeyZ4 };
 
 			}
 

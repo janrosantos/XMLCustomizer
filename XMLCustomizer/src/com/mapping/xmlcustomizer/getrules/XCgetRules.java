@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.mapping.xmlcustomizer.XMLCustomizer;
-import com.mapping.xmlcustomizer.functions.XCpadArray1D;
 import com.sap.aii.mapping.api.AbstractTrace;
 import com.sap.aii.mapping.api.StreamTransformationException;
 
@@ -18,7 +17,7 @@ public class XCgetRules extends XMLCustomizer {
 	String receiverScheme = "VMR_Target";
 	String context = "";
 
-	public String[][] executeXCgetRules(StringBuilder in, AbstractTrace trace) throws StreamTransformationException {
+	public String[][] executeXCgetRules(StringBuilder in, String omParam, AbstractTrace trace) throws StreamTransformationException {
 
 		trace.addInfo("Class XCgetRules: Acquiring rules for XML Customizer");
 
@@ -40,7 +39,7 @@ public class XCgetRules extends XMLCustomizer {
 			// Get Rules Step 2: Prepare document
 			if (docType.equals("IDOC")) {
 				XCprepIDOC prepIDOC = new XCprepIDOC();
-				docKey = prepIDOC.executeXCprepIDOC(in, trace);
+				docKey = prepIDOC.executeXCprepIDOC(in, omParam, trace);
 			}
 
 //			docKey = XCpadArray1D.executeXCpadArray1D(docKey, "", 12);

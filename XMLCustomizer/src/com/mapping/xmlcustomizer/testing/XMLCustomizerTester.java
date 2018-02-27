@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import com.mapping.xmlcustomizer.XMLCustomizer;
+import com.sap.aii.mapping.api.InputParameters;
+import com.sap.aii.mapping.lookup.Channel;
 
 public class XMLCustomizerTester {
 
@@ -20,10 +22,36 @@ public class XMLCustomizerTester {
 			// Read/assign input and output XML files
 			InputStream in = new FileInputStream(new File("inIDOC.xml"));
 			OutputStream out = new FileOutputStream(new File("out.xml"));
+			InputParameters inParam = new InputParameters() {
+				
+				@Override
+				public Object getValue(String name) {
+					// TODO Auto-generated method stub
+					return null;
+				}
+				
+				@Override
+				public String getString(String name) {
+					// TODO Auto-generated method stub
+					return "XCI";
+				}
+				
+				@Override
+				public int getInt(String name) {
+					// TODO Auto-generated method stub
+					return 0;
+				}
+				
+				@Override
+				public Channel getChannel(String name) {
+					// TODO Auto-generated method stub
+					return null;
+				}
+			};
 
 			// Execute java map
 			XMLCustomizer myMapping = new XMLCustomizer();
-			myMapping.customizeXML(in, out);
+			myMapping.customizeXML(in, inParam, out);
 
 		} catch (Exception e) {
 
