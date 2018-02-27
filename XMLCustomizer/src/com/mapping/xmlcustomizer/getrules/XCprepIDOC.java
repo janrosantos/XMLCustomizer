@@ -62,28 +62,9 @@ public class XCprepIDOC extends XMLCustomizer {
 				rcvlad = "";
 			}
 
-			// if ((direction.equals("1")) && (rcvlad.isEmpty())) {
-			// xcTable = "4.1.CUSTOM.XML.PRE";
-			// } else if (((direction.equals("1")) && (!rcvlad.isEmpty()))) {
-			// xcTable = "4.1.CUSTOM.XML.POST";
-			// } else if (((direction.equals("2")) && (rcvlad.isEmpty()))) {
-			// xcTable = "4.2.CUSTOM.XML.PRE";
-			// } else if (((direction.equals("2")) && (!rcvlad.isEmpty()))) {
-			// xcTable = "4.2.CUSTOM.XML.POST";
-			// }
-
-			// if (rcvlad.isEmpty()) {
-			//
-			// // Either outbound or inbound with no XC
-			// // Do nothing
-			//
-			// } else if (!rcvlad.isEmpty()) {
-
 			// Check for XC validity
 			if (rcvlad.contains("XCO")) {
 
-				// initTable = "1.1.LOOKUP";
-				// Try unified init lookup
 				initTable = "1.0.LOOKUP";
 				direction = "1";
 
@@ -99,7 +80,7 @@ public class XCprepIDOC extends XMLCustomizer {
 
 				}
 
-				// Other information to acquired from the IDOC
+				// Other information to be acquired from the IDOC
 
 				try {
 					XPathExpression standardXPath = xpath.compile("//STD");
@@ -246,8 +227,6 @@ public class XCprepIDOC extends XMLCustomizer {
 
 			} else if ((rcvlad.isEmpty() && omParam.contains("XCIPRE")) || (rcvlad.contains("XCIPRE") && omParam.contains("XCIPRE"))) {
 
-				// initTable = "1.2.LOOKUP";
-				// Try unified init lookup
 				initTable = "1.0.LOOKUP";
 				direction = "2";
 
@@ -256,7 +235,7 @@ public class XCprepIDOC extends XMLCustomizer {
 
 				// TODO
 				// Acquire details from OM parameter
-				// Format:XCIPRE_E96AZZ1996
+				// Format:XCIPRE_E96AZZ1
 
 				standard = omParam.substring(7, 8);
 
