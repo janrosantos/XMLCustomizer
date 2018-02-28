@@ -63,24 +63,129 @@ public class XCprepIDOC extends XMLCustomizer {
 			}
 
 			// Check for XC validity
-			if (rcvlad.contains("XCO")) {
+			// if (rcvlad.contains("XCO")) {
+			if (rcvlad.contains("XC")) {
 
 				initTable = "1.0.LOOKUP";
-				direction = "1";
 
-				if (rcvlad.contains("XCOPRE")) {
-
-					// Most common usage for IDOCs
-					xcTable = "4.1.CUSTOM.XML.PRE";
-
-				} else if (rcvlad.contains("XCOPOST")) {
-
-					// Limited case following this scenario
-					xcTable = "4.1.CUSTOM.XML.POST";
-
+				try {
+					XPathExpression directionXPath = xpath.compile("//DIRECT");
+					Node directionNode = (Node) directionXPath.evaluate(doc, XPathConstants.NODE);
+					direction = directionNode.getTextContent();
+				} catch (Exception e) {
+					direction = "2";
 				}
 
-				// Other information to be acquired from the IDOC
+				if (direction.equals("1")) {
+
+					try {
+						XPathExpression partnertypeXPath = xpath.compile("//RCVPRT");
+						Node partnertypeNode = (Node) partnertypeXPath.evaluate(doc, XPathConstants.NODE);
+						partnertype = partnertypeNode.getTextContent();
+					} catch (Exception e) {
+						partnertype = "";
+					}
+
+					try {
+						XPathExpression partnerXPath = xpath.compile("//RCVPRN");
+						Node partnerNode = (Node) partnerXPath.evaluate(doc, XPathConstants.NODE);
+						partner = partnerNode.getTextContent();
+					} catch (Exception e) {
+						partner = "";
+					}
+					if (partnertype.equals("KU")) {
+
+						try {
+							XPathExpression companyXPathKU = xpath.compile("//E1EDKA1[PARVW='AG']/LIFNR");
+							Node companyKUNode = (Node) companyXPathKU.evaluate(doc, XPathConstants.NODE);
+							company = companyKUNode.getTextContent().substring(
+									companyKUNode.getTextContent().length() - 3,
+									companyKUNode.getTextContent().length());
+						} catch (Exception e) {
+							company = "";
+
+						}
+					} else if (partnertype.equals("LI")) {
+
+						try {
+							XPathExpression companyXPathLI = xpath.compile("//E1EDKA1[PARVW='AG']/PARTN");
+							Node companyLINode = (Node) companyXPathLI.evaluate(doc, XPathConstants.NODE);
+							company = companyLINode.getTextContent().substring(
+									companyLINode.getTextContent().length() - 3,
+									companyLINode.getTextContent().length());
+						} catch (Exception e) {
+							company = "";
+						}
+
+					}
+
+					if (rcvlad.contains("XCPRE")) {
+						// Most common usage for IDOCs
+						xcTable = "4.1.CUSTOM.XML.PRE";
+
+					} else if (rcvlad.contains("XCPOST")) {
+
+						// Little possibility of usage
+						xcTable = "4.1.CUSTOM.XML.POST";
+					}
+
+				} else if (direction.equals("2")) {
+
+					try {
+						XPathExpression partnertypeXPath = xpath.compile("//SNDPRT");
+						Node partnertypeNode = (Node) partnertypeXPath.evaluate(doc, XPathConstants.NODE);
+						partnertype = partnertypeNode.getTextContent();
+					} catch (Exception e) {
+						partnertype = "";
+					}
+
+					try {
+						XPathExpression partnerXPath = xpath.compile("//SNDPRN");
+						Node partnerNode = (Node) partnerXPath.evaluate(doc, XPathConstants.NODE);
+						partner = partnerNode.getTextContent();
+					} catch (Exception e) {
+						partner = "";
+					}
+
+					if (partnertype.equals("KU")) {
+						// For Customer EDI
+						try {
+							XPathExpression companyXPathKU = xpath.compile("//E1EDKA1[PARVW='LF']/PARTN");
+							Node companyKUNode = (Node) companyXPathKU.evaluate(doc, XPathConstants.NODE);
+
+							company = companyKUNode.getTextContent().substring(
+									companyKUNode.getTextContent().length() - 3,
+									companyKUNode.getTextContent().length());
+						} catch (Exception e) {
+							company = "";
+
+						}
+					} else if (partnertype.equals("LI")) {
+						// For Vendor EDI only
+						// TODO Carrier EDI
+						try {
+							XPathExpression companyXPathLI = xpath.compile("//RCVPRN");
+							Node companyLINode = (Node) companyXPathLI.evaluate(doc, XPathConstants.NODE);
+							company = companyLINode.getTextContent().substring(
+									companyLINode.getTextContent().length() - 3,
+									companyLINode.getTextContent().length());
+						} catch (Exception e) {
+							company = "";
+						}
+					}
+
+					if (rcvlad.contains("XCPRE")) {
+						// Very unlikely
+						xcTable = "4.2.CUSTOM.XML.PRE";
+
+					} else if (rcvlad.contains("XCPOST")) {
+						// Second most possible usage
+						xcTable = "4.2.CUSTOM.XML.POST";
+					}
+				}
+
+				// All details MUST be in the IDOC header
+				// to qualify for XC usage
 
 				try {
 					XPathExpression standardXPath = xpath.compile("//STD");
@@ -105,155 +210,6 @@ public class XCprepIDOC extends XMLCustomizer {
 				} catch (Exception e) {
 					version = "";
 				}
-
-				try {
-					XPathExpression partnertypeXPath = xpath.compile("//RCVPRT");
-					Node partnertypeNode = (Node) partnertypeXPath.evaluate(doc, XPathConstants.NODE);
-					partnertype = partnertypeNode.getTextContent();
-				} catch (Exception e) {
-					partnertype = "";
-				}
-
-				try {
-					XPathExpression partnerXPath = xpath.compile("//RCVPRN");
-					Node partnerNode = (Node) partnerXPath.evaluate(doc, XPathConstants.NODE);
-					partner = partnerNode.getTextContent();
-				} catch (Exception e) {
-					partner = "";
-				}
-
-				// TODO
-				// Define better logic for company code identification
-				if (partnertype.equals("KU")) {
-
-					try {
-						XPathExpression companyXPathKU = xpath.compile("//E1EDKA1[PARVW='AG']/LIFNR");
-						Node companyKUNode = (Node) companyXPathKU.evaluate(doc, XPathConstants.NODE);
-						company = companyKUNode.getTextContent().substring(companyKUNode.getTextContent().length() - 4,
-								companyKUNode.getTextContent().length() - 1);
-					} catch (Exception e) {
-						company = "";
-
-					}
-				} else if (partnertype.equals("LI")) {
-
-					try {
-						XPathExpression companyXPathLI = xpath.compile("//E1EDKA1[PARVW='AG']/PARTN");
-						Node companyLINode = (Node) companyXPathLI.evaluate(doc, XPathConstants.NODE);
-						company = companyLINode.getTextContent().substring(companyLINode.getTextContent().length() - 4,
-								companyLINode.getTextContent().length() - 1);
-					} catch (Exception e) {
-						company = "";
-					}
-
-				}
-
-			} else if (rcvlad.contains("XCIPOST")) {
-
-				// Will be commonly used
-				// Details will still be acquired from the
-				// IDOC control record header
-				initTable = "1.0.LOOKUP";
-				direction = "2";
-				xcTable = "4.2.CUSTOM.XML.POST";
-
-				try {
-					XPathExpression standardXPath = xpath.compile("//STD");
-					Node standardNode = (Node) standardXPath.evaluate(doc, XPathConstants.NODE);
-					standard = standardNode.getTextContent();
-				} catch (Exception e) {
-					standard = "";
-				}
-
-				try {
-					XPathExpression messageXPath = xpath.compile("//STDMES");
-					Node messageNode = (Node) messageXPath.evaluate(doc, XPathConstants.NODE);
-					message = messageNode.getTextContent();
-				} catch (Exception e) {
-					message = "";
-				}
-
-				try {
-					XPathExpression versionXPath = xpath.compile("//STDVRS");
-					Node versionNode = (Node) versionXPath.evaluate(doc, XPathConstants.NODE);
-					version = versionNode.getTextContent();
-				} catch (Exception e) {
-					version = "";
-				}
-
-				try {
-					XPathExpression partnertypeXPath = xpath.compile("//SNDPRT");
-					Node partnertypeNode = (Node) partnertypeXPath.evaluate(doc, XPathConstants.NODE);
-					partnertype = partnertypeNode.getTextContent();
-				} catch (Exception e) {
-					partnertype = "";
-				}
-
-				try {
-					XPathExpression partnerXPath = xpath.compile("//SNDPRN");
-					Node partnerNode = (Node) partnerXPath.evaluate(doc, XPathConstants.NODE);
-					partner = partnerNode.getTextContent();
-				} catch (Exception e) {
-					partner = "";
-				}
-
-				// TODO
-				// Define better logic for company code identification
-
-				if (partnertype.equals("KU")) {
-
-					try {
-						XPathExpression companyXPathKU = xpath.compile("//E1EDKA1[PARVW='LF']/PARTN");
-						Node companyKUNode = (Node) companyXPathKU.evaluate(doc, XPathConstants.NODE);
-
-						company = companyKUNode.getTextContent().substring(companyKUNode.getTextContent().length() - 4,
-								companyKUNode.getTextContent().length() - 1);
-					} catch (Exception e) {
-						company = "";
-
-					}
-				} else if (partnertype.equals("LI")) {
-
-					try {
-						XPathExpression companyXPathLI = xpath.compile("//E1EDKA1[PARVW='RE']/PARTN");
-						Node companyLINode = (Node) companyXPathLI.evaluate(doc, XPathConstants.NODE);
-						company = companyLINode.getTextContent().substring(companyLINode.getTextContent().length() - 4,
-								companyLINode.getTextContent().length() - 1);
-					} catch (Exception e) {
-						company = "";
-					}
-
-				}
-
-			} else if ((rcvlad.isEmpty() && omParam.contains("XCIPRE")) || (rcvlad.contains("XCIPRE") && omParam.contains("XCIPRE"))) {
-
-				initTable = "1.0.LOOKUP";
-				direction = "2";
-
-				// Very unlikely case
-				xcTable = "4.2.CUSTOM.XML.PRE";
-
-				// TODO
-				// Acquire details from OM parameter
-				// Format:XCIPRE_E96AZZ1
-
-				standard = omParam.substring(7, 8);
-
-				try {
-					XPathExpression messageXPath = xpath.compile("//MESTYP");
-					Node messageNode = (Node) messageXPath.evaluate(doc, XPathConstants.NODE);
-					message = messageNode.getTextContent();
-				} catch (Exception e) {
-					message = "";
-				}
-
-				version = omParam.substring(8, 14);
-
-				partnertype = "";
-
-				partner = "";
-
-				company = omParam.substring(14, 16);
 
 			} else {
 
