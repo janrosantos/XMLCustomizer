@@ -17,12 +17,12 @@ public class XCinitDocument {
 		String standard = initDocKey[2];
 		String message = initDocKey[3];
 		String version = initDocKey[4];
-		String vmk1 = initDocKey[5];
-		String vmk2 = initDocKey[6];
-		String vmk3 = initDocKey[7];
-		String vmk4 = initDocKey[8];
-		String vmk5 = initDocKey[9];
-		String vmk6 = initDocKey[10];
+		String vmKeyInput1 = initDocKey[5];
+		String vmKeyInput2 = initDocKey[6];
+		String vmKeyInput3 = initDocKey[7];
+		String vmKeyInput4 = initDocKey[8];
+		String vmKeyInput5 = initDocKey[9];
+		String vmKeyInput6 = initDocKey[10];
 
 		String delimiter = "~@#~";
 		String senderAgency = "VMR_Key";
@@ -35,10 +35,10 @@ public class XCinitDocument {
 
 		try {
 
-			IFIdentifier vmsetsrc = XIVMFactory.newIdentifier("http://janro.com/vmrset", senderAgency, senderScheme);
-			IFIdentifier vmsetdst = XIVMFactory
-					.newIdentifier("http://janro.com/vmrset", receiverAgency, receiverScheme);
-			String vmset = XIVMService.executeMapping(vmsetsrc, vmsetdst, "0.0.VMRSET");
+			IFIdentifier vmsetSource = XIVMFactory.newIdentifier("http://janro.com/vmrset", senderAgency, senderScheme);
+			IFIdentifier vmsetDestination = XIVMFactory.newIdentifier("http://janro.com/vmrset", receiverAgency,
+					receiverScheme);
+			String vmset = XIVMService.executeMapping(vmsetSource, vmsetDestination, "0.0.VMRSET");
 			context = "http://janro.com/vmr/" + vmset;
 			trace.addInfo("Class XCinitDocument: VMR Set: " + context);
 
@@ -49,59 +49,50 @@ public class XCinitDocument {
 
 		}
 
-		// String vmkey =
-		// "1.1.LOOKUP~@#1~@#E~@#ORDERS~@#96AZZ1~@#~@#~@#~@#LI~@#9999000000~@#996~@#~@#~@#";
+		String vmKey = "";
+		String vmReturn = "";
 
-		String vmkey = "";
-		String vmreturn = "";
-
-		IFIdentifier src = XIVMFactory.newIdentifier(context, senderAgency, senderScheme);
-		IFIdentifier dst = XIVMFactory.newIdentifier(context, receiverAgency, receiverScheme);
+		IFIdentifier source = XIVMFactory.newIdentifier(context, senderAgency, senderScheme);
+		IFIdentifier destination = XIVMFactory.newIdentifier(context, receiverAgency, receiverScheme);
 
 		try {
 
-			// vmkey = initTable + delimiter + direction + delimiter + standard
-			// + delimiter + message + delimiter
-			// + version + delimiter + delimiter + delimiter + delimiter +
-			// partnertype + delimiter + partner
-			// + delimiter + company + delimiter + delimiter + delimiter;
-
 			// Try unified init lookup
-			vmkey = initTable + delimiter + delimiter + delimiter + delimiter + delimiter + delimiter + delimiter
-					+ delimiter + vmk1 + delimiter + vmk2 + delimiter + vmk3 + delimiter + vmk4 + delimiter + vmk5
-					+ delimiter + vmk6;
+			vmKey = initTable + delimiter + delimiter + delimiter + delimiter + delimiter + delimiter + delimiter
+					+ delimiter + vmKeyInput1 + delimiter + vmKeyInput2 + delimiter + vmKeyInput3 + delimiter
+					+ vmKeyInput4 + delimiter + vmKeyInput5 + delimiter + vmKeyInput6;
 
-			vmreturn = XIVMService.executeMapping(src, dst, vmkey);
+			vmReturn = XIVMService.executeMapping(source, destination, vmKey);
 
-			String L1[] = vmreturn.split("\\" + delimiter);
+			String L1[] = vmReturn.split("\\" + delimiter);
 
-			String vmkeyA4 = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
+			String vmKeyA4 = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
 					+ "A4" + delimiter + delimiter;
-			String vmkeyL1 = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
+			String vmKeyL1 = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
 					+ L1[0] + delimiter + L1[1] + delimiter + L1[2];
-			String vmkeyL2 = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
+			String vmKeyL2 = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
 					+ "L2" + delimiter + L1[1] + delimiter;
-			String vmkeyL3 = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
+			String vmKeyL3 = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
 					+ "L3" + delimiter + delimiter + L1[2];
-			String vmkeyL4 = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
+			String vmKeyL4 = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
 					+ "L4" + delimiter + delimiter;
-			String vmkeyZ4 = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
+			String vmKeyZ4 = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
 					+ "Z4" + delimiter + delimiter;
 
-			trace.addInfo("Class XCinitDocument: Initialize VM Key A4 - " + vmkeyA4);
-			trace.addInfo("Class XCinitDocument: Initialize VM Key L1 - " + vmkeyL1);
-			trace.addInfo("Class XCinitDocument: Initialize VM Key L2 - " + vmkeyL2);
-			trace.addInfo("Class XCinitDocument: Initialize VM Key L3 - " + vmkeyL3);
-			trace.addInfo("Class XCinitDocument: Initialize VM Key L4 - " + vmkeyL4);
-			trace.addInfo("Class XCinitDocument: Initialize VM Key Z4 - " + vmkeyZ4);
+			trace.addInfo("Class XCinitDocument: Initialize VM Key A4 - " + vmKeyA4);
+			trace.addInfo("Class XCinitDocument: Initialize VM Key L1 - " + vmKeyL1);
+			trace.addInfo("Class XCinitDocument: Initialize VM Key L2 - " + vmKeyL2);
+			trace.addInfo("Class XCinitDocument: Initialize VM Key L3 - " + vmKeyL3);
+			trace.addInfo("Class XCinitDocument: Initialize VM Key L4 - " + vmKeyL4);
+			trace.addInfo("Class XCinitDocument: Initialize VM Key Z4 - " + vmKeyZ4);
 
-			return new String[] { vmkeyA4, vmkeyL1, vmkeyL2, vmkeyL3, vmkeyL4, vmkeyZ4 };
+			return new String[] { vmKeyA4, vmKeyL1, vmKeyL2, vmKeyL3, vmKeyL4, vmKeyZ4 };
 
 		} catch (ValueMappingException epc) {
 
 			try {
 
-				trace.addInfo("Class XCinitDocument: No VM Key L1 found for " + vmkey + ". Trying VM Key L2.");
+				trace.addInfo("Class XCinitDocument: No VM Key L1 found for " + vmKey + ". Trying VM Key L2.");
 
 				// vmkey = initTable + delimiter + direction + delimiter +
 				// standard + delimiter + message + delimiter
@@ -110,56 +101,57 @@ public class XCinitDocument {
 				// + delimiter + delimiter + delimiter + delimiter;
 
 				// Try unified init lookup
-				vmkey = initTable + delimiter + delimiter + delimiter + delimiter + delimiter + delimiter + delimiter
-						+ delimiter + vmk1 + delimiter + vmk2 + delimiter + delimiter + delimiter + delimiter;
+				vmKey = initTable + delimiter + delimiter + delimiter + delimiter + delimiter + delimiter + delimiter
+						+ delimiter + vmKeyInput1 + delimiter + vmKeyInput2 + delimiter + delimiter + delimiter
+						+ delimiter;
 
-				vmreturn = XIVMService.executeMapping(src, dst, vmkey);
+				vmReturn = XIVMService.executeMapping(source, destination, vmKey);
 
-				String L2[] = vmreturn.split("\\" + delimiter);
+				String L2[] = vmReturn.split("\\" + delimiter);
 
-				String vmkeyA4 = direction + delimiter + standard + delimiter + message + delimiter + version
+				String vmKeyA4 = direction + delimiter + standard + delimiter + message + delimiter + version
 						+ delimiter + "A4" + delimiter + delimiter;
-				String vmkeyL1 = "";
-				String vmkeyL2 = direction + delimiter + standard + delimiter + message + delimiter + version
+				String vmKeyL1 = "";
+				String vmKeyL2 = direction + delimiter + standard + delimiter + message + delimiter + version
 						+ delimiter + "L2" + delimiter + L2[1] + delimiter;
-				String vmkeyL3 = direction + delimiter + standard + delimiter + message + delimiter + version
-						+ delimiter + "L3" + delimiter + delimiter + vmk3;
-				String vmkeyL4 = direction + delimiter + standard + delimiter + message + delimiter + version
+				String vmKeyL3 = direction + delimiter + standard + delimiter + message + delimiter + version
+						+ delimiter + "L3" + delimiter + delimiter + vmKeyInput3;
+				String vmKeyL4 = direction + delimiter + standard + delimiter + message + delimiter + version
 						+ delimiter + "L4" + delimiter + delimiter;
-				String vmkeyZ4 = direction + delimiter + standard + delimiter + message + delimiter + version
+				String vmKeyZ4 = direction + delimiter + standard + delimiter + message + delimiter + version
 						+ delimiter + "Z4" + delimiter + delimiter;
 
-				trace.addInfo("Class XCinitDocument: Initialize VM Key A4 - " + vmkeyA4);
+				trace.addInfo("Class XCinitDocument: Initialize VM Key A4 - " + vmKeyA4);
 				trace.addInfo("Class XCinitDocument: Initialize VM Key L1 not possible");
-				trace.addInfo("Class XCinitDocument: Initialize VM Key L2 - " + vmkeyL2);
-				trace.addInfo("Class XCinitDocument: Initialize VM Key L3 - " + vmkeyL3);
-				trace.addInfo("Class XCinitDocument: Initialize VM Key L4 - " + vmkeyL4);
-				trace.addInfo("Class XCinitDocument: Initialize VM Key Z4 - " + vmkeyZ4);
+				trace.addInfo("Class XCinitDocument: Initialize VM Key L2 - " + vmKeyL2);
+				trace.addInfo("Class XCinitDocument: Initialize VM Key L3 - " + vmKeyL3);
+				trace.addInfo("Class XCinitDocument: Initialize VM Key L4 - " + vmKeyL4);
+				trace.addInfo("Class XCinitDocument: Initialize VM Key Z4 - " + vmKeyZ4);
 
-				return new String[] { vmkeyA4, vmkeyL1, vmkeyL2, vmkeyL3, vmkeyL4, vmkeyZ4 };
+				return new String[] { vmKeyA4, vmKeyL1, vmKeyL2, vmKeyL3, vmKeyL4, vmKeyZ4 };
 
 			} catch (ValueMappingException epg) {
 
-				trace.addInfo("Class XCinitDocument: No VM Key L1 found for " + vmkey + ". Defaulting to VM Key L4.");
+				trace.addInfo("Class XCinitDocument: No VM Key L1 found for " + vmKey + ". Defaulting to VM Key L4.");
 
-				String vmkeyA4 = direction + delimiter + standard + delimiter + message + delimiter + version
+				String vmKeyA4 = direction + delimiter + standard + delimiter + message + delimiter + version
 						+ delimiter + "A4" + delimiter + delimiter;
-				String vmkeyL1 = "";
-				String vmkeyL2 = "";
-				String vmkeyL3 = "";
-				String vmkeyL4 = direction + delimiter + standard + delimiter + message + delimiter + version
+				String vmKeyL1 = "";
+				String vmKeyL2 = "";
+				String vmKeyL3 = "";
+				String vmKeyL4 = direction + delimiter + standard + delimiter + message + delimiter + version
 						+ delimiter + "L4" + delimiter + delimiter;
-				String vmkeyZ4 = direction + delimiter + standard + delimiter + message + delimiter + version
+				String vmKeyZ4 = direction + delimiter + standard + delimiter + message + delimiter + version
 						+ delimiter + "Z4" + delimiter + delimiter;
 
-				trace.addInfo("Class XCinitDocument: Initialize VM Key A4 - " + vmkeyA4);
+				trace.addInfo("Class XCinitDocument: Initialize VM Key A4 - " + vmKeyA4);
 				trace.addInfo("Class XCinitDocument: Initialize VM Key L1 not possible");
 				trace.addInfo("Class XCinitDocument: Initialize VM Key L2 not possible");
 				trace.addInfo("Class XCinitDocument: Initialize VM Key L3 - SKIP");
-				trace.addInfo("Class XCinitDocument: Initialize VM Key L4 - " + vmkeyL4);
-				trace.addInfo("Class XCinitDocument: Initialize VM Key Z4 - " + vmkeyZ4);
+				trace.addInfo("Class XCinitDocument: Initialize VM Key L4 - " + vmKeyL4);
+				trace.addInfo("Class XCinitDocument: Initialize VM Key Z4 - " + vmKeyZ4);
 
-				return new String[] { vmkeyA4, vmkeyL1, vmkeyL2, vmkeyL3, vmkeyL4, vmkeyZ4 };
+				return new String[] { vmKeyA4, vmKeyL1, vmKeyL2, vmKeyL3, vmKeyL4, vmKeyZ4 };
 
 			}
 

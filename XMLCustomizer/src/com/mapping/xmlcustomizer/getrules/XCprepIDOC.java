@@ -27,7 +27,7 @@ public class XCprepIDOC extends XMLCustomizer {
 		String standard = "";
 		String message = "";
 		String version = "";
-		String partnertype = "";
+		String partnerType = "";
 		String partner = "";
 		String company = "";
 
@@ -47,7 +47,7 @@ public class XCprepIDOC extends XMLCustomizer {
 
 			// Create XPath expression from arg0
 			XPathFactory xPathfactory = XPathFactory.newInstance();
-			XPath xpath = xPathfactory.newXPath();
+			XPath xPath = xPathfactory.newXPath();
 
 			// Check RCVLAD to identify direction and
 			// determine if pre or post processing
@@ -55,7 +55,7 @@ public class XCprepIDOC extends XMLCustomizer {
 			// from the IDOC or from RCVLAD
 
 			try {
-				XPathExpression rcvladXPath = xpath.compile("//RCVLAD");
+				XPathExpression rcvladXPath = xPath.compile("//RCVLAD");
 				Node rcvladNode = (Node) rcvladXPath.evaluate(doc, XPathConstants.NODE);
 				rcvlad = rcvladNode.getTextContent();
 			} catch (Exception e) {
@@ -69,7 +69,7 @@ public class XCprepIDOC extends XMLCustomizer {
 				initTable = "1.0.LOOKUP";
 
 				try {
-					XPathExpression directionXPath = xpath.compile("//DIRECT");
+					XPathExpression directionXPath = xPath.compile("//DIRECT");
 					Node directionNode = (Node) directionXPath.evaluate(doc, XPathConstants.NODE);
 					direction = directionNode.getTextContent();
 				} catch (Exception e) {
@@ -79,24 +79,24 @@ public class XCprepIDOC extends XMLCustomizer {
 				if (direction.equals("1")) {
 
 					try {
-						XPathExpression partnertypeXPath = xpath.compile("//RCVPRT");
+						XPathExpression partnertypeXPath = xPath.compile("//RCVPRT");
 						Node partnertypeNode = (Node) partnertypeXPath.evaluate(doc, XPathConstants.NODE);
-						partnertype = partnertypeNode.getTextContent();
+						partnerType = partnertypeNode.getTextContent();
 					} catch (Exception e) {
-						partnertype = "";
+						partnerType = "";
 					}
 
 					try {
-						XPathExpression partnerXPath = xpath.compile("//RCVPRN");
+						XPathExpression partnerXPath = xPath.compile("//RCVPRN");
 						Node partnerNode = (Node) partnerXPath.evaluate(doc, XPathConstants.NODE);
 						partner = partnerNode.getTextContent();
 					} catch (Exception e) {
 						partner = "";
 					}
-					if (partnertype.equals("KU")) {
+					if (partnerType.equals("KU")) {
 
 						try {
-							XPathExpression companyXPathKU = xpath.compile("//E1EDKA1[PARVW='AG']/LIFNR");
+							XPathExpression companyXPathKU = xPath.compile("//E1EDKA1[PARVW='AG']/LIFNR");
 							Node companyKUNode = (Node) companyXPathKU.evaluate(doc, XPathConstants.NODE);
 							company = companyKUNode.getTextContent().substring(
 									companyKUNode.getTextContent().length() - 3,
@@ -105,10 +105,10 @@ public class XCprepIDOC extends XMLCustomizer {
 							company = "";
 
 						}
-					} else if (partnertype.equals("LI")) {
+					} else if (partnerType.equals("LI")) {
 
 						try {
-							XPathExpression companyXPathLI = xpath.compile("//E1EDKA1[PARVW='AG']/PARTN");
+							XPathExpression companyXPathLI = xPath.compile("//E1EDKA1[PARVW='AG']/PARTN");
 							Node companyLINode = (Node) companyXPathLI.evaluate(doc, XPathConstants.NODE);
 							company = companyLINode.getTextContent().substring(
 									companyLINode.getTextContent().length() - 3,
@@ -132,25 +132,25 @@ public class XCprepIDOC extends XMLCustomizer {
 				} else if (direction.equals("2")) {
 
 					try {
-						XPathExpression partnertypeXPath = xpath.compile("//SNDPRT");
+						XPathExpression partnertypeXPath = xPath.compile("//SNDPRT");
 						Node partnertypeNode = (Node) partnertypeXPath.evaluate(doc, XPathConstants.NODE);
-						partnertype = partnertypeNode.getTextContent();
+						partnerType = partnertypeNode.getTextContent();
 					} catch (Exception e) {
-						partnertype = "";
+						partnerType = "";
 					}
 
 					try {
-						XPathExpression partnerXPath = xpath.compile("//SNDPRN");
+						XPathExpression partnerXPath = xPath.compile("//SNDPRN");
 						Node partnerNode = (Node) partnerXPath.evaluate(doc, XPathConstants.NODE);
 						partner = partnerNode.getTextContent();
 					} catch (Exception e) {
 						partner = "";
 					}
 
-					if (partnertype.equals("KU")) {
+					if (partnerType.equals("KU")) {
 						// For Customer EDI
 						try {
-							XPathExpression companyXPathKU = xpath.compile("//E1EDKA1[PARVW='LF']/PARTN");
+							XPathExpression companyXPathKU = xPath.compile("//E1EDKA1[PARVW='LF']/PARTN");
 							Node companyKUNode = (Node) companyXPathKU.evaluate(doc, XPathConstants.NODE);
 
 							company = companyKUNode.getTextContent().substring(
@@ -160,11 +160,11 @@ public class XCprepIDOC extends XMLCustomizer {
 							company = "";
 
 						}
-					} else if (partnertype.equals("LI")) {
+					} else if (partnerType.equals("LI")) {
 						// For Vendor EDI only
 						// TODO Carrier EDI
 						try {
-							XPathExpression companyXPathLI = xpath.compile("//RCVPRN");
+							XPathExpression companyXPathLI = xPath.compile("//RCVPRN");
 							Node companyLINode = (Node) companyXPathLI.evaluate(doc, XPathConstants.NODE);
 							company = companyLINode.getTextContent().substring(
 									companyLINode.getTextContent().length() - 3,
@@ -188,7 +188,7 @@ public class XCprepIDOC extends XMLCustomizer {
 				// to qualify for XC usage
 
 				try {
-					XPathExpression standardXPath = xpath.compile("//STD");
+					XPathExpression standardXPath = xPath.compile("//STD");
 					Node standardNode = (Node) standardXPath.evaluate(doc, XPathConstants.NODE);
 					standard = standardNode.getTextContent();
 				} catch (Exception e) {
@@ -196,7 +196,7 @@ public class XCprepIDOC extends XMLCustomizer {
 				}
 
 				try {
-					XPathExpression messageXPath = xpath.compile("//STDMES");
+					XPathExpression messageXPath = xPath.compile("//STDMES");
 					Node messageNode = (Node) messageXPath.evaluate(doc, XPathConstants.NODE);
 					message = messageNode.getTextContent();
 				} catch (Exception e) {
@@ -204,7 +204,7 @@ public class XCprepIDOC extends XMLCustomizer {
 				}
 
 				try {
-					XPathExpression versionXPath = xpath.compile("//STDVRS");
+					XPathExpression versionXPath = xPath.compile("//STDVRS");
 					Node versionNode = (Node) versionXPath.evaluate(doc, XPathConstants.NODE);
 					version = versionNode.getTextContent();
 				} catch (Exception e) {
@@ -223,7 +223,7 @@ public class XCprepIDOC extends XMLCustomizer {
 			trace.addInfo("Class XCprepIDOC error: " + exception);
 		}
 
-		return new String[] { initTable, direction, standard, message, version, partnertype, partner, company, "", "",
+		return new String[] { initTable, direction, standard, message, version, partnerType, partner, company, "", "",
 				"", xcTable };
 
 	}

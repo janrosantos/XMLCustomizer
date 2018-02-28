@@ -26,9 +26,9 @@ public class XCgetRules extends XMLCustomizer {
 		String[] docKey = new String[] {};
 		String[] initVMKeys = new String[] { "", "", "", "", "", "" };
 		String[] blankVMKey = new String[] { "", "", "", "", "", "" };
-		String[] XCrulesTemp = new String[] {};
-		String[][] XCrules = new String[][] {};
-		List<String[]> XCrulesArray = new ArrayList<String[]>();
+		String[] xcRulesTemp = new String[] {};
+		String[][] xcRules = new String[][] {};
+		List<String[]> xcRulesArray = new ArrayList<String[]>();
 
 		try {
 
@@ -59,16 +59,16 @@ public class XCgetRules extends XMLCustomizer {
 				// Get Rules Step 4.1: Get A4 rules from cache
 
 				int ruleNumber = 10100;
-				int lenXCrulesTemp = 1;
+				int xcRulesTempLen = 1;
 				boolean Lmatch = false;
 
-				while ((lenXCrulesTemp > 0) && (ruleNumber < 11000)) {
+				while ((xcRulesTempLen > 0) && (ruleNumber < 11000)) {
 
-					XCrulesTemp = getVMentry.executeGetVMentry(xcTable, initVMKeys[0], ruleNumber, trace);
-					if (XCrulesTemp.length > 0) {
-						XCrulesArray.add(XCrulesTemp);
+					xcRulesTemp = getVMentry.executeGetVMentry(xcTable, initVMKeys[0], ruleNumber, trace);
+					if (xcRulesTemp.length > 0) {
+						xcRulesArray.add(xcRulesTemp);
 					}
-					lenXCrulesTemp = XCrulesTemp.length;
+					xcRulesTempLen = xcRulesTemp.length;
 					ruleNumber = ruleNumber + 100;
 
 					if (ruleNumber == 11000) {
@@ -80,15 +80,15 @@ public class XCgetRules extends XMLCustomizer {
 
 				for (int L = 1; ((L < 5) && (!Lmatch)); L++) {
 					ruleNumber = 10100;
-					lenXCrulesTemp = 1;
-					while ((lenXCrulesTemp > 0) && (ruleNumber < 11000)) {
+					xcRulesTempLen = 1;
+					while ((xcRulesTempLen > 0) && (ruleNumber < 11000)) {
 
-						XCrulesTemp = getVMentry.executeGetVMentry(xcTable, initVMKeys[L], ruleNumber, trace);
-						if (XCrulesTemp.length > 0) {
-							XCrulesArray.add(XCrulesTemp);
+						xcRulesTemp = getVMentry.executeGetVMentry(xcTable, initVMKeys[L], ruleNumber, trace);
+						if (xcRulesTemp.length > 0) {
+							xcRulesArray.add(xcRulesTemp);
 							Lmatch = true;
 						}
-						lenXCrulesTemp = XCrulesTemp.length;
+						xcRulesTempLen = xcRulesTemp.length;
 						ruleNumber = ruleNumber + 100;
 
 						if (ruleNumber == 11000) {
@@ -100,16 +100,16 @@ public class XCgetRules extends XMLCustomizer {
 				// Get Rules Step 4.2: Get Z4 rules from cache
 
 				ruleNumber = 10100;
-				lenXCrulesTemp = 1;
+				xcRulesTempLen = 1;
 
-				while ((lenXCrulesTemp > 0) && (ruleNumber < 11000)) {
+				while ((xcRulesTempLen > 0) && (ruleNumber < 11000)) {
 
-					XCrulesTemp = getVMentry.executeGetVMentry(xcTable, initVMKeys[5], ruleNumber, trace);
+					xcRulesTemp = getVMentry.executeGetVMentry(xcTable, initVMKeys[5], ruleNumber, trace);
 
-					if (XCrulesTemp.length > 0) {
-						XCrulesArray.add(XCrulesTemp);
+					if (xcRulesTemp.length > 0) {
+						xcRulesArray.add(xcRulesTemp);
 					}
-					lenXCrulesTemp = XCrulesTemp.length;
+					xcRulesTempLen = xcRulesTemp.length;
 					ruleNumber = ruleNumber + 100;
 
 					if (ruleNumber == 11000) {
@@ -121,7 +121,7 @@ public class XCgetRules extends XMLCustomizer {
 
 				// No rules acquired
 				trace.addInfo("Class XCgetRules: Document not initialized");
-				XCrules = new String[][] {};
+				xcRules = new String[][] {};
 
 			}
 
@@ -129,13 +129,13 @@ public class XCgetRules extends XMLCustomizer {
 
 			trace.addInfo("Class XCgetRules error: " + exception);
 			trace.addInfo("Class XCgetRules error: Returning blank rules");
-			return XCrules;
+			return xcRules;
 
 		}
 
-		XCrules = XCrulesArray.toArray(XCrules);
-		trace.addInfo("Class XCgetRules: " + XCrules.length + " rule(s) acquired");
-		return XCrules;
+		xcRules = xcRulesArray.toArray(xcRules);
+		trace.addInfo("Class XCgetRules: " + xcRules.length + " rule(s) acquired");
+		return xcRules;
 
 	}
 }

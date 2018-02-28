@@ -23,10 +23,10 @@ public class XCgetVMentry {
 
 		try {
 
-			IFIdentifier vmsetsrc = XIVMFactory.newIdentifier("http://janro.com/vmrset", senderAgency, senderScheme);
-			IFIdentifier vmsetdst = XIVMFactory
+			IFIdentifier vmsetSource = XIVMFactory.newIdentifier("http://janro.com/vmrset", senderAgency, senderScheme);
+			IFIdentifier vmsetDestination = XIVMFactory
 					.newIdentifier("http://janro.com/vmrset", receiverAgency, receiverScheme);
-			String vmset = XIVMService.executeMapping(vmsetsrc, vmsetdst, "0.0.VMRSET");
+			String vmset = XIVMService.executeMapping(vmsetSource, vmsetDestination, "0.0.VMRSET");
 			context = "http://janro.com/vmr/" + vmset;
 
 		} catch (ValueMappingException exception) {
@@ -35,18 +35,18 @@ public class XCgetVMentry {
 
 		}
 
-		IFIdentifier src = XIVMFactory.newIdentifier(context, senderAgency, senderScheme);
-		IFIdentifier dst = XIVMFactory.newIdentifier(context, receiverAgency, receiverScheme);
+		IFIdentifier source = XIVMFactory.newIdentifier(context, senderAgency, senderScheme);
+		IFIdentifier destination = XIVMFactory.newIdentifier(context, receiverAgency, receiverScheme);
 
-		String VMreturn = "";
+		String vmReturn = "";
 
 		try {
 
 			String vmKey = xcTable + delimiter + vmKeyRule + delimiter + ruleNumber + delimiter + delimiter + delimiter
 					+ delimiter + delimiter;
 			trace.addInfo("Class XCgetVMentry: Trying " + vmKey);
-			VMreturn = XIVMService.executeMapping(src, dst, vmKey);
-			String xcRuleParam[] = VMreturn.split("\\" + delimiter);
+			vmReturn = XIVMService.executeMapping(source, destination, vmKey);
+			String xcRuleParam[] = vmReturn.split("\\" + delimiter);
 
 			return xcRuleParam;
 

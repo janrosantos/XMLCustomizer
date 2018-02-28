@@ -53,7 +53,7 @@ public class XCdeleteNode extends XMLCustomizer {
 			// Create XML document from input string
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document doc = builder.parse(new InputSource(new StringReader(inputString.toString())));
+			Document xmlDocument = builder.parse(new InputSource(new StringReader(inputString.toString())));
 
 			// Create XPath expression from arg0
 			XPathFactory xPathfactory = XPathFactory.newInstance();
@@ -62,7 +62,7 @@ public class XCdeleteNode extends XMLCustomizer {
 
 			// Parse XML document using XPath expression
 			// List all matches in delNode
-			NodeList delNodes = (NodeList) delXPath.evaluate(doc, XPathConstants.NODESET);
+			NodeList delNodes = (NodeList) delXPath.evaluate(xmlDocument, XPathConstants.NODESET);
 
 			// Execute deletion of nodes for all that matched the XPath
 			// delNodes is an array/list of nodes that matched the XPath
@@ -83,7 +83,7 @@ public class XCdeleteNode extends XMLCustomizer {
 			StringWriter stringWriter = new StringWriter();
 
 			// Assign transformed XML document to a temporary variable
-			transformer.transform(new DOMSource(doc), new StreamResult(stringWriter));
+			transformer.transform(new DOMSource(xmlDocument), new StreamResult(stringWriter));
 
 			// Console output only for debugging
 			// To be removed on actual deployment

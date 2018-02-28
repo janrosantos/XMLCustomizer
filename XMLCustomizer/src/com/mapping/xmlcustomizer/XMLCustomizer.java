@@ -38,17 +38,17 @@ public class XMLCustomizer extends AbstractTransformation {
 
 		try {
 
-			StringBuilder inputstreamtemp = new StringBuilder();
+			StringBuilder inputStreamTemp = new StringBuilder();
 			InputStreamReader reader = new InputStreamReader(in, "UTF-8");
 			char[] buffer = new char[4098];
 			int charsRead;
 			while ((charsRead = reader.read(buffer)) != -1) {
-				inputstreamtemp.append(buffer, 0, charsRead);
+				inputStreamTemp.append(buffer, 0, charsRead);
 			}
 			in.close();
 
-			StringBuilder outputstreamtemp = new StringBuilder();
-			outputstreamtemp = inputstreamtemp;
+			StringBuilder outputStreamTemp = new StringBuilder();
+			outputStreamTemp = inputStreamTemp;
 			
 			//Get OM parameter
 			String omParam = inParam.getString("XC");
@@ -57,7 +57,7 @@ public class XMLCustomizer extends AbstractTransformation {
 			// Execute method to get rule parameters from PI cache
 			String[][] XCrules = new String[][] { {} };
 			XCgetRules getRules = new XCgetRules();
-			XCrules = getRules.executeXCgetRules(inputstreamtemp, omParam, trace);
+			XCrules = getRules.executeXCgetRules(inputStreamTemp, omParam, trace);
 
 			XCrules = XCpadArray2D.executeXCpadArray2D(XCrules, "", 5);
 
@@ -81,23 +81,23 @@ public class XMLCustomizer extends AbstractTransformation {
 
 							// Add XML nodes/elements
 							XCaddNode addNodeXML = new XCaddNode();
-							outputstreamtemp = addNodeXML.executeXCaddNode(operation, arg0, arg1, arg2, arg3,
-									inputstreamtemp, trace);
+							outputStreamTemp = addNodeXML.executeXCaddNode(operation, arg0, arg1, arg2, arg3,
+									inputStreamTemp, trace);
 
 						} else if (operation.equals("deleteNode")) {
 
 							// Delete XML nodes/elements
 							XCdeleteNode deleteNodeXML = new XCdeleteNode();
-							outputstreamtemp = deleteNodeXML.executeXCdeleteNode(arg0, arg1, arg2, arg3,
-									inputstreamtemp, trace);
+							outputStreamTemp = deleteNodeXML.executeXCdeleteNode(arg0, arg1, arg2, arg3,
+									inputStreamTemp, trace);
 
 						} else if ((operation.equals("replaceValueConstant"))
 								|| (operation.equals("replaceValueXPath"))) {
 
 							// Replace XML nodes/elements values
 							XCreplaceValue replaceValueXML = new XCreplaceValue();
-							outputstreamtemp = replaceValueXML.executeXCreplaceValue(operation, arg0, arg1, arg2, arg3,
-									inputstreamtemp, trace);
+							outputStreamTemp = replaceValueXML.executeXCreplaceValue(operation, arg0, arg1, arg2, arg3,
+									inputStreamTemp, trace);
 
 						} else {
 
@@ -106,12 +106,12 @@ public class XMLCustomizer extends AbstractTransformation {
 
 						}
 
-						inputstreamtemp = outputstreamtemp;
+						inputStreamTemp = outputStreamTemp;
 
 					} else {
 
 						trace.addInfo("Class XMLCustomizer: Rule # 1 has no valid entries");
-						inputstreamtemp = outputstreamtemp;
+						inputStreamTemp = outputStreamTemp;
 
 					}
 
@@ -121,11 +121,11 @@ public class XMLCustomizer extends AbstractTransformation {
 
 				// No valid rules found, invalid operation parameter
 				trace.addInfo("Class XMLCustomizer: No rules found.");
-				inputstreamtemp = outputstreamtemp;
+				inputStreamTemp = outputStreamTemp;
 
 			}
 
-			out.write(outputstreamtemp.toString().getBytes(Charset.forName("UTF-8")));
+			out.write(outputStreamTemp.toString().getBytes(Charset.forName("UTF-8")));
 
 		} catch (Exception exception) {
 

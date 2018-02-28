@@ -63,11 +63,11 @@ public class XCaddNode {
 			// Create XML document from input string
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document doc = builder.parse(new InputSource(new StringReader(inputString.toString())));
+			Document xmlDocument = builder.parse(new InputSource(new StringReader(inputString.toString())));
 
 			// Create XPath expression
 			XPathFactory xPathfactory = XPathFactory.newInstance();
-			XPath xpath = xPathfactory.newXPath();
+			XPath xPath = xPathfactory.newXPath();
 
 			//
 			// Identify new value
@@ -118,11 +118,11 @@ public class XCaddNode {
 				} else {
 
 					// Create XPath expression from arg2
-					XPathExpression copyXPath = xpath.compile(arg3);
+					XPathExpression copyXPath = xPath.compile(arg3);
 
 					// Parse XML document using XPath expression
 					// Assign matching node to copyNode
-					Node copyNode = (Node) copyXPath.evaluate(doc, XPathConstants.NODE);
+					Node copyNode = (Node) copyXPath.evaluate(xmlDocument, XPathConstants.NODE);
 
 					// Get text content of copyNode
 					newValue = copyNode.getTextContent();
@@ -139,18 +139,18 @@ public class XCaddNode {
 			//
 
 			// Create XPath expression from arg0 which is the parent node
-			XPathExpression parentXPath = xpath.compile(arg0);
+			XPathExpression parentXPath = xPath.compile(arg0);
 
 			// Parse XML document using XPath expression
 			// Assign matching node to parentNode
-			NodeList parentNodes = (NodeList) parentXPath.evaluate(doc, XPathConstants.NODESET);
+			NodeList parentNodes = (NodeList) parentXPath.evaluate(xmlDocument, XPathConstants.NODESET);
 
 			// Create XML document for the new node to be inserted
 			Document addNodeDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 			addNodeDoc.appendChild(addNodeDoc.createElement(arg1));
 
 			// Create XPath expression from arg1 which is the child/new node
-			XPathExpression addXPath = xpath.compile("/" + arg1);
+			XPathExpression addXPath = xPath.compile("/" + arg1);
 
 			// Parse XML document using XPath expression
 			// Assign matching node to addNode
@@ -165,7 +165,7 @@ public class XCaddNode {
 			for (int i = 0; i < parentNodes.getLength(); i++) {
 
 				// Insert child node to parent node
-				parentNodes.item(i).appendChild(doc.importNode(addNode, true));
+				parentNodes.item(i).appendChild(xmlDocument.importNode(addNode, true));
 
 			}
 
@@ -177,7 +177,7 @@ public class XCaddNode {
 			StringWriter stringWriter = new StringWriter();
 
 			// Assign transformed XML document to a temporary variable
-			transformer.transform(new DOMSource(doc), new StreamResult(stringWriter));
+			transformer.transform(new DOMSource(xmlDocument), new StreamResult(stringWriter));
 
 			// Console output only for debugging
 			// To be removed on actual deployment

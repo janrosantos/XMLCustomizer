@@ -30,7 +30,7 @@ public class XCprepEDIFACT {
 		String partner = "";
 		String company = "";
 
-		String rcvlad = "";
+		String xcIndicator = "";
 		String xcTable = "";
 
 		trace.addInfo("Class XCprepIDOC: Preparing IDOC document keys");
@@ -54,11 +54,11 @@ public class XCprepEDIFACT {
 			// from the IDOC or from RCVLAD
 
 			try {
-				XPathExpression rcvladXPath = xpath.compile("//RCVLAD");
+				XPathExpression rcvladXPath = xpath.compile("//D_0001");
 				Node rcvladNode = (Node) rcvladXPath.evaluate(doc, XPathConstants.NODE);
-				rcvlad = rcvladNode.getTextContent();
+				xcIndicator = rcvladNode.getTextContent();
 			} catch (Exception e) {
-				rcvlad = "";
+				xcIndicator = "";
 			}
 
 			// Post processing for OUT only

@@ -28,11 +28,11 @@ public class XCgetVM extends XMLCustomizer {
 
 		try {
 
-			IFIdentifier vmsetsrc = XIVMFactory.newIdentifier("http://janro.com/vmrset", senderAgency, senderScheme);
-			IFIdentifier vmsetdst = XIVMFactory
+			IFIdentifier vmSetSrc = XIVMFactory.newIdentifier("http://janro.com/vmrset", senderAgency, senderScheme);
+			IFIdentifier vmSetDst = XIVMFactory
 					.newIdentifier("http://janro.com/vmrset", receiverAgency, receiverScheme);
-			String vmset = XIVMService.executeMapping(vmsetsrc, vmsetdst, "0.0.VMRSET");
-			context = "http://janro.com/vmr/" + vmset;
+			String vmSet = XIVMService.executeMapping(vmSetSrc, vmSetDst, "0.0.VMRSET");
+			context = "http://janro.com/vmr/" + vmSet;
 
 		} catch (ValueMappingException exception) {
 

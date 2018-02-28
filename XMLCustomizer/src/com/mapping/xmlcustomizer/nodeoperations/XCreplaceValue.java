@@ -61,7 +61,7 @@ public class XCreplaceValue {
 			// Create XML document from input string
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document doc = builder.parse(new InputSource(new StringReader(inputString.toString())));
+			Document xmlDocument = builder.parse(new InputSource(new StringReader(inputString.toString())));
 
 			// Create XPath expression
 			XPathFactory xPathfactory = XPathFactory.newInstance();
@@ -120,7 +120,7 @@ public class XCreplaceValue {
 
 					// Parse XML document using XPath expression
 					// Assign matching node to copyNode
-					Node copyNode = (Node) copyXPath.evaluate(doc, XPathConstants.NODE);
+					Node copyNode = (Node) copyXPath.evaluate(xmlDocument, XPathConstants.NODE);
 
 					// Get text content of copyNode
 					newValue = copyNode.getTextContent();
@@ -143,7 +143,7 @@ public class XCreplaceValue {
 
 			// Parse XML document using XPath expression
 			// Assign matching node to replaceNode
-			NodeList replaceNodes = (NodeList) replaceXPath.evaluate(doc, XPathConstants.NODESET);
+			NodeList replaceNodes = (NodeList) replaceXPath.evaluate(xmlDocument, XPathConstants.NODESET);
 
 			// Execute value replacement
 			// replaceNodes is an array/list of parent nodes
@@ -162,7 +162,7 @@ public class XCreplaceValue {
 			StringWriter stringWriter = new StringWriter();
 
 			// Assign transformed XML document to a temporary variable
-			transformer.transform(new DOMSource(doc), new StreamResult(stringWriter));
+			transformer.transform(new DOMSource(xmlDocument), new StreamResult(stringWriter));
 
 			// Console output only for debugging
 			// To be removed on actual deployment
