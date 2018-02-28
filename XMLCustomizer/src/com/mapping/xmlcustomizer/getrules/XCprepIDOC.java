@@ -150,7 +150,7 @@ public class XCprepIDOC extends XMLCustomizer {
 					if (partnerType.equals("KU")) {
 						// For Customer EDI
 						try {
-							XPathExpression companyXPathKU = xPath.compile("//E1EDKA1[PARVW='LF']/PARTN");
+							XPathExpression companyXPathKU = xPath.compile("//RCVPRN");
 							Node companyKUNode = (Node) companyXPathKU.evaluate(doc, XPathConstants.NODE);
 
 							company = companyKUNode.getTextContent().substring(
