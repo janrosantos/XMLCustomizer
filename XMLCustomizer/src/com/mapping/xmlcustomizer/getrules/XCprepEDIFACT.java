@@ -33,7 +33,7 @@ public class XCprepEDIFACT {
 		String xcIndicator = "";
 		String xcTable = "";
 
-		trace.addInfo("Class XCprepIDOC: Preparing IDOC document keys");
+		trace.addInfo("Class XCprepEDIFACT: Preparing EDIFACT document keys");
 
 		// Assign variables for the XML string
 		StringBuilder inputString = in;
@@ -54,31 +54,57 @@ public class XCprepEDIFACT {
 			// from the IDOC or from RCVLAD
 
 			try {
-				XPathExpression rcvladXPath = xpath.compile("//D_0001");
-				Node rcvladNode = (Node) rcvladXPath.evaluate(doc, XPathConstants.NODE);
-				xcIndicator = rcvladNode.getTextContent();
+				XPathExpression xcIndicatorXPath = xpath.compile("//D_0001");
+				Node xcIndicatorNode = (Node) xcIndicatorXPath.evaluate(doc, XPathConstants.NODE);
+				xcIndicator = xcIndicatorNode.getTextContent();
 			} catch (Exception e) {
 				xcIndicator = "";
 			}
 
-			// Post processing for OUT only
-			// Very unlikely to have INB post
-			// Use segment D_0001 for checking
-			// D_0001 should contain the indicator
-			
-			
-			
-			//TODO
-			//Pre processing
+			/*-			 
+			 * Post processing for OUT only
+			 * Very unlikely to have INB post
+			 * Use segment D_0001 for checking
+			 * D_0001 should contain the indicator
+			 * Format: UNOC-XCPOST-1E96AZZ1-LI:9999000004:996
+			 * Retain syntax identifier after
+			 */
+
+			if (xcIndicator.contains("XCPOST")) {
+
+				initTable = "1.0.LOOKUP";
+				direction = "1";
+				standard = "E";
+				xcTable = "4.1.CUSTOM.XML.POST";
+
+				String xcVar[] = xcIndicator.split("\\" + "-");
+				String xcPartner[] = xcVar[3].split("\\" + ":");
+
+				try {
+					XPathExpression xcIndicatorXPath = xpath.compile("//D_0065");
+					Node xcIndicatorNode = (Node) xcIndicatorXPath.evaluate(doc, XPathConstants.NODE);
+					message = xcIndicatorNode.getTextContent();
+				} catch (Exception e) {
+					message = "";
+				}
+
+				version = xcVar[2].substring(2, 8);
+				partnertype = xcPartner[0];
+				partner = xcPartner[1];
+				company = xcPartner[2];
+
+			}
+
+			// TODO
+			// Pre processing
 
 		} catch (Exception exception) {
 
-			trace.addInfo("Class XCprepIDOC error: " + exception);
+			trace.addInfo("Class XCprepEDIFACT error: " + exception);
 		}
 
 		return new String[] { initTable, direction, standard, message, version, partnertype, partner, company, "", "",
 				"", xcTable };
 
 	}
-
 }
