@@ -26,19 +26,21 @@ public class XCdeleteNode extends XMLCustomizer {
 	public StringBuilder executeXCdeleteNode(String arg0, String arg1, String arg2, String arg3, StringBuilder in,
 			AbstractTrace trace) throws StreamTransformationException {
 
-		// This method will execute deletion of nodes from the XML document
-		// passed via the input stream
-		// Node selection is based on the first argument
+		/**
+		 * This method will execute deletion of nodes from the XML document
+		 * passed via the input stream
+		 * 
+		 * Node selection is based on the first argument
+		 */
 
-		// arg0 is the node/s to be deleted
-		// arg0 is an XPath expression
-		// arg1 is not used
-		// arg2 is not used
-		// arg3 is not used
+		/*-
+		 * arg0 is the node/s to be deleted
+		 * arg0 is an XPath expression
+		 * arg1 is not used
+		 * arg2 is not used
+		 * arg3 is not used
+		 */
 
-		// Console output only for debugging
-		// To be removed on actual deployment
-		System.out.println("Entering node delete subroutine.");
 		trace.addInfo("Class XMLCustomizerDeleteNode: Starting delete node routine");
 
 		// Assign variables for the XML string
@@ -85,23 +87,14 @@ public class XCdeleteNode extends XMLCustomizer {
 			// Assign transformed XML document to a temporary variable
 			transformer.transform(new DOMSource(xmlDocument), new StreamResult(stringWriter));
 
-			// Console output only for debugging
-			// To be removed on actual deployment
-			System.out.println(stringWriter.toString());
 
 			// Write transformed XML string to output variable
 			outputString.append(stringWriter.toString());
 
-			// Console output only for debugging
-			// To be removed on actual deployment
-			System.out.println("Deletion completed.");
 			trace.addInfo("Class XMLCustomizerDeleteNode: Deletion completed");
 
 		} catch (Exception exception) {
 
-			// Console output only for debugging
-			// To be removed on actual deployment
-			System.out.println("Error encountered: " + exception);
 			trace.addInfo("Class XMLCustomizerDeleteNode error: " + exception);
 
 		}
