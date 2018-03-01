@@ -54,7 +54,7 @@ public class XCgetDocType {
 			if (idocNodes.getLength() > 0) {
 				docType = "IDOC";
 			} else if (edifactNodes.getLength() > 0) {
-				docType = "EDFICAT";
+				docType = "EDIFACT";
 			} else if (x12Nodes.getLength() > 0) {
 				docType = "X12";
 			} else if (xmlNodes.getLength() > 0) {
