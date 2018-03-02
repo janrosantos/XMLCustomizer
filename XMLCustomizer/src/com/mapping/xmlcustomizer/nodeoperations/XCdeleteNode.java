@@ -41,7 +41,7 @@ public class XCdeleteNode extends XMLCustomizer {
 		 * arg3 is not used
 		 */
 
-		trace.addInfo("Class XMLCustomizerDeleteNode: Starting delete node routine");
+		trace.addInfo("Class XCdeleteNode: Starting delete node routine");
 
 		// Assign variables for the XML string
 		StringBuilder inputString = in;
@@ -75,7 +75,7 @@ public class XCdeleteNode extends XMLCustomizer {
 
 			}
 
-			trace.addInfo("Class XMLCustomizerDeleteNode: " + delNodes.getLength() + " node(s) deleted");
+			trace.addInfo("Class XCdeleteNode: " + delNodes.getLength() + " node(s) deleted");
 
 			// Create new Transformer with the XSLT
 			TransformerFactory tfactory = TransformerFactory.newInstance();
@@ -87,15 +87,14 @@ public class XCdeleteNode extends XMLCustomizer {
 			// Assign transformed XML document to a temporary variable
 			transformer.transform(new DOMSource(xmlDocument), new StreamResult(stringWriter));
 
-
 			// Write transformed XML string to output variable
 			outputString.append(stringWriter.toString());
 
-			trace.addInfo("Class XMLCustomizerDeleteNode: Deletion completed");
+			trace.addInfo("Class XCdeleteNode: Deletion completed");
 
 		} catch (Exception exception) {
 
-			trace.addInfo("Class XMLCustomizerDeleteNode error: " + exception);
+			trace.addInfo("Class XCdeleteNode error: " + exception);
 
 		}
 

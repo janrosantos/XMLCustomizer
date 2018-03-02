@@ -20,7 +20,7 @@ public class XMLCustomizerTester {
 		try {
 
 			// Read/assign input and output XML files
-			InputStream in = new FileInputStream(new File("inIDOC.xml"));
+			InputStream in = new FileInputStream(new File("xcPostEDIFACTVendorOutbound.xml"));
 			OutputStream out = new FileOutputStream(new File("out.xml"));
 			InputParameters inParam = new InputParameters() {
 				

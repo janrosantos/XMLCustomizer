@@ -24,17 +24,18 @@ public class XMLCustomizer extends AbstractTransformation {
 			throws StreamTransformationException {
 
 		try {
-			this.customizeXML(transformationInput.getInputPayload().getInputStream(),transformationInput.getInputParameters(), transformationOutput
-					.getOutputPayload().getOutputStream());
+			this.customizeXML(transformationInput.getInputPayload().getInputStream(), transformationInput
+					.getInputParameters(), transformationOutput.getOutputPayload().getOutputStream());
 		} catch (Exception e) {
 			System.out.println("Error: " + e);
 		}
 	}
 
-	public void customizeXML(InputStream in, InputParameters inParam, OutputStream out) throws StreamTransformationException {
+	public void customizeXML(InputStream in, InputParameters inParam, OutputStream out)
+			throws StreamTransformationException {
 
 		AbstractTrace trace = getTrace();
-		trace.addInfo("Class XMLCustomizer: Starting XML Customizer");
+		// trace.addInfo("Class XMLCustomizer: Starting XML Customizer");
 
 		try {
 
@@ -49,10 +50,10 @@ public class XMLCustomizer extends AbstractTransformation {
 
 			StringBuilder outputStreamTemp = new StringBuilder();
 			outputStreamTemp = inputStreamTemp;
-			
-			//Get OM parameter
+
+			// Get OM parameter
 			String omParam = inParam.getString("XC");
-			getTrace().addInfo("Input Parameter: " + omParam);
+			trace.addInfo("Input Parameter: " + omParam);
 
 			// Execute method to get rule parameters from PI cache
 			String[][] XCrules = new String[][] { {} };

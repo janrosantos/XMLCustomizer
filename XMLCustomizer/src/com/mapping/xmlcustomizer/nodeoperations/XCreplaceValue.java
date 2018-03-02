@@ -27,27 +27,28 @@ public class XCreplaceValue {
 	public StringBuilder executeXCreplaceValue(String valueSource, String arg0, String arg1, String arg2, String arg3,
 			StringBuilder in, AbstractTrace trace) throws StreamTransformationException {
 
-		// This method will execute value replacement of nodes on the XML
-		// document passed via the input stream
-		// Node selection and value to be assigned is based on the first, third
-		// and fourth argument
+		/**
+		 * This method will execute value replacement of nodes on the XML
+		 * document passed via the input stream
+		 * 
+		 * Node selection and value to be assigned is based on the first, third
+		 * and fourth argument
+		 */
 
-		// arg0 is the parent node where the new element is to be inserted
-		// arg0 is an XPath expression
-		// arg1 is not used
-		// arg2 is the value to be assigned to the new node
-		// arg2 is a constant
-		// arg2 is optional
-		// arg3 is a node/element where a value should be copied
-		// should arg2 is blank
-		// arg3 is an XPath expression
-		// arg3 is optional
-		// Either arg1 or arg2 should at least exist else the created node will
-		// be blank
+		/*-
+		 * arg0 is the parent node where the new element is to be inserted
+		 * arg0 is an XPath expression
+		 * arg1 is not used
+		 * arg2 is the value to be assigned to the new node
+		 * arg2 is a constant
+		 * arg2 is optional
+		 * arg3 is a node/element where a value should be copied should arg2 is blank
+		 * arg3 is an XPath expression
+		 * arg3 is optional
+		 * Either arg1 or arg2 should at least exist else the created node will be blank
+		 */
 
-		// Console output only for debugging
-		// To be removed on actual deployment
-		System.out.println("Entering node value replacement subroutine.");
+		trace.addInfo("Class XCreplaceValue: Starting replace value routine");
 
 		// Assign variables for the XML string
 		StringBuilder inputString = in;
@@ -78,64 +79,46 @@ public class XCreplaceValue {
 			// Check where the value to assign will come from
 			if (valueSource.equals("replaceValueConstant")) {
 
-				if (arg2.isEmpty()) {
-
-					// arg2 is empty
-					// Assigning blank value
-					newValue = "";
-
-					// Console output only for debugging
-					// To be removed on actual deployment
-					System.out.println("Assigning blank value.");
-
-				} else {
-
-					// Using a constant value
+				try {
 					newValue = arg2;
-
-					// Console output only for debugging
-					// To be removed on actual deployment
-					System.out.println("New constant value: " + newValue);
-
+				} catch (Exception e) {
+					newValue = "";
+					trace.addInfo("Class XCreplaceValue: Assigning blank value " + newValue);
 				}
+
+				trace.addInfo("Class XCreplaceValue: New Value " + newValue);
 
 			} else if (valueSource.equals("replaceValueXPath")) {
 
-				if (arg2.isEmpty()) {
-
-					// arg2 is empty
-					// Assigning blank value
-					newValue = "";
-
-					// Console output only for debugging
-					// To be removed on actual deployment
-					System.out.println("Assigning blank value.");
-
-				} else {
-
+				try {
 					// Copy value from an existing node
 
 					// Create XPath expression from arg2
-					XPathExpression copyXPath = xpath.compile(arg3);
+					XPathExpression copyXPath = xpath.compile(arg2);
 
-					// Parse XML document using XPath expression
-					// Assign matching node to copyNode
-					Node copyNode = (Node) copyXPath.evaluate(xmlDocument, XPathConstants.NODE);
+					try {
+						// Parse XML document using XPath expression
+						// Assign matching node to copyNode
+						Node copyNode = (Node) copyXPath.evaluate(xmlDocument, XPathConstants.NODE);
+						// Get text content of copyNode
+						newValue = copyNode.getTextContent();
+					} catch (Exception e) {
+						// Treat as string right away
+						newValue = (String) copyXPath.evaluate(xmlDocument, XPathConstants.STRING);
+					}
 
-					// Get text content of copyNode
-					newValue = copyNode.getTextContent();
-
-					// Console output only for debugging
-					// To be removed on actual deployment
-					System.out.println("New value from existing node: " + newValue);
-
+				} catch (Exception e) {
+					newValue = "";
+					trace.addInfo("Class XCreplaceValue Error: Assigning blank value " + e);
 				}
+
+				trace.addInfo("Class XCreplaceValue: New Value from XPath " + newValue);
 
 			}
 
-			//
-			// Do replaceValue proper
-			//
+			/*
+			 * Do replaceValue proper
+			 */
 
 			// Create XPath expression from arg0 which is the node to be
 			// replaced
@@ -154,6 +137,8 @@ public class XCreplaceValue {
 
 			}
 
+			trace.addInfo("Class XCreplaceValue: " + replaceNodes.getLength() + " node(s) replaced");
+
 			// Create new Transformer with the XSLT
 			TransformerFactory tfactory = TransformerFactory.newInstance();
 			Transformer transformer = tfactory.newTransformer();
@@ -164,22 +149,14 @@ public class XCreplaceValue {
 			// Assign transformed XML document to a temporary variable
 			transformer.transform(new DOMSource(xmlDocument), new StreamResult(stringWriter));
 
-			// Console output only for debugging
-			// To be removed on actual deployment
-			System.out.println(stringWriter.toString());
-
 			// Write transformed XML string to output variable
 			outputString.append(stringWriter.toString());
 
-			// Console output only for debugging
-			// To be removed on actual deployment
-			System.out.println("Replace value completed.");
+			trace.addInfo("Class XCreplaceValue: Replace value completed");
 
 		} catch (Exception exception) {
 
-			// Console output only for debugging
-			// To be removed on actual deployment
-			System.out.println("Error encountered: " + exception);
+			trace.addInfo("Class XCreplaceValue error: " + exception);
 
 		}
 
