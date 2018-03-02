@@ -23,33 +23,28 @@ import com.sap.aii.mapping.api.AbstractTrace;
 import com.sap.aii.mapping.api.StreamTransformationException;
 
 public class XCaddNode {
-	
 
-	public StringBuilder executeXCaddNode(String addSource, String arg0, String arg1, String arg2, String arg3,
-			StringBuilder in, AbstractTrace trace) throws StreamTransformationException {
+	public StringBuilder executeXCaddNode(String addSource, String inParentXPath, String inNewField, String inNewValue,
+			String dummyArg4, StringBuilder in, AbstractTrace trace) throws StreamTransformationException {
 
-		// This method will execute addition of nodes on the XML document
-		// passed via the input stream
-		// Node selection and value to be assigned is based on the first, second
-		// and third argument
+		/**
+		 * This method will execute addition of nodes on the XML document passed
+		 * via the input stream
+		 * 
+		 * Node selection and value to be assigned is based on the first,
+		 * second, third and fourth argument
+		 */
 
-		// arg0 is the parent node where the new element is to be inserted
-		// arg0 is an XPath expression
-		// arg1 is the name of the new element/node
-		// arg1 is a string
-		// arg2 is the value to be assigned to the new node
-		// arg2 is a constant
-		// arg2 is optional
-		// arg3 is a node/element where a value should be copied
-		// should arg2 is blank
-		// arg3 is an XPath expression
-		// arg3 is optional
-		// Either arg1 or arg2 should at least exist else the created node will
-		// be blank
+		/*-
+		 * inParentXPath is the parent node where the new element is to be inserted
+		 * inParentXPath is an XPath expression
+		 * inNewField is the name of the new element/node
+		 * inNewValue is either the value to be assigned to the new node or an XPath expression
+		 * inNewValue is optional; blank value is assigned
+		 * dummyArg4 is not used
+		 * */
 
-		// Console output only for debugging
-		// To be removed on actual deployment
-		System.out.println("Entering node addition subroutine.");
+		trace.addInfo("Class XCreplaceValue: Starting replace value routine");
 
 		// Assign variables for the XML string
 		StringBuilder inputString = in;
@@ -80,58 +75,41 @@ public class XCaddNode {
 			// Check where the value to assign will come from
 			if (addSource.equals("addNodeConstant")) {
 
-				if (arg2.isEmpty()) {
-
-					// arg2 is empty
-					// Assigning blank value
+				try {
+					newValue = inNewValue;
+				} catch (Exception e) {
 					newValue = "";
-
-					// Console output only for debugging
-					// To be removed on actual deployment
-					System.out.println("Assigning blank value.");
-
-				} else {
-
-					// Using a constant value
-					newValue = arg2;
-
-					// Console output only for debugging
-					// To be removed on actual deployment
-					System.out.println("New constant value: " + newValue);
-
+					trace.addInfo("Class XCaddNode: Assigning blank value " + newValue);
 				}
 
 			} else if (addSource.equals("addNodeXPath")) {
 
 				// Copy value from an existing node
 
-				if (arg2.isEmpty()) {
-
-					// arg2 is empty
-					// Assigning blank value
-					newValue = "";
-
-					// Console output only for debugging
-					// To be removed on actual deployment
-					System.out.println("Assigning blank value.");
-
-				} else {
+				try {
+					// Copy value from an existing node
 
 					// Create XPath expression from arg2
-					XPathExpression copyXPath = xPath.compile(arg3);
+					XPathExpression copyXPath = xPath.compile(inNewValue);
 
-					// Parse XML document using XPath expression
-					// Assign matching node to copyNode
-					Node copyNode = (Node) copyXPath.evaluate(xmlDocument, XPathConstants.NODE);
+					try {
+						// Parse XML document using XPath expression
+						// Assign matching node to copyNode
+						Node copyNode = (Node) copyXPath.evaluate(xmlDocument, XPathConstants.NODE);
+						// Get text content of copyNode
+						newValue = copyNode.getTextContent();
+					} catch (Exception e) {
+						// Treat as string right away
+						newValue = (String) copyXPath.evaluate(xmlDocument, XPathConstants.STRING);
+					}
 
-					// Get text content of copyNode
-					newValue = copyNode.getTextContent();
-
-					// Console output only for debugging
-					// To be removed on actual deployment
-					System.out.println("New value from existing node: " + newValue);
-
+				} catch (Exception e) {
+					newValue = "";
+					trace.addInfo("Class XCaddNode Error: Assigning blank value " + e);
 				}
+
+				trace.addInfo("Class XCaddNode: New Value from XPath " + newValue);
+
 			}
 
 			//
@@ -139,7 +117,7 @@ public class XCaddNode {
 			//
 
 			// Create XPath expression from arg0 which is the parent node
-			XPathExpression parentXPath = xPath.compile(arg0);
+			XPathExpression parentXPath = xPath.compile(inParentXPath);
 
 			// Parse XML document using XPath expression
 			// Assign matching node to parentNode
@@ -147,10 +125,10 @@ public class XCaddNode {
 
 			// Create XML document for the new node to be inserted
 			Document addNodeDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-			addNodeDoc.appendChild(addNodeDoc.createElement(arg1));
+			addNodeDoc.appendChild(addNodeDoc.createElement(inNewField));
 
 			// Create XPath expression from arg1 which is the child/new node
-			XPathExpression addXPath = xPath.compile("/" + arg1);
+			XPathExpression addXPath = xPath.compile("/" + inNewField);
 
 			// Parse XML document using XPath expression
 			// Assign matching node to addNode
@@ -169,6 +147,8 @@ public class XCaddNode {
 
 			}
 
+			trace.addInfo("Class XCdeleteNode: " + parentNodes.getLength() + " " + inNewField + " node(s) deleted");
+
 			// Create new Transformer with the XSLT
 			TransformerFactory tfactory = TransformerFactory.newInstance();
 			Transformer transformer = tfactory.newTransformer();
@@ -179,22 +159,14 @@ public class XCaddNode {
 			// Assign transformed XML document to a temporary variable
 			transformer.transform(new DOMSource(xmlDocument), new StreamResult(stringWriter));
 
-			// Console output only for debugging
-			// To be removed on actual deployment
-			System.out.println(stringWriter.toString());
-
 			// Write transformed XML string to output variable
 			outputString.append(stringWriter.toString());
 
-			// Console output only for debugging
-			// To be removed on actual deployment
-			System.out.println("Addition completed.");
+			trace.addInfo("Class XCaddNode: Replace value completed");
 
 		} catch (Exception exception) {
 
-			// Console output only for debugging
-			// To be removed on actual deployment
-			System.out.println("Error encountered: " + exception);
+			trace.addInfo("Class XCaddNode error: " + exception);
 
 		}
 

@@ -24,28 +24,26 @@ import com.sap.aii.mapping.api.StreamTransformationException;
 
 public class XCreplaceValue {
 
-	public StringBuilder executeXCreplaceValue(String valueSource, String arg0, String arg1, String arg2, String arg3,
-			StringBuilder in, AbstractTrace trace) throws StreamTransformationException {
+	public StringBuilder executeXCreplaceValue(String valueSource, String inReplaceXPath, String dummyArg2,
+			String inNewValue, String dummyArg4, StringBuilder in, AbstractTrace trace)
+			throws StreamTransformationException {
 
 		/**
 		 * This method will execute value replacement of nodes on the XML
 		 * document passed via the input stream
 		 * 
-		 * Node selection and value to be assigned is based on the first, third
+		 * Node selection and value to be assigned is based on the first, second
 		 * and fourth argument
 		 */
 
 		/*-
-		 * arg0 is the parent node where the new element is to be inserted
-		 * arg0 is an XPath expression
-		 * arg1 is not used
-		 * arg2 is the value to be assigned to the new node
-		 * arg2 is a constant
-		 * arg2 is optional
-		 * arg3 is a node/element where a value should be copied should arg2 is blank
-		 * arg3 is an XPath expression
-		 * arg3 is optional
-		 * Either arg1 or arg2 should at least exist else the created node will be blank
+		 * inReplaceXPath is the parent node where the new element is to be inserted
+		 * inReplaceXPath is an XPath expression
+		 * dummyArg2 is not used
+		 * inNewValue is the value to be assigned to the new node or and xpath expression
+		 * inNewValue is optional; blank value to be assigned
+		 * dummyArg4 is not used
+
 		 */
 
 		trace.addInfo("Class XCreplaceValue: Starting replace value routine");
@@ -68,9 +66,9 @@ public class XCreplaceValue {
 			XPathFactory xPathfactory = XPathFactory.newInstance();
 			XPath xpath = xPathfactory.newXPath();
 
-			//
-			// Identify new value
-			//
+			/*
+			 * Identify new value
+			 */
 
 			// Create a temporary variable to store value to be assigned on the
 			// new node/element of the XML document
@@ -80,7 +78,7 @@ public class XCreplaceValue {
 			if (valueSource.equals("replaceValueConstant")) {
 
 				try {
-					newValue = arg2;
+					newValue = inNewValue;
 				} catch (Exception e) {
 					newValue = "";
 					trace.addInfo("Class XCreplaceValue: Assigning blank value " + newValue);
@@ -94,7 +92,7 @@ public class XCreplaceValue {
 					// Copy value from an existing node
 
 					// Create XPath expression from arg2
-					XPathExpression copyXPath = xpath.compile(arg2);
+					XPathExpression copyXPath = xpath.compile(inNewValue);
 
 					try {
 						// Parse XML document using XPath expression
@@ -122,7 +120,7 @@ public class XCreplaceValue {
 
 			// Create XPath expression from arg0 which is the node to be
 			// replaced
-			XPathExpression replaceXPath = xpath.compile(arg0);
+			XPathExpression replaceXPath = xpath.compile(inReplaceXPath);
 
 			// Parse XML document using XPath expression
 			// Assign matching node to replaceNode

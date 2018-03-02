@@ -26,12 +26,11 @@ public class XCprepEDIFACT {
 		String standard = "";
 		String message = "";
 		String version = "";
-		String partnertype = "";
-		String partner = "";
-		String company = "";
 
 		String xcIndicator = "";
 		String xcTable = "";
+		
+		String [] edifactKey = new String [] {};
 
 		trace.addInfo("Class XCprepEDIFACT: Preparing EDIFACT document keys");
 
@@ -44,14 +43,11 @@ public class XCprepEDIFACT {
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document doc = builder.parse(new InputSource(new StringReader(inputString.toString())));
 
-			// Create XPath expression from arg0
+			// Create XPath expression
 			XPathFactory xPathfactory = XPathFactory.newInstance();
 			XPath xpath = xPathfactory.newXPath();
 
-			// Check RCVLAD to identify direction and
-			// determine if pre or post processing
-			// This will also determinE if the VM keys will come
-			// from the IDOC or from RCVLAD
+			// Check D_0001 content
 
 			try {
 				XPathExpression xcIndicatorXPath = xpath.compile("//D_0001");
@@ -67,18 +63,15 @@ public class XCprepEDIFACT {
 			 * Use segment D_0001 for checking
 			 * D_0001 should contain the indicator
 			 * Format: UNOC-XCPOST-1E96AZZ1-LI:9999000004:996
-			 * Retain syntax identifier after
+			 * Retain syntax identifier after i.e. UNOC
 			 */
 
-			if (xcIndicator.contains("XCPOST")) {
+			if (xcIndicator.contains("XCPOST-1")) {
 
 				initTable = "1.0.LOOKUP";
 				direction = "1";
-				standard = "E";
-				xcTable = "4.1.CUSTOM.XML.POST";
 
-				String xcVar[] = xcIndicator.split("\\" + "-");
-				String xcPartner[] = xcVar[3].split("\\" + ":");
+				standard = "E";
 
 				try {
 					XPathExpression xcIndicatorXPath = xpath.compile("//D_0065");
@@ -88,23 +81,106 @@ public class XCprepEDIFACT {
 					message = "";
 				}
 
+				String xcVar[] = xcIndicator.split("\\" + "-");
+				String xcPartner[] = xcVar[3].split("\\" + ":");
+
 				version = xcVar[2].substring(2, 8);
-				partnertype = xcPartner[0];
-				partner = xcPartner[1];
-				company = xcPartner[2];
+
+				String partnertype = xcPartner[0];
+				String partner = xcPartner[1];
+				String company = xcPartner[2];
+
+				xcTable = "4.1.CUSTOM.XML.POST";
+
+				edifactKey =  new String [] { initTable, direction, standard, message, version, partnertype, partner, company,
+						"", "", "", xcTable };
 
 			}
 
 			// TODO
 			// Pre processing
 
+			/*-
+			 * Pre processing is for IN only
+			 * Very unlikely to have OUT pre
+			 * Check the value of the parameter to determine XC qualification
+			 * Format: XCPRE-2E96AZZ1
+			 * Inbound pre processing is for A4, L4 and Z4 rules only
+			 */
+
+			else if (omParam.contains("XCPRE-2")) {
+				
+				initTable = "1.0.LOOKUP";
+				direction = "2";
+
+				standard = "E";
+
+				try {
+					XPathExpression messageXPath = xpath.compile("//D_0065");
+					Node messageNode = (Node) messageXPath.evaluate(doc, XPathConstants.NODE);
+					message = messageNode.getTextContent();
+				} catch (Exception e) {
+					message = "";
+				}
+
+				String xcVar[] = omParam.split("\\" + "-");
+				version = xcVar[1].substring(2, 8);
+
+				String senderGLN = "";
+				String senderQualf = "";
+				String receiverGLN = "";
+				String receiverQualf = "";
+				
+				try {
+					XPathExpression senderGLNXPath = xpath.compile("//D_0065");
+					Node senderGLNNode = (Node) senderGLNXPath.evaluate(doc, XPathConstants.NODE);
+					senderGLN = senderGLNNode.getTextContent();
+				} catch (Exception e) {
+					senderGLN = "";
+				}
+
+				try {
+					XPathExpression senderQualfXPath = xpath.compile("//D_0065");
+					Node senderQualfNode = (Node) senderQualfXPath.evaluate(doc, XPathConstants.NODE);
+					senderQualf = senderQualfNode.getTextContent();
+				} catch (Exception e) {
+					senderQualf = "";
+				}
+
+				try {
+					XPathExpression receiverGLNxPath = xpath.compile("//D_0065");
+					Node receiverGLNNode = (Node) receiverGLNxPath.evaluate(doc, XPathConstants.NODE);
+					receiverGLN = receiverGLNNode.getTextContent();
+				} catch (Exception e) {
+					receiverGLN = "";
+				}
+
+				try {
+					XPathExpression receiverQualfXPath = xpath.compile("//D_0065");
+					Node receiverQualfNode = (Node) receiverQualfXPath.evaluate(doc, XPathConstants.NODE);
+					receiverQualf = receiverQualfNode.getTextContent();
+				} catch (Exception e) {
+					receiverQualf = "";
+				}
+
+
+				xcTable = "4.2.CUSTOM.XML.PRE";
+
+				return new String[] { initTable, direction, standard, message, version, senderGLN, senderQualf,
+						receiverGLN, receiverQualf, "", "", xcTable };
+
+			} else {
+				edifactKey =  new String [] { initTable, direction, standard, message, version, "", "",
+						"", "", "", "", xcTable };
+
+			}
+
 		} catch (Exception exception) {
 
 			trace.addInfo("Class XCprepEDIFACT error: " + exception);
 		}
 
-		return new String[] { initTable, direction, standard, message, version, partnertype, partner, company, "", "",
-				"", xcTable };
-
+		return edifactKey;
+		
 	}
 }

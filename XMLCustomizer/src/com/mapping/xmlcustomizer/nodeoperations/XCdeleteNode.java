@@ -18,12 +18,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import com.mapping.xmlcustomizer.XMLCustomizer;
 import com.sap.aii.mapping.api.AbstractTrace;
 import com.sap.aii.mapping.api.StreamTransformationException;
 
-public class XCdeleteNode extends XMLCustomizer {
-	public StringBuilder executeXCdeleteNode(String arg0, String arg1, String arg2, String arg3, StringBuilder in,
+public class XCdeleteNode {
+
+	public StringBuilder executeXCdeleteNode(String inDelXPath, String dummyArg1, String dummyArg2, String dummyArg3, StringBuilder in,
 			AbstractTrace trace) throws StreamTransformationException {
 
 		/**
@@ -34,11 +34,11 @@ public class XCdeleteNode extends XMLCustomizer {
 		 */
 
 		/*-
-		 * arg0 is the node/s to be deleted
-		 * arg0 is an XPath expression
-		 * arg1 is not used
-		 * arg2 is not used
-		 * arg3 is not used
+		 * deleteXPath is the node/s to be deleted
+		 * deleteXPath is an XPath expression
+		 * dummyArg1 is not used
+		 * dummyArg2 is not used
+		 * dummyArg3 is not used
 		 */
 
 		trace.addInfo("Class XCdeleteNode: Starting delete node routine");
@@ -57,10 +57,10 @@ public class XCdeleteNode extends XMLCustomizer {
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document xmlDocument = builder.parse(new InputSource(new StringReader(inputString.toString())));
 
-			// Create XPath expression from arg0
+			// Create XPath expression from inDelXPath
 			XPathFactory xPathfactory = XPathFactory.newInstance();
-			XPath xpath = xPathfactory.newXPath();
-			XPathExpression delXPath = xpath.compile(arg0);
+			XPath xPath = xPathfactory.newXPath();
+			XPathExpression delXPath = xPath.compile(inDelXPath);
 
 			// Parse XML document using XPath expression
 			// List all matches in delNode

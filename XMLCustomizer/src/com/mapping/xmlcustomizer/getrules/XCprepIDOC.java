@@ -50,7 +50,7 @@ public class XCprepIDOC extends XMLCustomizer {
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document doc = builder.parse(new InputSource(new StringReader(inputString.toString())));
 
-			// Create XPath expression from arg0
+			// Create XPath expression
 			XPathFactory xPathfactory = XPathFactory.newInstance();
 			XPath xPath = xPathfactory.newXPath();
 
@@ -272,7 +272,7 @@ public class XCprepIDOC extends XMLCustomizer {
 			} else {
 
 				/*-
-				 * No config for XC
+				 * No configuration for XC
 				 * Do nothing
 				 */
 
