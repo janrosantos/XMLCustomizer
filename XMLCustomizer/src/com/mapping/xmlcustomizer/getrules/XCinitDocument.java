@@ -13,9 +13,10 @@ public class XCinitDocument {
 			throws StreamTransformationException {
 
 		/**
-		 * This is a generic method for the initiation document and rules from PI cache.
+		 * This is a generic method for the initiation document and rules from
+		 * PI cache.
 		 */
-		
+
 		String[] vmOut = new String[] {};
 		String initTable = initDocKey[0];
 		String direction = initDocKey[1];
@@ -39,8 +40,8 @@ public class XCinitDocument {
 		String receiverScheme3 = "VMR_Target_3";
 		String context = "";
 
-//		trace.addInfo("Class XCinitDocument: Initialize document VM keys");
-			try {
+		// trace.addInfo("Class XCinitDocument: Initialize document VM keys");
+		try {
 
 			IFIdentifier vmsetSource = XIVMFactory.newIdentifier("http://janro.com/vmrset", senderAgency, senderScheme);
 			IFIdentifier vmsetDestination = XIVMFactory.newIdentifier("http://janro.com/vmrset", receiverAgency,
@@ -89,11 +90,14 @@ public class XCinitDocument {
 			vmReturn = vmReturn1 + vmReturn2 + vmReturn3;
 
 			String L1[] = vmReturn.split("\\" + delimiter);
+			
+			trace.addInfo("XXX");
 
 			String vmKeyA4 = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
 					+ "A4" + delimiter + delimiter;
 			String vmKeyL1 = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
 					+ L1[0] + delimiter + L1[1] + delimiter + L1[2];
+			trace.addInfo("XXX");
 			String vmKeyL2 = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
 					+ "L2" + delimiter + L1[1] + delimiter;
 			String vmKeyL3 = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
@@ -112,7 +116,7 @@ public class XCinitDocument {
 
 			vmOut = new String[] { vmKeyA4, vmKeyL1, vmKeyL2, vmKeyL3, vmKeyL4, vmKeyZ4 };
 
-		} catch (ValueMappingException eL1) {
+		} catch (Exception eL1) {
 
 			try {
 
@@ -158,7 +162,7 @@ public class XCinitDocument {
 
 				vmOut = new String[] { vmKeyA4, vmKeyL1, vmKeyL2, vmKeyL3, vmKeyL4, vmKeyZ4 };
 
-			} catch (ValueMappingException eL2) {
+			} catch (Exception eL2) {
 
 				trace.addInfo("Class XCinitDocument: No VM Key L2 found for " + vmKey + ". Defaulting to VM Key L4.");
 
@@ -183,11 +187,13 @@ public class XCinitDocument {
 
 			}
 
-		} catch (Exception e) {
-
-			trace.addInfo("Class XCinitDocument: No ValueMapping 1.0.LOOKUP found");
-			vmOut = new String[] { "", "", "", "", "", "" };
-		}
+		} 
+		
+//		catch (Exception e) {
+//
+//			trace.addInfo("Class XCinitDocument: No ValueMapping 1.0.LOOKUP found " + e);
+//			vmOut = new String[] { "", "", "", "", "", "" };
+//		}
 
 		return vmOut;
 

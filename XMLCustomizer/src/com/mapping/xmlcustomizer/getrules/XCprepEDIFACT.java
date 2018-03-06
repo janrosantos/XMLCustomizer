@@ -29,8 +29,8 @@ public class XCprepEDIFACT {
 
 		String xcIndicator = "";
 		String xcTable = "";
-		
-		String [] edifactKey = new String [] {};
+
+		String[] edifactKey = new String[] {};
 
 		trace.addInfo("Class XCprepEDIFACT: Preparing EDIFACT document keys");
 
@@ -88,12 +88,16 @@ public class XCprepEDIFACT {
 
 				String partnertype = xcPartner[0];
 				String partner = xcPartner[1];
-				String company = xcPartner[2];
-
+				String company = "";
+				try {
+					company = xcPartner[2];
+				} catch (Exception e) {
+					company = "";
+				}
 				xcTable = "4.1.CUSTOM.XML.POST";
 
-				edifactKey =  new String [] { initTable, direction, standard, message, version, partnertype, partner, company,
-						"", "", "", xcTable };
+				edifactKey = new String[] { initTable, direction, standard, message, version, partnertype, partner,
+						company, "", "", "", xcTable };
 
 			}
 
@@ -106,7 +110,7 @@ public class XCprepEDIFACT {
 			 */
 
 			else if (omParam.contains("XCPRE-2")) {
-				
+
 				initTable = "1.0.LOOKUP";
 				direction = "2";
 
@@ -127,9 +131,9 @@ public class XCprepEDIFACT {
 				String senderQualf = "";
 				String receiverGLN = "";
 				String receiverQualf = "";
-				
+
 				try {
-					XPathExpression senderGLNXPath = xpath.compile("//D_0065");
+					XPathExpression senderGLNXPath = xpath.compile("//C_S002/D_0004");
 					Node senderGLNNode = (Node) senderGLNXPath.evaluate(doc, XPathConstants.NODE);
 					senderGLN = senderGLNNode.getTextContent();
 				} catch (Exception e) {
@@ -137,7 +141,7 @@ public class XCprepEDIFACT {
 				}
 
 				try {
-					XPathExpression senderQualfXPath = xpath.compile("//D_0065");
+					XPathExpression senderQualfXPath = xpath.compile("//C_S002/D_0007");
 					Node senderQualfNode = (Node) senderQualfXPath.evaluate(doc, XPathConstants.NODE);
 					senderQualf = senderQualfNode.getTextContent();
 				} catch (Exception e) {
@@ -145,7 +149,7 @@ public class XCprepEDIFACT {
 				}
 
 				try {
-					XPathExpression receiverGLNxPath = xpath.compile("//D_0065");
+					XPathExpression receiverGLNxPath = xpath.compile("//C_S003/D_0010");
 					Node receiverGLNNode = (Node) receiverGLNxPath.evaluate(doc, XPathConstants.NODE);
 					receiverGLN = receiverGLNNode.getTextContent();
 				} catch (Exception e) {
@@ -153,13 +157,12 @@ public class XCprepEDIFACT {
 				}
 
 				try {
-					XPathExpression receiverQualfXPath = xpath.compile("//D_0065");
+					XPathExpression receiverQualfXPath = xpath.compile("//C_S003/D_0007");
 					Node receiverQualfNode = (Node) receiverQualfXPath.evaluate(doc, XPathConstants.NODE);
 					receiverQualf = receiverQualfNode.getTextContent();
 				} catch (Exception e) {
 					receiverQualf = "";
 				}
-
 
 				xcTable = "4.2.CUSTOM.XML.PRE";
 
@@ -167,8 +170,8 @@ public class XCprepEDIFACT {
 						receiverGLN, receiverQualf, "", "", xcTable };
 
 			} else {
-				edifactKey =  new String [] { initTable, direction, standard, message, version, "", "",
-						"", "", "", "", xcTable };
+				edifactKey = new String[] { initTable, direction, standard, message, version, "", "", "", "", "", "",
+						xcTable };
 
 			}
 
@@ -178,6 +181,6 @@ public class XCprepEDIFACT {
 		}
 
 		return edifactKey;
-		
+
 	}
 }
