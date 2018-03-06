@@ -10,10 +10,10 @@ import com.sap.aii.mapping.value.api.XIVMService;
 
 public class XCgetVM extends XMLCustomizer {
 
-//	
-//	This is not needed anymore
-//	
-	
+	//	
+	// This is not needed anymore
+	//	
+
 	public String[] executeGetVM(String table, String[] initVMKey, String processor, int ruleNumber, AbstractTrace trace)
 			throws StreamTransformationException {
 
@@ -69,7 +69,7 @@ public class XCgetVM extends XMLCustomizer {
 				try {
 
 					String vmkeypg = table + delimiter + gcvmkeypg + delimiter + processor + delimiter + ruleNumber
-					+ delimiter + delimiter + delimiter + delimiter;
+							+ delimiter + delimiter + delimiter + delimiter;
 					vmreturn = XIVMService.executeMapping(src, dst, vmkeypg);
 					String pg[] = vmreturn.split("\\" + delimiter);
 
@@ -83,7 +83,7 @@ public class XCgetVM extends XMLCustomizer {
 					try {
 
 						String vmkeygc = table + delimiter + gcvmkeygc + delimiter + processor + delimiter + ruleNumber
-						+ delimiter + delimiter + delimiter + delimiter;
+								+ delimiter + delimiter + delimiter + delimiter;
 						vmreturn = XIVMService.executeMapping(src, dst, vmkeygc);
 						String gc[] = vmreturn.split("\\" + delimiter);
 
@@ -96,8 +96,8 @@ public class XCgetVM extends XMLCustomizer {
 
 						try {
 
-							String vmkeygg = table + delimiter + gcvmkeygg + delimiter + processor + delimiter + ruleNumber
-							+ delimiter + delimiter + delimiter + delimiter;
+							String vmkeygg = table + delimiter + gcvmkeygg + delimiter + processor + delimiter
+									+ ruleNumber + delimiter + delimiter + delimiter + delimiter;
 
 							vmreturn = XIVMService.executeMapping(src, dst, vmkeygg);
 							String gg[] = vmreturn.split("\\" + delimiter);
@@ -122,7 +122,6 @@ public class XCgetVM extends XMLCustomizer {
 		} else {
 
 			trace.addInfo("Map not initialized. Aborting conversion.");
-			// return "";
 			return new String[] {};
 
 		}

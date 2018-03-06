@@ -105,6 +105,7 @@ public class XCprepIDOC extends XMLCustomizer {
 						XPathExpression partnerXPath = xPath.compile("//EDI_DC40/RCVPRN");
 						Node partnerNode = (Node) partnerXPath.evaluate(doc, XPathConstants.NODE);
 						partner = partnerNode.getTextContent();
+						partner = String.format("%010d", Integer.parseInt(partner));
 					} catch (Exception e) {
 						partner = "";
 					}
@@ -196,6 +197,7 @@ public class XCprepIDOC extends XMLCustomizer {
 						XPathExpression partnerXPath = xPath.compile("//EDI_DC40/SNDPRN");
 						Node partnerNode = (Node) partnerXPath.evaluate(doc, XPathConstants.NODE);
 						partner = partnerNode.getTextContent();
+						partner = String.format("%010d", Integer.parseInt(partner));
 					} catch (Exception e) {
 						partner = "";
 					}

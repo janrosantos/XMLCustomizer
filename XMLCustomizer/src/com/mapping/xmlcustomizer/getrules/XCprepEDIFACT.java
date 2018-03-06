@@ -97,9 +97,6 @@ public class XCprepEDIFACT {
 
 			}
 
-			// TODO
-			// Pre processing
-
 			/*-
 			 * Pre processing is for IN only
 			 * Very unlikely to have OUT pre

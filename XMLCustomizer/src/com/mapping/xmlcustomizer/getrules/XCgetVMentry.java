@@ -12,20 +12,27 @@ public class XCgetVMentry {
 	public String[] executeGetVMentry(String xcTable, String vmKeyRule, int ruleNumber, AbstractTrace trace)
 			throws StreamTransformationException {
 
-		trace.addInfo("Class XCgetVMentry: Executing rule acquisition from PI cache");
+		/**
+		 * This is a generic method for the extraction of rules from PI cache.
+		 */
+
+//		trace.addInfo("Class XCgetVMentry: Executing rule acquisition from PI cache");
 
 		String delimiter = "~@#~";
 		String senderAgency = "VMR_Key";
 		String senderScheme = "VMR_Source";
 		String receiverAgency = "VMR_Return";
 		String receiverScheme = "VMR_Target";
+		String receiverScheme1 = "VMR_Target_1";
+		String receiverScheme2 = "VMR_Target_2";
+		String receiverScheme3 = "VMR_Target_3";
 		String context = "";
 
 		try {
 
 			IFIdentifier vmsetSource = XIVMFactory.newIdentifier("http://janro.com/vmrset", senderAgency, senderScheme);
-			IFIdentifier vmsetDestination = XIVMFactory
-					.newIdentifier("http://janro.com/vmrset", receiverAgency, receiverScheme);
+			IFIdentifier vmsetDestination = XIVMFactory.newIdentifier("http://janro.com/vmrset", receiverAgency,
+					receiverScheme);
 			String vmset = XIVMService.executeMapping(vmsetSource, vmsetDestination, "0.0.VMRSET");
 			context = "http://janro.com/vmr/" + vmset;
 
@@ -36,16 +43,38 @@ public class XCgetVMentry {
 		}
 
 		IFIdentifier source = XIVMFactory.newIdentifier(context, senderAgency, senderScheme);
-		IFIdentifier destination = XIVMFactory.newIdentifier(context, receiverAgency, receiverScheme);
+		IFIdentifier destination1 = XIVMFactory.newIdentifier(context, receiverAgency, receiverScheme1);
+		IFIdentifier destination2 = XIVMFactory.newIdentifier(context, receiverAgency, receiverScheme2);
+		IFIdentifier destination3 = XIVMFactory.newIdentifier(context, receiverAgency, receiverScheme3);
 
 		String vmReturn = "";
+		String vmReturn1 = "";
+		String vmReturn2 = "";
+		String vmReturn3 = "";
 
 		try {
 
 			String vmKey = xcTable + delimiter + vmKeyRule + delimiter + ruleNumber + delimiter + delimiter + delimiter
 					+ delimiter + delimiter;
-			trace.addInfo("Class XCgetVMentry: Trying " + vmKey);
-			vmReturn = XIVMService.executeMapping(source, destination, vmKey);
+
+			trace.addInfo("Class XCgetVMentry: Extracting " + vmKey);
+
+			vmReturn1 = XIVMService.executeMapping(source, destination1, vmKey);
+
+			try {
+				vmReturn2 = XIVMService.executeMapping(source, destination2, vmKey);
+			} catch (Exception e) {
+				vmReturn2 = "";
+			}
+
+			try {
+				vmReturn3 = XIVMService.executeMapping(source, destination3, vmKey);
+			} catch (Exception e) {
+				vmReturn3 = "";
+			}
+
+			vmReturn = vmReturn1 + vmReturn2 + vmReturn3;
+
 			String xcRuleParam[] = vmReturn.split("\\" + delimiter);
 
 			return xcRuleParam;

@@ -52,7 +52,7 @@ public class XCgetRules extends XMLCustomizer {
 			} catch (Exception e) {
 				docKey = XCpadArray1D.executeXCpadArray1D(docKey, "", 12);
 			}
-
+			
 			// Get Rules Step 3: Initialize document
 			XCinitDocument initDocument = new XCinitDocument();
 			initVMKeys = initDocument.executeXCinitDocument(docKey, trace);
@@ -69,7 +69,7 @@ public class XCgetRules extends XMLCustomizer {
 				int xcRulesTempLen = 1;
 				boolean Lmatch = false;
 
-				while ((xcRulesTempLen > 0) && (ruleNumber < 11000)) {
+				while ((xcRulesTempLen > 0) && (ruleNumber < 15000)) {
 
 					xcRulesTemp = getVMentry.executeGetVMentry(xcTable, initVMKeys[0], ruleNumber, trace);
 					if (xcRulesTemp.length > 0) {
@@ -78,7 +78,7 @@ public class XCgetRules extends XMLCustomizer {
 					xcRulesTempLen = xcRulesTemp.length;
 					ruleNumber = ruleNumber + 100;
 
-					if (ruleNumber == 11000) {
+					if (ruleNumber == 15000) {
 						break;
 					}
 				}
@@ -88,7 +88,7 @@ public class XCgetRules extends XMLCustomizer {
 				for (int L = 1; ((L < 5) && (!Lmatch)); L++) {
 					ruleNumber = 10100;
 					xcRulesTempLen = 1;
-					while ((xcRulesTempLen > 0) && (ruleNumber < 11000)) {
+					while ((xcRulesTempLen > 0) && (ruleNumber < 15000)) {
 
 						xcRulesTemp = getVMentry.executeGetVMentry(xcTable, initVMKeys[L], ruleNumber, trace);
 						if (xcRulesTemp.length > 0) {
@@ -98,18 +98,18 @@ public class XCgetRules extends XMLCustomizer {
 						xcRulesTempLen = xcRulesTemp.length;
 						ruleNumber = ruleNumber + 100;
 
-						if (ruleNumber == 11000) {
+						if (ruleNumber == 15000) {
 							break;
 						}
 					}
 				}
 
-				// Get Rules Step 4.2: Get Z4 rules from cache
+				// Get Rules Step 4.3: Get Z4 rules from cache
 
 				ruleNumber = 10100;
 				xcRulesTempLen = 1;
 
-				while ((xcRulesTempLen > 0) && (ruleNumber < 11000)) {
+				while ((xcRulesTempLen > 0) && (ruleNumber < 15000)) {
 
 					xcRulesTemp = getVMentry.executeGetVMentry(xcTable, initVMKeys[5], ruleNumber, trace);
 
@@ -119,7 +119,7 @@ public class XCgetRules extends XMLCustomizer {
 					xcRulesTempLen = xcRulesTemp.length;
 					ruleNumber = ruleNumber + 100;
 
-					if (ruleNumber == 11000) {
+					if (ruleNumber == 15000) {
 						break;
 					}
 				}

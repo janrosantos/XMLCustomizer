@@ -12,6 +12,11 @@ public class XCinitDocument {
 	public String[] executeXCinitDocument(String[] initDocKey, AbstractTrace trace)
 			throws StreamTransformationException {
 
+		/**
+		 * This is a generic method for the initiation document and rules from PI cache.
+		 */
+		
+		String[] vmOut = new String[] {};
 		String initTable = initDocKey[0];
 		String direction = initDocKey[1];
 		String standard = initDocKey[2];
@@ -29,11 +34,13 @@ public class XCinitDocument {
 		String senderScheme = "VMR_Source";
 		String receiverAgency = "VMR_Return";
 		String receiverScheme = "VMR_Target";
+		String receiverScheme1 = "VMR_Target_1";
+		String receiverScheme2 = "VMR_Target_2";
+		String receiverScheme3 = "VMR_Target_3";
 		String context = "";
 
-		trace.addInfo("Class XCinitDocument: Initialize document VM keys");
-
-		try {
+//		trace.addInfo("Class XCinitDocument: Initialize document VM keys");
+			try {
 
 			IFIdentifier vmsetSource = XIVMFactory.newIdentifier("http://janro.com/vmrset", senderAgency, senderScheme);
 			IFIdentifier vmsetDestination = XIVMFactory.newIdentifier("http://janro.com/vmrset", receiverAgency,
@@ -45,15 +52,20 @@ public class XCinitDocument {
 		} catch (ValueMappingException e) {
 
 			trace.addInfo("Class XCinitDocument: No ValueMapping found for " + "0.0.VMRSET");
-			return new String[] { "", "", "", "" };
+			vmOut = new String[] { "", "", "", "", "", "" };
 
 		}
 
 		String vmKey = "";
 		String vmReturn = "";
+		String vmReturn1 = "";
+		String vmReturn2 = "";
+		String vmReturn3 = "";
 
 		IFIdentifier source = XIVMFactory.newIdentifier(context, senderAgency, senderScheme);
-		IFIdentifier destination = XIVMFactory.newIdentifier(context, receiverAgency, receiverScheme);
+		IFIdentifier destination1 = XIVMFactory.newIdentifier(context, receiverAgency, receiverScheme1);
+		IFIdentifier destination2 = XIVMFactory.newIdentifier(context, receiverAgency, receiverScheme2);
+		IFIdentifier destination3 = XIVMFactory.newIdentifier(context, receiverAgency, receiverScheme3);
 
 		try {
 
@@ -62,7 +74,19 @@ public class XCinitDocument {
 					+ delimiter + vmKeyInput1 + delimiter + vmKeyInput2 + delimiter + vmKeyInput3 + delimiter
 					+ vmKeyInput4 + delimiter + vmKeyInput5 + delimiter + vmKeyInput6;
 
-			vmReturn = XIVMService.executeMapping(source, destination, vmKey);
+			vmReturn1 = XIVMService.executeMapping(source, destination1, vmKey);
+			try {
+				vmReturn2 = XIVMService.executeMapping(source, destination2, vmKey);
+			} catch (Exception evmReturn2) {
+				vmReturn2 = "";
+			}
+			try {
+				vmReturn3 = XIVMService.executeMapping(source, destination3, vmKey);
+			} catch (Exception evmReturn3) {
+				vmReturn3 = "";
+			}
+
+			vmReturn = vmReturn1 + vmReturn2 + vmReturn3;
 
 			String L1[] = vmReturn.split("\\" + delimiter);
 
@@ -86,26 +110,30 @@ public class XCinitDocument {
 			trace.addInfo("Class XCinitDocument: Initialize VM Key L4 - " + vmKeyL4);
 			trace.addInfo("Class XCinitDocument: Initialize VM Key Z4 - " + vmKeyZ4);
 
-			return new String[] { vmKeyA4, vmKeyL1, vmKeyL2, vmKeyL3, vmKeyL4, vmKeyZ4 };
+			vmOut = new String[] { vmKeyA4, vmKeyL1, vmKeyL2, vmKeyL3, vmKeyL4, vmKeyZ4 };
 
-		} catch (ValueMappingException epc) {
+		} catch (ValueMappingException eL1) {
 
 			try {
 
 				trace.addInfo("Class XCinitDocument: No VM Key L1 found for " + vmKey + ". Trying VM Key L2.");
-
-				// vmkey = initTable + delimiter + direction + delimiter +
-				// standard + delimiter + message + delimiter
-				// + version + delimiter + delimiter + delimiter + delimiter +
-				// partnertype + delimiter + partner
-				// + delimiter + delimiter + delimiter + delimiter;
 
 				// Try unified init lookup
 				vmKey = initTable + delimiter + delimiter + delimiter + delimiter + delimiter + delimiter + delimiter
 						+ delimiter + vmKeyInput1 + delimiter + vmKeyInput2 + delimiter + delimiter + delimiter
 						+ delimiter;
 
-				vmReturn = XIVMService.executeMapping(source, destination, vmKey);
+				vmReturn1 = XIVMService.executeMapping(source, destination1, vmKey);
+				try {
+					vmReturn2 = XIVMService.executeMapping(source, destination2, vmKey);
+				} catch (Exception evmReturn2) {
+					vmReturn2 = "";
+				}
+				try {
+					vmReturn3 = XIVMService.executeMapping(source, destination3, vmKey);
+				} catch (Exception evmReturn3) {
+					vmReturn3 = "";
+				}
 
 				String L2[] = vmReturn.split("\\" + delimiter);
 
@@ -128,11 +156,11 @@ public class XCinitDocument {
 				trace.addInfo("Class XCinitDocument: Initialize VM Key L4 - " + vmKeyL4);
 				trace.addInfo("Class XCinitDocument: Initialize VM Key Z4 - " + vmKeyZ4);
 
-				return new String[] { vmKeyA4, vmKeyL1, vmKeyL2, vmKeyL3, vmKeyL4, vmKeyZ4 };
+				vmOut = new String[] { vmKeyA4, vmKeyL1, vmKeyL2, vmKeyL3, vmKeyL4, vmKeyZ4 };
 
-			} catch (ValueMappingException epg) {
+			} catch (ValueMappingException eL2) {
 
-				trace.addInfo("Class XCinitDocument: No VM Key L1 found for " + vmKey + ". Defaulting to VM Key L4.");
+				trace.addInfo("Class XCinitDocument: No VM Key L2 found for " + vmKey + ". Defaulting to VM Key L4.");
 
 				String vmKeyA4 = direction + delimiter + standard + delimiter + message + delimiter + version
 						+ delimiter + "A4" + delimiter + delimiter;
@@ -147,15 +175,21 @@ public class XCinitDocument {
 				trace.addInfo("Class XCinitDocument: Initialize VM Key A4 - " + vmKeyA4);
 				trace.addInfo("Class XCinitDocument: Initialize VM Key L1 not possible");
 				trace.addInfo("Class XCinitDocument: Initialize VM Key L2 not possible");
-				trace.addInfo("Class XCinitDocument: Initialize VM Key L3 - SKIP");
+				trace.addInfo("Class XCinitDocument: Initialize VM Key L3 - SKIPPED");
 				trace.addInfo("Class XCinitDocument: Initialize VM Key L4 - " + vmKeyL4);
 				trace.addInfo("Class XCinitDocument: Initialize VM Key Z4 - " + vmKeyZ4);
 
-				return new String[] { vmKeyA4, vmKeyL1, vmKeyL2, vmKeyL3, vmKeyL4, vmKeyZ4 };
+				vmOut = new String[] { vmKeyA4, vmKeyL1, vmKeyL2, vmKeyL3, vmKeyL4, vmKeyZ4 };
 
 			}
 
+		} catch (Exception e) {
+
+			trace.addInfo("Class XCinitDocument: No ValueMapping 1.0.LOOKUP found");
+			vmOut = new String[] { "", "", "", "", "", "" };
 		}
+
+		return vmOut;
 
 	}
 }
