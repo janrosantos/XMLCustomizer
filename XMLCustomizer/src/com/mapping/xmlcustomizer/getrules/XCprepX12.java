@@ -67,7 +67,7 @@ public class XCprepX12 {
 			 * Very unlikely to have INB post
 			 * Use segment D_0001 for checking
 			 * D_0001 should contain the indicator
-			 * Format: UNOC-XCPOST-1E96AZZ1-LI:9999000004:996
+			 * Format: UNOC-XCPOST-1XV41ZZ1-LI:9999000004:996
 			 * Retain syntax identifier after i.e. UNOC
 			 */
 
