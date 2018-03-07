@@ -21,6 +21,11 @@ public class XCprepEDIFACT {
 	public String[] executeXCprepEDIFACT(StringBuilder in, String omParam, AbstractTrace trace)
 			throws StreamTransformationException {
 
+		/**
+		 * This method will prepare the necessary information from the EDIFACT
+		 * EDI that will be used to acquire rule from PI cache
+		 */
+
 		String initTable = "";
 		String direction = "";
 		String standard = "";

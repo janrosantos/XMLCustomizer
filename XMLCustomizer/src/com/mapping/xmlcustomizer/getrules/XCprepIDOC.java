@@ -13,11 +13,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
-import com.mapping.xmlcustomizer.XMLCustomizer;
 import com.sap.aii.mapping.api.AbstractTrace;
 import com.sap.aii.mapping.api.StreamTransformationException;
 
-public class XCprepIDOC extends XMLCustomizer {
+public class XCprepIDOC {
 
 	public String[] executeXCprepIDOC(StringBuilder in, AbstractTrace trace) throws StreamTransformationException {
 
@@ -105,7 +104,8 @@ public class XCprepIDOC extends XMLCustomizer {
 						XPathExpression partnerXPath = xPath.compile("//EDI_DC40/RCVPRN");
 						Node partnerNode = (Node) partnerXPath.evaluate(doc, XPathConstants.NODE);
 						partner = partnerNode.getTextContent();
-//						partner = String.format("%010d", Integer.parseInt(partner));
+						// partner = String.format("%010d",
+						// Integer.parseInt(partner));
 					} catch (Exception e) {
 						partner = "";
 					}
@@ -197,7 +197,8 @@ public class XCprepIDOC extends XMLCustomizer {
 						XPathExpression partnerXPath = xPath.compile("//EDI_DC40/SNDPRN");
 						Node partnerNode = (Node) partnerXPath.evaluate(doc, XPathConstants.NODE);
 						partner = partnerNode.getTextContent();
-//						partner = String.format("%010d", Integer.parseInt(partner));
+						// partner = String.format("%010d",
+						// Integer.parseInt(partner));
 					} catch (Exception e) {
 						partner = "";
 					}

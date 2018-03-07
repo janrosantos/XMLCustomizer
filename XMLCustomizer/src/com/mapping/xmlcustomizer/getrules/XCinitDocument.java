@@ -13,8 +13,11 @@ public class XCinitDocument {
 			throws StreamTransformationException {
 
 		/**
-		 * This is a generic method for the initiation document and rules from
-		 * PI cache.
+		 * This is a generic method for the initiation of document and rules
+		 * from PI cache.
+		 * 
+		 * Input arguments are the VM input keys that are prepared by XCprep*
+		 * classes
 		 */
 
 		String[] vmOut = new String[] {};
@@ -40,7 +43,7 @@ public class XCinitDocument {
 		String receiverScheme3 = "VMR_Target_3";
 		String context = "";
 
-		// trace.addInfo("Class XCinitDocument: Initialize document VM keys");
+		// Get VM set
 		try {
 
 			IFIdentifier vmsetSource = XIVMFactory.newIdentifier("http://janro.com/vmrset", senderAgency, senderScheme);
@@ -63,6 +66,7 @@ public class XCinitDocument {
 		String vmReturn2 = "";
 		String vmReturn3 = "";
 
+		// Build VM prerequisites
 		IFIdentifier source = XIVMFactory.newIdentifier(context, senderAgency, senderScheme);
 		IFIdentifier destination1 = XIVMFactory.newIdentifier(context, receiverAgency, receiverScheme1);
 		IFIdentifier destination2 = XIVMFactory.newIdentifier(context, receiverAgency, receiverScheme2);
@@ -70,34 +74,35 @@ public class XCinitDocument {
 
 		try {
 
-			// Try unified init lookup
+			/*
+			 * Try first L1 initialization
+			 */
+
 			vmKey = initTable + delimiter + delimiter + delimiter + delimiter + delimiter + delimiter + delimiter
 					+ delimiter + vmKeyInput1 + delimiter + vmKeyInput2 + delimiter + vmKeyInput3 + delimiter
 					+ vmKeyInput4 + delimiter + vmKeyInput5 + delimiter + vmKeyInput6;
 
 			vmReturn1 = XIVMService.executeMapping(source, destination1, vmKey);
 			try {
+				// Check if VM Target has part 2
 				vmReturn2 = XIVMService.executeMapping(source, destination2, vmKey);
 			} catch (Exception evmReturn2) {
 				vmReturn2 = "";
 			}
 			try {
+				// Check if VM Target has part 3
 				vmReturn3 = XIVMService.executeMapping(source, destination3, vmKey);
 			} catch (Exception evmReturn3) {
 				vmReturn3 = "";
 			}
 
 			vmReturn = vmReturn1 + vmReturn2 + vmReturn3;
-
 			String L1[] = vmReturn.split("\\" + delimiter);
-			
-			trace.addInfo("XXX");
 
 			String vmKeyA4 = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
 					+ "A4" + delimiter + delimiter;
 			String vmKeyL1 = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
 					+ L1[0] + delimiter + L1[1] + delimiter + L1[2];
-			trace.addInfo("XXX");
 			String vmKeyL2 = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
 					+ "L2" + delimiter + L1[1] + delimiter;
 			String vmKeyL3 = direction + delimiter + standard + delimiter + message + delimiter + version + delimiter
@@ -120,25 +125,31 @@ public class XCinitDocument {
 
 			try {
 
+				/*
+				 * If L1 initialization failed, try L2
+				 */
+
 				trace.addInfo("Class XCinitDocument: No VM Key L1 found for " + vmKey + ". Trying VM Key L2.");
 
-				// Try unified init lookup
 				vmKey = initTable + delimiter + delimiter + delimiter + delimiter + delimiter + delimiter + delimiter
 						+ delimiter + vmKeyInput1 + delimiter + vmKeyInput2 + delimiter + delimiter + delimiter
 						+ delimiter;
 
 				vmReturn1 = XIVMService.executeMapping(source, destination1, vmKey);
 				try {
+					// Check if VM Target has part 2
 					vmReturn2 = XIVMService.executeMapping(source, destination2, vmKey);
 				} catch (Exception evmReturn2) {
 					vmReturn2 = "";
 				}
 				try {
+					// Check if VM Target has part 3
 					vmReturn3 = XIVMService.executeMapping(source, destination3, vmKey);
 				} catch (Exception evmReturn3) {
 					vmReturn3 = "";
 				}
 
+				vmReturn = vmReturn1 + vmReturn2 + vmReturn3;
 				String L2[] = vmReturn.split("\\" + delimiter);
 
 				String vmKeyA4 = direction + delimiter + standard + delimiter + message + delimiter + version
@@ -164,6 +175,10 @@ public class XCinitDocument {
 
 			} catch (Exception eL2) {
 
+				/*
+				 * If L2 initialization failed, default to L4
+				 */
+
 				trace.addInfo("Class XCinitDocument: No VM Key L2 found for " + vmKey + ". Defaulting to VM Key L4.");
 
 				String vmKeyA4 = direction + delimiter + standard + delimiter + message + delimiter + version
@@ -187,13 +202,7 @@ public class XCinitDocument {
 
 			}
 
-		} 
-		
-//		catch (Exception e) {
-//
-//			trace.addInfo("Class XCinitDocument: No ValueMapping 1.0.LOOKUP found " + e);
-//			vmOut = new String[] { "", "", "", "", "", "" };
-//		}
+		}
 
 		return vmOut;
 

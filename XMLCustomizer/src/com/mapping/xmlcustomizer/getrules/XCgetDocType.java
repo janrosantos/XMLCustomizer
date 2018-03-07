@@ -20,6 +20,12 @@ public class XCgetDocType {
 
 	public String executeXCgetDocType(StringBuilder in, AbstractTrace trace) throws StreamTransformationException {
 
+		/**
+		 * This method will identify the document type that is being processed.
+		 * Different rules will be used to identify VM keys per document. This
+		 * is a prerequisite for getVMentry proper.
+		 */
+
 		String docType = "";
 
 		// Assign variables for the XML string
@@ -64,7 +70,7 @@ public class XCgetDocType {
 			}
 
 		} catch (Exception exception) {
-			
+
 			trace.addInfo("Class XCgetDocType error: " + exception);
 		}
 

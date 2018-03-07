@@ -34,8 +34,8 @@ public class XCdeleteNode {
 		 */
 
 		/*-
-		 * deleteXPath is the node/s to be deleted
-		 * deleteXPath is an XPath expression
+		 * inDeleteXPath is the node/s to be deleted
+		 * inDeleteXPath is an XPath expression
 		 * dummyArg1 is not used
 		 * dummyArg2 is not used
 		 * dummyArg3 is not used

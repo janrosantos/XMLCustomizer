@@ -11,15 +11,12 @@ import com.sap.aii.mapping.api.StreamTransformationException;
 
 public class XCgetRules extends XMLCustomizer {
 
-	String delimiter = "~@#~";
-	String senderAgency = "VMR_Key";
-	String senderScheme = "VMR_Source";
-	String receiverAgency = "VMR_Return";
-	String receiverScheme = "VMR_Target";
-	String context = "";
-
 	public String[][] executeXCgetRules(StringBuilder in, String omParam, AbstractTrace trace)
 			throws StreamTransformationException {
+
+		/**
+		 * This method will extract the rules to be applied on the XML document
+		 * */
 
 		trace.addInfo("Class XCgetRules: Acquiring rules for XML Customizer");
 
@@ -52,7 +49,7 @@ public class XCgetRules extends XMLCustomizer {
 			} catch (Exception e) {
 				docKey = XCpadArray1D.executeXCpadArray1D(docKey, "", 12);
 			}
-			
+
 			// Get Rules Step 3: Initialize document
 			XCinitDocument initDocument = new XCinitDocument();
 			initVMKeys = initDocument.executeXCinitDocument(docKey, trace);
@@ -68,10 +65,11 @@ public class XCgetRules extends XMLCustomizer {
 				int ruleNumber = 10100;
 				int xcRulesTempLen = 1;
 				boolean Lmatch = false;
+				String vmKeyRuleLevel = initVMKeys[0]; // A4 Rule
 
 				while ((xcRulesTempLen > 0) && (ruleNumber < 15000)) {
 
-					xcRulesTemp = getVMentry.executeGetVMentry(xcTable, initVMKeys[0], ruleNumber, trace);
+					xcRulesTemp = getVMentry.executeGetVMentry(xcTable, vmKeyRuleLevel, ruleNumber, trace);
 					if (xcRulesTemp.length > 0) {
 						xcRulesArray.add(xcRulesTemp);
 					}
@@ -88,9 +86,10 @@ public class XCgetRules extends XMLCustomizer {
 				for (int L = 1; ((L < 5) && (!Lmatch)); L++) {
 					ruleNumber = 10100;
 					xcRulesTempLen = 1;
+					vmKeyRuleLevel = initVMKeys[L]; // L* Rule
 					while ((xcRulesTempLen > 0) && (ruleNumber < 15000)) {
 
-						xcRulesTemp = getVMentry.executeGetVMentry(xcTable, initVMKeys[L], ruleNumber, trace);
+						xcRulesTemp = getVMentry.executeGetVMentry(xcTable, vmKeyRuleLevel, ruleNumber, trace);
 						if (xcRulesTemp.length > 0) {
 							xcRulesArray.add(xcRulesTemp);
 							Lmatch = true;
@@ -108,10 +107,11 @@ public class XCgetRules extends XMLCustomizer {
 
 				ruleNumber = 10100;
 				xcRulesTempLen = 1;
+				vmKeyRuleLevel = initVMKeys[5]; // Z4 Rule
 
 				while ((xcRulesTempLen > 0) && (ruleNumber < 15000)) {
 
-					xcRulesTemp = getVMentry.executeGetVMentry(xcTable, initVMKeys[5], ruleNumber, trace);
+					xcRulesTemp = getVMentry.executeGetVMentry(xcTable, vmKeyRuleLevel, ruleNumber, trace);
 
 					if (xcRulesTemp.length > 0) {
 						xcRulesArray.add(xcRulesTemp);
@@ -141,7 +141,11 @@ public class XCgetRules extends XMLCustomizer {
 		}
 
 		xcRules = xcRulesArray.toArray(xcRules);
-		trace.addInfo("Class XCgetRules: " + xcRules.length + " rule(s) acquired");
+
+		if (xcRules.length > 0) {
+			trace.addInfo("Class XCgetRules: " + xcRules.length + " rule(s) acquired");
+		}
+
 		return xcRules;
 
 	}

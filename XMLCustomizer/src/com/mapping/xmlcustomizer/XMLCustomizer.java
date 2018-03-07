@@ -121,7 +121,7 @@ public class XMLCustomizer extends AbstractTransformation {
 			} else {
 
 				// No valid rules found, invalid operation parameter
-				trace.addInfo("Class XMLCustomizer: No rules found.");
+				trace.addInfo("Class XMLCustomizer: No rules applied.");
 				inputStreamTemp = outputStreamTemp;
 
 			}
