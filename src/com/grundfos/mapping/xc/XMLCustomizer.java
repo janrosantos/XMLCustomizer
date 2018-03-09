@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 
+import com.grundfos.mapping.xc.dynamicconfiguration.XCsetDyamicConfig;
 import com.grundfos.mapping.xc.functions.XCpadArray2D;
 import com.grundfos.mapping.xc.getrules.XCgetRules;
 import com.grundfos.mapping.xc.nodeoperations.XCaddNode;
@@ -12,6 +13,7 @@ import com.grundfos.mapping.xc.nodeoperations.XCdeleteNode;
 import com.grundfos.mapping.xc.nodeoperations.XCreplaceValue;
 import com.sap.aii.mapping.api.AbstractTrace;
 import com.sap.aii.mapping.api.AbstractTransformation;
+import com.sap.aii.mapping.api.DynamicConfiguration;
 import com.sap.aii.mapping.api.InputParameters;
 import com.sap.aii.mapping.api.StreamTransformationException;
 import com.sap.aii.mapping.api.TransformationInput;
@@ -25,13 +27,14 @@ public class XMLCustomizer extends AbstractTransformation {
 
 		try {
 			this.customizeXML(transformationInput.getInputPayload().getInputStream(), transformationInput
-					.getInputParameters(), transformationOutput.getOutputPayload().getOutputStream());
+					.getInputParameters(), transformationInput.getDynamicConfiguration(), transformationOutput
+					.getOutputPayload().getOutputStream());
 		} catch (Exception e) {
 			System.out.println("Error: " + e);
 		}
 	}
 
-	public void customizeXML(InputStream in, InputParameters inParam, OutputStream out)
+	public void customizeXML(InputStream in, InputParameters inParam, DynamicConfiguration dynConfig, OutputStream out)
 			throws StreamTransformationException {
 
 		AbstractTrace trace = getTrace();
@@ -99,6 +102,12 @@ public class XMLCustomizer extends AbstractTransformation {
 							XCreplaceValue replaceValueXML = new XCreplaceValue();
 							outputStreamTemp = replaceValueXML.executeXCreplaceValue(operation, arg0, arg1, arg2, arg3,
 									inputStreamTemp, trace);
+
+						} else if ((operation.equals("setDynConfigConstant"))
+								|| (operation.equals("setDynConfigXPath"))) {
+
+							XCsetDyamicConfig setDynamicConfigValues = new XCsetDyamicConfig();
+							setDynamicConfigValues.executeXCsetDyamicConfig(operation, dynConfig, arg0, arg1, arg3, inputStreamTemp, trace);
 
 						} else {
 

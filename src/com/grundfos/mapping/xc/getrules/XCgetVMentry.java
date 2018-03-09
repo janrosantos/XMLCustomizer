@@ -31,11 +31,11 @@ public class XCgetVMentry {
 		// Get VM set
 		try {
 
-			IFIdentifier vmsetSource = XIVMFactory.newIdentifier("http://janro.com/vmrset", senderAgency, senderScheme);
-			IFIdentifier vmsetDestination = XIVMFactory.newIdentifier("http://janro.com/vmrset", receiverAgency,
+			IFIdentifier vmsetSource = XIVMFactory.newIdentifier("http://grundfos.com/vmrset", senderAgency, senderScheme);
+			IFIdentifier vmsetDestination = XIVMFactory.newIdentifier("http://grundfos.com/vmrset", receiverAgency,
 					receiverScheme);
 			String vmset = XIVMService.executeMapping(vmsetSource, vmsetDestination, "0.0.VMRSET");
-			context = "http://janro.com/vmr/" + vmset;
+			context = "http://grundfos.com/vmr/" + vmset;
 
 		} catch (ValueMappingException exception) {
 
