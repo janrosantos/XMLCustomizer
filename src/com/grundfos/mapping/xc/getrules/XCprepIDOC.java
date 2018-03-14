@@ -169,12 +169,12 @@ public class XCprepIDOC {
 
 					if (rcvlad.contains("XCPRE")) {
 						// Most common usage for IDOCs
-						xcTable = "4.1.CUSTOM.XML.PRE";
+						xcTable = "9.1.CUSTOM.XML.PRE";
 
 					} else if (rcvlad.contains("XCPOST")) {
 
 						// Little possibility of usage
-						xcTable = "4.1.CUSTOM.XML.POST";
+						xcTable = "9.1.CUSTOM.XML.POST";
 					}
 
 				} else if (direction.equals("2")) {
@@ -233,11 +233,11 @@ public class XCprepIDOC {
 
 					if (rcvlad.contains("XCPRE")) {
 						// Very unlikely
-						xcTable = "4.2.CUSTOM.XML.PRE";
+						xcTable = "9.2.CUSTOM.XML.PRE";
 
 					} else if (rcvlad.contains("XCPOST")) {
 						// Second most possible usage
-						xcTable = "4.2.CUSTOM.XML.POST";
+						xcTable = "9.2.CUSTOM.XML.POST";
 					}
 				}
 

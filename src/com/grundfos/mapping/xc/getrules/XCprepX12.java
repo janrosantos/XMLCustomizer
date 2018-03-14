@@ -99,7 +99,7 @@ public class XCprepX12 {
 				} catch (Exception e) {
 					company = "";
 				}
-				xcTable = "4.1.CUSTOM.XML.POST";
+				xcTable = "9.1.CUSTOM.XML.POST";
 
 				edifactKey = new String[] { initTable, direction, standard, message, version, partnertype, partner,
 						company, "", "", "", xcTable };
@@ -169,7 +169,7 @@ public class XCprepX12 {
 					receiverQualf = "";
 				}
 
-				xcTable = "4.2.CUSTOM.XML.PRE";
+				xcTable = "9.2.CUSTOM.XML.PRE";
 
 				return new String[] { initTable, direction, standard, message, version, senderGLN, senderQualf,
 						receiverGLN, receiverQualf, "", "", xcTable };

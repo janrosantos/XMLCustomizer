@@ -24,7 +24,8 @@ public class XCgetRules extends XMLCustomizer {
 		String xcTable = "";
 		String[] docKey = new String[] {};
 		String[] initVMKeys = new String[] { "", "", "", "", "", "" };
-		String[] blankVMKey = new String[] { "", "", "", "", "", "" };
+		String[] blankVMKey = new String[] {};
+		String[] blankDocKey = new String[] {};
 		String[] xcRulesTemp = new String[] {};
 		String[][] xcRules = new String[][] {};
 		List<String[]> xcRulesArray = new ArrayList<String[]>();
@@ -50,12 +51,15 @@ public class XCgetRules extends XMLCustomizer {
 				docKey = XCpadArray1D.executeXCpadArray1D(docKey, "", 12);
 			}
 
+			blankDocKey = XCpadArray1D.executeXCpadArray1D(blankDocKey, "", 12);
+			blankVMKey = XCpadArray1D.executeXCpadArray1D(blankVMKey, "", 6);
+
 			// Get Rules Step 3: Initialize document
 			XCinitDocument initDocument = new XCinitDocument();
 			initVMKeys = initDocument.executeXCinitDocument(docKey, trace);
 
 			// Get Rules Step 4: Get rules from cache
-			if (!Arrays.equals(blankVMKey, initVMKeys)) {
+			if ((!Arrays.equals(blankDocKey, docKey)) && (!Arrays.equals(blankVMKey, initVMKeys))) {
 
 				// XCgetVM getVM = new XCgetVM();
 				XCgetVMentry getVMentry = new XCgetVMentry();
